@@ -1,0 +1,175 @@
+# Set font
+font pango:Inconsolata Mono 10
+
+# Gaps
+gaps inner 10
+gaps outer 10
+smart_gaps on
+
+# Borders
+new_window pixel 1
+new_float pixel 0
+hide_edge_borders both
+
+# Set default workspace layout
+#workspace_layout tabbed
+
+# Specific window configuration
+for_window    [class=".*"]                   sticky enable
+for_window    [window_role="pop-up"]         floating enable
+for_window    [class="Pinentry"]             floating enable
+for_window    [class="copyq"]                floating enable
+for_window    [class="Peek"]                 floating enable
+for_window    [class="Rofi"]                 floating enable
+for_window    [class="Vivaldi"]              move container to $workspace2, title_format "Vivaldi"
+for_window    [class="Wire"]                 move container to $workspace3
+for_window    [class="Slack"]                move container to $workspace3
+for_window    [class="Thunderbird"]          move container to $workspace4
+for_window    [class="TeamViewer"]           move container to $workspace9, floating enable, sticky disable
+for_window    [class="xfreerdp"]             move container to $workspace9
+
+# Color scheme (Gruvbox dark)
+set $color_normal_white  #a89984
+set $color_bright_white  #ebdbb2
+set $color_normal_gray   #222222
+set $color_bright_gray   #3c3836
+set $color_bright_yellow #d79921
+set $color_normal_black  #282828
+set $color_unused        #ff0000
+
+# Colors                  border                 background             text                   indicator       child_border
+client.focused            $color_bright_gray     $color_bright_gray     $color_bright_white    $color_unused   $color_normal_white
+client.focused_inactive   $color_bright_gray     $color_bright_gray     $color_bright_white    $color_unused   $color_normal_black
+client.unfocused          $color_normal_gray     $color_normal_gray     $color_normal_white    $color_unused   $color_normal_black
+client.urgent             $color_bright_yellow   $color_bright_yellow   $color_normal_black    $color_unused   $color_unused
+client.placeholder        $color_unused          $color_normal_black    $color_unused          $color_unused   $color_unused
+
+# Bar
+bar {
+  colors {
+    # Whole color settings
+    background $color_normal_gray
+    separator  $color_bright_gray
+    statusline $color_bright_white
+
+    # Type             border                 background              font
+    focused_workspace  $color_bright_gray     $color_bright_gray      $color_bright_white
+    active_workspace   $color_unused          $color_unused           $color_unused
+    inactive_workspace $color_normal_gray     $color_normal_gray      $color_normal_white
+    urgent_workspace   $color_bright_yellow   $color_bright_yellow    $color_normal_black
+  }
+
+  separator_symbol "  |  "
+  status_command py3status --dbus-notify
+  position top
+  tray_output none
+}
+
+# Use Windows as a modifier key
+set $mod Mod4
+
+# Define NumLock modifier
+set $numlock Mod2
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# Refresh py3status module after switching keyboard layout (Shift+Shift)
+bindcode Shift+50 exec "py3-cmd refresh keyboard_layout"
+bindcode Shift+62 exec "py3-cmd refresh keyboard_layout"
+
+# Start a terminal
+bindsym $mod+Return exec kitty
+bindsym $mod+Shift+Return exec kitty /bin/bash
+
+# Start a launcher (=)(d)(o)(p)
+bindcode $mod+21 exec "pgrep -x rofi && killall rofi || rofi -normal-window -show calc"
+bindcode $mod+40 exec "pgrep -x rofi && killall rofi || rofi -normal-window -show drun"
+bindcode $mod+32 exec "pgrep -x rofi && killall rofi || rofi -normal-window -show window"
+bindcode $mod+33 exec "passmenu"
+
+# Start networkmanager_dmenu (n)
+???LINES MISSING
+bindcode $numlock+$mod+Shift+79 move container to $workspace7
+bindcode $numlock+$mod+Shift+80 move container to $workspace8
+bindcode $numlock+$mod+Shift+81 move container to $workspace9
+bindcode $numlock+$mod+Shift+90 move container to $workspace0
+
+# Move window to workspace using number row
+bindsym $mod+Shift+1 move container to $workspace1
+bindsym $mod+Shift+2 move container to $workspace2
+bindsym $mod+Shift+3 move container to $workspace3
+bindsym $mod+Shift+4 move container to $workspace4
+bindsym $mod+Shift+5 move container to $workspace5
+bindsym $mod+Shift+6 move container to $workspace6
+bindsym $mod+Shift+7 move container to $workspace7
+bindsym $mod+Shift+8 move container to $workspace8
+bindsym $mod+Shift+9 move container to $workspace9
+bindsym $mod+Shift+0 move container to $workspace0
+
+# Automatically rename workspaces
+exec_always i3-autoname-workspaces &
+
+# Resize window (r)
+set $mode_resize Resize window
+mode "$mode_resize" {
+  # (h)
+  bindcode 43            resize grow   left  10 px or 10 ppt
+  bindcode Shift+43      resize shrink right 10 px or 10 ppt
+  bindcode Ctrl+43       resize grow   left  1  px or 1  ppt
+  bindcode Ctrl+Shift+43 resize shrink right 1  px or 1  ppt
+  # (j)
+  bindcode Shift+44      resize grow   down  10 px or 10 ppt
+  bindcode 44            resize shrink up    10 px or 10 ppt
+  bindcode Ctrl+Shift+44 resize grow   down  1  px or 1  ppt
+  bindcode Ctrl+44       resize shrink up    1  px or 1  ppt
+  # (k)
+  bindcode Shift+45      resize shrink down  10 px or 10 ppt
+  bindcode 45            resize grow   up    10 px or 10 ppt
+  bindcode Ctrl+Shift+45 resize shrink down  1  px or 1  ppt
+  bindcode Ctrl+45       resize grow   up    1  px or 1  ppt
+  # (l)
+  bindcode Shift+46      resize grow   right 10 px or 10 ppt
+  bindcode 46            resize shrink left  10 px or 10 ppt
+  bindcode Ctrl+Shift+46 resize grow   right 1  px or 1  ppt
+  bindcode Ctrl+46       resize shrink left  1  px or 1  ppt
+
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindcode $mod+27 mode "$mode_resize"
+
+# Shutdown, Suspend, Lock (e)
+set $mode_system System (l) lock, (e) logout, (s) suspend, (r) reboot, (h) shutdown
+mode "$mode_system" {
+  # (l)
+  bindcode 46 exec i3exit lock, mode "default"
+  # (e)
+  bindcode 26 exec i3exit logout, mode "default"
+  # (s)
+  bindcode 39 exec i3exit suspend, mode "default"
+  # (r)
+  bindcode 27 exec i3exit reboot, mode "default"
+  # (h)
+  bindcode 43 exec i3exit shutdown, mode "default"
+
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindcode $mod+Shift+26 mode "$mode_system"
+
+# Move workspaces between monitors (m)
+set $mode_workspaces_monitors Move workspace between monitors
+mode "$mode_workspaces_monitors" {
+  # (h)
+  bindcode 43 exec i3-msg move workspace to output left, mode "default"
+  # (l)
+  bindcode 46 exec i3-msg move workspace to output right, mode "default"
+
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindcode $mod+Shift+58 mode $mode_workspaces_monitors

@@ -15,11 +15,22 @@ xorg-xinit
 xorg-xprop
 xorg-xrandr
 rofi
+rofi-calc
+rofi-dmenu
 kitty
 terminus-font
 ttf-liberation
 
 
+-- Desktop
+flameshot: screenshot tool
+compton: Some sort of compositor
+
+
 -- Web
 vivaldi
 pepper-flash
+
+
+-- Other
+pass
