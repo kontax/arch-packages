@@ -1,11 +1,9 @@
 -- Arch
-
 fwupdate
 cryptboot
 yay
 
 -- i3
-
 i3-gaps
 i3status
 py3status
@@ -19,18 +17,21 @@ rofi-calc
 rofi-dmenu
 kitty
 terminus-font
-ttf-liberation
+ttf-inconsolata
 
 
 -- Desktop
-flameshot: screenshot tool
-compton: Some sort of compositor
+*flameshot: screenshot tool
+*compton: Some sort of compositor
+*copyq: Clipboard manager
+*unclutter: Hides the mouse when not in use
 
 
 -- Web
-vivaldi
+*vivaldi
 pepper-flash
 
 
 -- Other
-pass
+*pass
+*usbguard
