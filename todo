@@ -1,0 +1,18 @@
+i3
+---
+Figure out split toggling for i3
+ - splith | splitv | tabbed ??
+ - what's the default?
+ - what key to set for each mode
+ - think about parent (wrap or something in the docs)
+ - multi-monitor
+
+Marks
+
+Scratchpad
+
+Notification thing on statusbar?
+
+What to do about networkmanager
+ - How to deal with VPN
+

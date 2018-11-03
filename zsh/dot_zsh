@@ -1,0 +1,25 @@
+# Lazy-loading
+. ~/dotfiles/zsh/sandboxd.zsh
+
+# Load environment variables
+. /usr/share/LS_COLORS/dircolors.sh
+
+# Load terminal configuration
+. ~/dotfiles/zsh/title.zsh
+. ~/dotfiles/zsh/prompt.zsh
+
+# Load plugins
+. ~/dotfiles/zsh/prezto.zsh
+. ~/dotfiles/zsh/zsh-notify.zsh
+. ~/dotfiles/zsh/antigen.zsh
+. ~/dotfiles/zsh/prezto-patches.zsh
+
+# Load custom configurations
+. ~/dotfiles/zsh/opts.zsh
+. ~/dotfiles/zsh/keybindings.zsh
+. ~/dotfiles/zsh/aliases.zsh
+. ~/dotfiles/zsh/pacman.zsh
+. ~/dotfiles/zsh/git.zsh
+. ~/dotfiles/zsh/fuzzy.zsh
+. ~/dotfiles/zsh/ssh.zsh
+. ~/dotfiles/zsh/mse.zsh
