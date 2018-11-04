@@ -22,4 +22,3 @@
 . ~/dotfiles/zsh/git.zsh
 . ~/dotfiles/zsh/fuzzy.zsh
 . ~/dotfiles/zsh/ssh.zsh
-. ~/dotfiles/zsh/mse.zsh
