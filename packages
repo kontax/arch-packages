@@ -2,6 +2,8 @@
 fwupdate
 cryptboot
 yay
+exa: ls replacement
+*ripgrep: fuzzy searcher - mapped in zsh to ctrl T/R
 
 -- i3
 i3-gaps
@@ -35,3 +37,9 @@ pepper-flash
 -- Other
 *pass
 *usbguard
+
+-- zsh
+*antigen: package manager (aur)
+*prezto: config framework (aur)
+*fzy: Fuzzy text selector
+lscolors-git: Colours for ls (aur)

@@ -267,6 +267,7 @@ set $mode_system System (l) lock, (e) logout, (s) suspend, (r) reboot, (h) shutd
 mode "$mode_system" {
   # (l)
   bindcode 46 exec i3exit lock, mode "default"
+  #bindcode 46 exec xsecurelock, mode "default"
   # (e)
   bindcode 26 exec i3exit logout, mode "default"
   # (s)
