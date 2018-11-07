@@ -4,7 +4,7 @@ from subprocess import Popen, PIPE
 
 
 def main(args):
-    p1 = Popen(["ssh", "mse", "~/get-vms"], stdout=PIPE)
+    p1 = Popen(["ssh", "yakuza", "~/get-vms"], stdout=PIPE)
     p2 = Popen(["fzy"], stdin=p1.stdout, stdout=PIPE)
     vm, _ = p2.communicate()
     return vm.decode("utf-8").strip()

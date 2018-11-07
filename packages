@@ -4,11 +4,13 @@ cryptboot
 yay
 exa: ls replacement
 *ripgrep: fuzzy searcher - mapped in zsh to ctrl T/R
+*rmtrash: trash to bin (aur)
 
 -- i3
 i3-gaps
-i3status
-py3status
+*i3status
+*py3status
+*i3ipc-python: An IPC for i3 using python (aur)
 xorg-server
 xorg-xfontsel
 xorg-xinit
@@ -43,3 +45,9 @@ pepper-flash
 *prezto: config framework (aur)
 *fzy: Fuzzy text selector
 lscolors-git: Colours for ls (aur)
+
+-- Snapper
+*snapper: Manage btrfs snapshots
+*btrfs-progs: Some btrfs utilities I guess
+*snap-pac: Hooks for pacman to automatically create snapshots after installs
+*snap-pac-grub: Add grub entries every time a snapshot is made
