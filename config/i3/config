@@ -1,5 +1,6 @@
 # Set font
-font pango:Inconsolat Mono 10
+#font pango:Taskbar, Inconsolata Mono 10
+font pango: Inconsolata Mono 10, Cantarell 9
 
 # Gaps
 gaps inner 20

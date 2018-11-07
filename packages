@@ -22,6 +22,7 @@ rofi-dmenu
 kitty
 terminus-font
 ttf-inconsolata
+otf-font-awesome: Font for icons
 
 
 -- Desktop
