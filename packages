@@ -5,6 +5,10 @@ yay
 exa: ls replacement
 *ripgrep: fuzzy searcher - mapped in zsh to ctrl T/R
 *rmtrash: trash to bin (aur)
+alsa-utils: Sound config
+pulseaudio: Sound server
+pulseaudio-alsa: Sound server for alsa
+pamixer: pulseaudio command-line mixer
 
 -- i3
 i3-gaps
@@ -23,6 +27,7 @@ kitty
 terminus-font
 ttf-inconsolata
 otf-font-awesome: Font for icons
+python-tzlocal: For status bar clock
 
 
 -- Desktop
@@ -48,7 +53,7 @@ pepper-flash
 lscolors-git: Colours for ls (aur)
 
 -- Snapper
-*snapper: Manage btrfs snapshots
-*btrfs-progs: Some btrfs utilities I guess
-*snap-pac: Hooks for pacman to automatically create snapshots after installs
-*snap-pac-grub: Add grub entries every time a snapshot is made
+snapper: Manage btrfs snapshots
+btrfs-progs: Some btrfs utilities I guess
+snap-pac: Hooks for pacman to automatically create snapshots after installs
+snap-pac-grub: Add grub entries every time a snapshot is made
