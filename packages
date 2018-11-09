@@ -31,6 +31,7 @@ terminus-font
 ttf-inconsolata
 otf-font-awesome: Font for icons
 python-tzlocal: For status bar clock
+lightdm: Login interface
 
 
 -- Desktop
