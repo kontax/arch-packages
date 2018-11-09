@@ -9,6 +9,9 @@ alsa-utils: Sound config
 pulseaudio: Sound server
 pulseaudio-alsa: Sound server for alsa
 pamixer: pulseaudio command-line mixer
+iw: wifi command
+fwupd: Firmware updater
+*dunst: Notification service (need to figure out how to enable on boot)
 
 -- i3
 i3-gaps
