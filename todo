@@ -6,13 +6,24 @@ Figure out split toggling for i3
  - what key to set for each mode
  - think about parent (wrap or something in the docs)
  - multi-monitor
+ - do_not_disturb i3status module
+ - icons for Vivaldi (and others)
 
 Marks
 
 Scratchpad
 
-Notification thing on statusbar?
-
 What to do about networkmanager
  - How to deal with VPN
+
+aur
+
+Servers
+ - packages
+ - whatismyip
+
+Software Config
+ - vim
+ - git
+
 
