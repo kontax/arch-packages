@@ -12,6 +12,9 @@ pamixer: pulseaudio command-line mixer
 iw: wifi command
 fwupd: Firmware updater
 *dunst: Notification service (need to figure out how to enable on boot)
+*aurutils: Package manager for aur
+*pacutils: Required by aurutils - is it needed otherwise?
+*s3cmd: Used to upload packages to amazon s3
 
 -- i3
 i3-gaps

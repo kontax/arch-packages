@@ -1,13 +1,13 @@
 i3
 ---
-Figure out split toggling for i3
- - splith | splitv | tabbed ??
- - what's the default?
- - what key to set for each mode
- - think about parent (wrap or something in the docs)
+ - Figure out split toggling for i3
+   - splith | splitv | tabbed ??
+   - what's the default?
+   - what key to set for each mode
+   - think about parent (wrap or something in the docs)
  - multi-monitor
  - do_not_disturb i3status module
- - icons for Vivaldi (and others)
+ - DONE: icons for Vivaldi (and others) - this is in bin/i3-autorename-workspace (uses i3ipc)
 
 Marks
 
@@ -17,6 +17,8 @@ What to do about networkmanager
  - How to deal with VPN
 
 aur
+ - Set up server
+ - Figure out building etc
 
 Servers
  - packages
@@ -24,6 +26,10 @@ Servers
 
 Software Config
  - vim
- - git
+ - git - auto push some repos (eg. pass)
+ - gpg
+ - yubikey
+ - pia
+ - pass
 
-
+Setup file
