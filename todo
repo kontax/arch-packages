@@ -17,8 +17,11 @@ What to do about networkmanager
  - How to deal with VPN
 
 aur
- - Set up server
- - Figure out building etc
+ - DONE: Set up server
+ - DONE: Figure out building etc
+ - Can files be remote only?
+ - Clean older than one version
+ - Signing / verifying key
 
 Servers
  - packages
