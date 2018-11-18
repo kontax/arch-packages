@@ -8,6 +8,7 @@ i3
  - multi-monitor
  - do_not_disturb i3status module
  - DONE: icons for Vivaldi (and others) - this is in bin/i3-autorename-workspace (uses i3ipc)
+ - gsimplecal theme (something to do with i3?)
 
 Marks
 
@@ -22,6 +23,8 @@ aur
  - Can files be remote only?
  - Clean older than one version
  - Signing / verifying key
+ - Migrate to VPS
+ - Build / update server (arch only?)
 
 Servers
  - packages

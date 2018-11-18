@@ -35,6 +35,7 @@ ttf-inconsolata
 otf-font-awesome: Font for icons
 python-tzlocal: For status bar clock
 lightdm: Login interface
+*gsimplecal: Calendar for i3status
 
 
 -- Desktop
