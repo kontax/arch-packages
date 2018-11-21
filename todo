@@ -12,8 +12,8 @@ i3
  - dunst notification in taskbar doesn't seem to work
 
 Snapper
- - Test it works from grub
- - Figure out a rollback
+ - DONE: Test it works from grub - only seems cmdline? - it acts weird, no idea why for now
+ - DONE: Figure out a rollback - requires a reboot, undochanges is the way forwards
 
 btrfs
 
