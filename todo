@@ -9,6 +9,7 @@ i3
  - do_not_disturb i3status module
  - DONE: icons for Vivaldi (and others) - this is in bin/i3-autorename-workspace (uses i3ipc)
  - gsimplecal theme (something to do with i3?)
+ - dunst notification in taskbar doesn't seem to work
 
 Snapper
  - Test it works from grub
