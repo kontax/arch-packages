@@ -43,7 +43,7 @@ lightdm: Login interface
 *compton: Some sort of compositor
 *copyq: Clipboard manager
 *unclutter: Hides the mouse when not in use
-ranger: File manager (can view pics in kitty)
+*ranger: File manager (can view pics in kitty)
 
 
 -- Web
