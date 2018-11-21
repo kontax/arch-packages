@@ -128,8 +128,10 @@
 
     ```
     # echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-    # echo "en_DK.UTF-8 UTF-8" >> /etc/locale.gen
+    # echo "en_IE.UTF-8 UTF-8" >> /etc/locale.gen
     # locale-gen
+    # echo "LANG=en_US.UTF-8" > /etc/locale.conf
+    # echo "LC_MONETARY=en_IE.UTF-8" >> /etc/locale.conf
     ```
 
 1.  Configure hostname:
