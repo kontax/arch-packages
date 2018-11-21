@@ -10,6 +10,10 @@ i3
  - DONE: icons for Vivaldi (and others) - this is in bin/i3-autorename-workspace (uses i3ipc)
  - gsimplecal theme (something to do with i3?)
 
+Snapper
+ - Test it works from grub
+ - Figure out a rollback
+
 Marks
 
 Scratchpad
