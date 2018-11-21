@@ -12,7 +12,7 @@ pamixer: pulseaudio command-line mixer
 iw: wifi command
 fwupd: Firmware updater
 *dunst: Notification service (need to figure out how to enable on boot)
-*aurutils: Package manager for aur
+*aurutils-git: Package manager for aur
 *pacutils: Required by aurutils - is it needed otherwise?
 *s3cmd: Used to upload packages to amazon s3
 
@@ -43,6 +43,7 @@ lightdm: Login interface
 *compton: Some sort of compositor
 *copyq: Clipboard manager
 *unclutter: Hides the mouse when not in use
+ranger: File manager (can view pics in kitty)
 
 
 -- Web
@@ -57,8 +58,8 @@ x264
 *usbguard
 
 -- zsh
-*antigen: package manager (aur)
-*prezto: config framework (aur)
+*antigen-git: package manager (aur)
+*prezto-git: config framework (aur)
 *fzy: Fuzzy text selector
 lscolors-git: Colours for ls (aur)
 
