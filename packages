@@ -1,7 +1,6 @@
 -- Arch
 fwupdate
 cryptboot
-yay
 exa: ls replacement
 *ripgrep: fuzzy searcher - mapped in zsh to ctrl T/R
 *rmtrash: trash to bin (aur)
@@ -35,6 +34,7 @@ ttf-inconsolata
 otf-font-awesome: Font for icons
 python-tzlocal: For status bar clock
 lightdm: Login interface
+lightdm-gtk-greeter: Theme for lightdm
 *gsimplecal: Calendar for i3status
 
 
