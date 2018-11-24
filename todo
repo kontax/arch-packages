@@ -10,6 +10,8 @@ i3
  - DONE: icons for Vivaldi (and others) - this is in bin/i3-autorename-workspace (uses i3ipc)
  - gsimplecal theme (something to do with i3?)
  - DONE: dunst notification in taskbar doesn't seem to work - it does now for some reason
+ - usbguard statusbar
+ - vivaldi statusbar icon
 
 Snapper
  - DONE: Test it works from grub - only seems cmdline? - lightdm fails on startup
@@ -48,5 +50,7 @@ Software Config
  - yubikey
  - pia
  - pass
+ - kitty
+   - sort out keyboard shortcuts (especially that ssh/rdp one)
 
 Setup file
