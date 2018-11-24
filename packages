@@ -59,6 +59,7 @@ x264
 yubikey-manager
 yubico-pam
 yubikey-touch-detector (aur)
+libu2f-server (aur)
 pam_u2f (aur)
 
 -- zsh
