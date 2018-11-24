@@ -56,6 +56,10 @@ x264
 -- Other
 *pass
 *usbguard
+yubikey-manager
+yubico-pam
+yubikey-touch-detector (aur)
+pam_u2f (aur)
 
 -- zsh
 *antigen-git: package manager (aur)
