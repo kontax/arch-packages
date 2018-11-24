@@ -47,6 +47,7 @@ Software Config
    - auto push some repos (eg. pass)
    - .netrc
  - gpg
+   - Add key to keyserver
  - yubikey
  - pia
  - pass
