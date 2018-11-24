@@ -12,7 +12,7 @@ i3
  - DONE: dunst notification in taskbar doesn't seem to work - it does now for some reason
 
 Snapper
- - DONE: Test it works from grub - only seems cmdline? - it acts weird, no idea why for now
+ - DONE: Test it works from grub - only seems cmdline? - lightdm fails on startup
  - DONE: Figure out a rollback - requires a reboot, undochanges is the way forwards
 
 btrfs
