@@ -41,7 +41,9 @@ Servers
 
 Software Config
  - vim
- - git - auto push some repos (eg. pass)
+ - git
+   - auto push some repos (eg. pass)
+   - .netrc
  - gpg
  - yubikey
  - pia
