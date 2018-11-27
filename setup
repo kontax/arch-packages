@@ -1,0 +1,8 @@
+System services
+ - pcscd.service
+ - lightdm.service
+ - snapper-cleanup.timer
+
+User services
+ - dunst.service
+ - yubikey-touch-detector.service
