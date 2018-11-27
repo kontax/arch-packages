@@ -14,6 +14,7 @@ fwupd: Firmware updater
 *aurutils-git: Package manager for aur
 *pacutils: Required by aurutils - is it needed otherwise?
 *s3cmd: Used to upload packages to amazon s3
+devtools: For developing packages
 
 -- i3
 i3-gaps
@@ -61,6 +62,7 @@ yubico-pam
 yubikey-touch-detector (aur)
 libu2f-server (aur)
 pam_u2f (aur)
+docker
 
 -- zsh
 *antigen-git: package manager (aur)
