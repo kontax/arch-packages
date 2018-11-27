@@ -45,6 +45,7 @@ lightdm-gtk-greeter: Theme for lightdm
 *copyq: Clipboard manager
 *unclutter: Hides the mouse when not in use
 *ranger: File manager (can view pics in kitty)
+freerdp
 
 
 -- Web
