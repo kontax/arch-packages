@@ -20,6 +20,7 @@ Snapper
 btrfs
 
 Security
+ - Keeping config files secure
 
 Marks
 
@@ -45,7 +46,7 @@ Software Config
  - vim
  - git
    - auto push some repos (eg. pass)
-   - .netrc
+   - .netrc (can this be done in .gitconfig?)
  - gpg
    - Add key to keyserver
  - yubikey
