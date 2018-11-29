@@ -76,3 +76,6 @@ snapper: Manage btrfs snapshots
 btrfs-progs: Some btrfs utilities I guess
 snap-pac: Hooks for pacman to automatically create snapshots after installs
 snap-pac-grub: Add grub entries every time a snapshot is made
+
+--  Dev
+python-virtualenv
