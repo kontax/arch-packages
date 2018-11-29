@@ -3,6 +3,7 @@
 
 # Load environment variables
 . /usr/share/LS_COLORS/dircolors.sh
+. ~/dotfiles/zsh/env.zsh
 
 # Load terminal configuration
 . ~/dotfiles/zsh/title.zsh
