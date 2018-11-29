@@ -90,9 +90,9 @@ bindcode $mod+32 exec "pgrep -x rofi && killall rofi || rofi -normal-window -sho
 bindcode $mod+33 exec "passmenu"
 
 # Start networkmanager_dmenu (n)
-#bindcode $mod+57 exec "networkmanager_dmenu"
-bindcode $mod+57 exec "connman_dmenu"
-bindcode $mod+Shift+57 exec "connman_dmenu scan"
+bindcode $mod+57 exec "networkmanager_dmenu"
+#bindcode $mod+57 exec "connman_dmenu"
+#bindcode $mod+Shift+57 exec "connman_dmenu scan"
 
 # Start a screenshot tool (m)
 bindcode $mod+58 exec "flameshot gui"
