@@ -32,7 +32,7 @@ What to do about networkmanager
 aur
  - DONE: Set up server
  - DONE: Figure out building etc
- - Can files be remote only?
+ - DONE: Can files be remote only? - sort of, just need the db.tar.xz file to repo-add pkg
  - Clean older than one version (has to be on arch build system)
  - Signing / verifying key
  - Migrate to VPS
