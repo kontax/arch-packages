@@ -51,6 +51,7 @@ freerdp
 -- Web
 *vivaldi
 vivaldi-ffmpeg-codecs (aur)
+vivaldi-widevine (aur)
 pepper-flash
 x264
 *browserpass
