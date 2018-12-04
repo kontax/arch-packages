@@ -8,6 +8,7 @@ exa: ls replacement
 iw: wifi command
 fwupd: Firmware updater
 networkmanager-strongswan
+cifs-utils
 
 -- zsh
 *antigen-git: package manager (aur)
@@ -66,7 +67,7 @@ pamixer: pulseaudio command-line mixer
 *compton: Some sort of compositor
 *copyq: Clipboard manager
 *unclutter: Hides the mouse when not in use
-ranger: File manager (can view pics in kitty)
+*ranger: File manager (can view pics in kitty, still need mime etc.)
 python-pillow: Needed by ranger to view images (PIL)
 freerdp
 
