@@ -15,6 +15,7 @@ i3
  - drag-and-drop
  - DONE: flameshot - works fine
  - DONE: group wifi - causes processor to go crazy - set cache_timeout to default
+ - lock after time
 
 Snapper
  - DONE: Test it works from grub - only seems cmdline? - lightdm fails on startup
