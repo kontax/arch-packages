@@ -7,6 +7,7 @@ exa: ls replacement
 *rmtrash: trash to bin (aur)
 iw: wifi command
 fwupd: Firmware updater
+networkmanager-strongswan
 
 -- zsh
 *antigen-git: package manager (aur)
