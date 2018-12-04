@@ -13,7 +13,8 @@ i3
  - usbguard statusbar
  - DONE: vivaldi statusbar icon
  - drag-and-drop
- - flameshot
+ - DONE: flameshot - works fine
+ - group wifi - causes processor to go crazy
 
 Snapper
  - DONE: Test it works from grub - only seems cmdline? - lightdm fails on startup
