@@ -15,6 +15,9 @@ Steps
  - Install packages
  - Link/copy config files
  - Start services
+ - Add Strongswan config
+   - Trust & add certs (maybe request USB key?)
+   - Add to connman/networkmanager?
 
 
 set -e
