@@ -1,21 +1,36 @@
+-- BASE --
 -- Arch
 fwupdate
 cryptboot
 exa: ls replacement
 *ripgrep: fuzzy searcher - mapped in zsh to ctrl T/R
 *rmtrash: trash to bin (aur)
-alsa-utils: Sound config
-pulseaudio: Sound server
-pulseaudio-alsa: Sound server for alsa
-pamixer: pulseaudio command-line mixer
 iw: wifi command
 fwupd: Firmware updater
-*dunst: Notification service (need to figure out how to enable on boot)
-*aurutils-git: Package manager for aur
-*pacutils: Required by aurutils - is it needed otherwise?
-*s3cmd: Used to upload packages to amazon s3
-devtools: For developing packages
 
+-- zsh
+*antigen-git: package manager (aur)
+*prezto-git: config framework (aur)
+*fzy: Fuzzy text selector
+lscolors-git: Colours for ls (aur)
+
+-- Snapper
+snapper: Manage btrfs snapshots
+btrfs-progs: Some btrfs utilities I guess
+snap-pac: Hooks for pacman to automatically create snapshots after installs
+snap-pac-grub: Add grub entries every time a snapshot is made
+
+-- Access
+*pass
+*usbguard
+yubikey-manager
+yubico-pam
+yubikey-touch-detector (aur)
+libu2f-server (aur)
+pam_u2f (aur)
+
+
+-- DESKTOP --
 -- i3
 i3-gaps
 *i3status
@@ -37,7 +52,13 @@ python-tzlocal: For status bar clock
 lightdm: Login interface
 lightdm-gtk-greeter: Theme for lightdm
 *gsimplecal: Calendar for i3status
+*dunst: Notification service (need to figure out how to enable on boot)
 
+-- Multimedia
+alsa-utils: Sound config
+pulseaudio: Sound server
+pulseaudio-alsa: Sound server for alsa
+pamixer: pulseaudio command-line mixer
 
 -- Desktop
 *flameshot: screenshot tool
@@ -47,7 +68,6 @@ lightdm-gtk-greeter: Theme for lightdm
 *ranger: File manager (can view pics in kitty)
 freerdp
 
-
 -- Web
 *vivaldi
 vivaldi-ffmpeg-codecs (aur)
@@ -56,28 +76,14 @@ pepper-flash
 x264
 *browserpass
 
-
--- Other
-*pass
-*usbguard
-yubikey-manager
-yubico-pam
-yubikey-touch-detector (aur)
-libu2f-server (aur)
-pam_u2f (aur)
+-- DEVELOPMENT --
+-- General Dev
+python-virtualenv
 docker
 
--- zsh
-*antigen-git: package manager (aur)
-*prezto-git: config framework (aur)
-*fzy: Fuzzy text selector
-lscolors-git: Colours for ls (aur)
+-- Pkg Dev
+*aurutils-git: Package manager for aur
+*pacutils: Required by aurutils - is it needed otherwise?
+*s3cmd: Used to upload packages to amazon s3
+devtools: For developing packages
 
--- Snapper
-snapper: Manage btrfs snapshots
-btrfs-progs: Some btrfs utilities I guess
-snap-pac: Hooks for pacman to automatically create snapshots after installs
-snap-pac-grub: Add grub entries every time a snapshot is made
-
---  Dev
-python-virtualenv
