@@ -12,6 +12,8 @@ i3
  - DONE: dunst notification in taskbar doesn't seem to work - it does now for some reason
  - usbguard statusbar
  - vivaldi statusbar icon
+ - drag-and-drop
+ - flameshot
 
 Snapper
  - DONE: Test it works from grub - only seems cmdline? - lightdm fails on startup
