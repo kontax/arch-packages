@@ -75,3 +75,14 @@ systemctl_enable_start() {
     systemctl enable --now "$name"
   fi
 }
+
+if [[ "$(whoami)" == "root" ]]; then
+    echo "[*]"
+    echo "[*] Setting up Pacman"
+    echo "[*]"
+    copy "etc/pacman.conf"
+    copy "etc/pacman.d/couldinho-arch-aur"
+
+    echo "[*] Installing packages - choose distribution type"
+    echo "Desktop\nServer\nDeveloper" | fzy
+fi
