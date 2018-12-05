@@ -50,12 +50,17 @@ Servers
 
 Software Config
  - vim
+   - Use neovim instead?
+   - Figure out how to use as an IDE
+   - Plugins
  - git
    - auto push some repos (eg. pass)
-   - .netrc (can this be done in .gitconfig?)
+   - DONE: .netrc (can this be done in .gitconfig?)
  - gpg
    - Add key to keyserver
  - yubikey
+   - Set up pam for login/sudo
+   - Multiple keys for GPG
  - pia
  - pass
  - kitty
