@@ -12,8 +12,8 @@ User services
 
 
 Steps
- - Add custom repo to sources
- - Install packages
+ - DONE: Add custom repo to sources
+ - DONE: Install packages
  - Link/copy config files
  - Start services
  - Add Strongswan config
@@ -24,6 +24,8 @@ Steps
 
 set -e
 exec 2> >(while read line; do echo -e "\e[01;31m$line\e[0m"; done)
+
+COMP=""
 
 script_name="$(basename "$0")"
 dotfiles_dir="$(cd "$(dirname "$0")"; pwd)"
@@ -86,5 +88,15 @@ if [[ "$(whoami)" == "root" ]]; then
     copy "etc/pacman.d/couldinho-arch-aur"
 
     echo "[*] Installing packages - choose distribution type"
-    echo "Desktop\nServer\nDeveloper" | fzy
+    COMP=$(echo "Desktop\nServer\nDev\nRevEng" | fzy | tr '[:upper:]' '[:lower:]')
+    pacman -Sy --needed --noconfirm "couldinho-$COMP"
+
+    echo "[*] Copying config files"
+    copy "etc/conf.d/snapper"
+    copy "etc/snapper/configs/root"
+    copy "etc/snap-pac.conf"
+    copy "etc/lightdm/lightdm-gtk-greeter.conf"
+    copy "etc/lightdm/lightdm.conf"
+    copy "etc/NetworkManager/system-connections/home.coulson.ie.nmconnection"
+    copy "etc/profile.d/zz_custom.sh"
 fi
