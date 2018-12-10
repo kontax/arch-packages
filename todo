@@ -10,7 +10,7 @@ i3
  - DONE: icons for Vivaldi (and others) - this is in bin/i3-autorename-workspace (uses i3ipc)
  - gsimplecal theme (something to do with i3?)
  - DONE: dunst notification in taskbar doesn't seem to work - it does now for some reason
- - usbguard statusbar
+ - DONE: usbguard statusbar
  - DONE: vivaldi statusbar icon
  - drag-and-drop
  - DONE: flameshot - works fine
