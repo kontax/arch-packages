@@ -1,0 +1,76 @@
+pkgbase='couldinho'
+pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-server couldinho-devel couldinho-reveng)
+pkgver=1
+pkgrel=1
+pkgdesc="Packages for couldinho systems"
+arch=(x86_64)
+url="https://github.com/kontax/dotfiles"
+license=(MIT)
+groups=(coudinho)
+
+source=()
+sha256sums=()
+
+package_couldinho-base() {
+    install=couldinho-base.install
+
+    # base
+    depends=(
+        base                # expand and remote unnecessary
+        base-devel          # same here
+    )
+
+    # Boot and base progs
+    depends+=(
+        grub efibootmgr     # For EFI systems
+        cryptboot           # Encrypted partitions
+        intel-ucode         # Microcode patches
+        fwupd               # Firmware updater
+        terminus-font       # Better font for console
+        git                 # Move to devel?
+        cifs-utils          # Connect to shared drives
+    )
+    
+    # Base replacements
+    depends+=(
+        exa                 # ls replacement
+        ripgrep             # Fuzzy search
+        rmtrash             # Delete to bin
+        
+    )
+
+    # Networking + VPN
+    depends+=(
+        networkmanager              # Networking
+        networkmanager-strongswan   # IPSEC VPN
+        iw                          # Move to laptop?
+        wget openssh                # Download and connect
+    )
+
+    # Shell
+    depends+=(
+        zsh                 # Better shell
+        antigen-git         # Package manager
+        prezto-git          # Configuration framework
+        fzy                 # Fzy text selector
+        lscolors-git        # Colours for ls
+    )
+
+    # Filesystem
+    depends+=(
+        btrfs-progs         # BTRFS filesystem tools
+        snapper             # Snapshot manager
+        snap-pac            # Hooks for pacman for auto-snapshotting
+        snap-pac-grub       # Add grub entries for snapshots
+    )
+
+    # Access Control
+    depends+=(
+        pass                # Text-based password manager
+        usbguard            # USB security configuration
+        yubikey-manager     # Yubikey settings
+        yubico-pam          # PAM settings for yubikey
+        libu2f-server       # Libraries for U2F - login with yubikey
+        pam_u2f             # Login to system with U2F
+    )
+}
