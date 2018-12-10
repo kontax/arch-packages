@@ -16,6 +16,9 @@ post_upgrade() {
     # Move Strongswan config
     cp /etc/couldinho-ipsec.conf /etc/ipsec.conf
 
+    # Move USBGuard config
+    cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
+
     # Change certificate name to match (certs need to be present)
     sed -i "s/#HOSTNAME#/$(hostname)/g" /etc/NetworkManager/system-connections/home.coulson.ie.nmconnection
 
@@ -26,4 +29,5 @@ post_upgrade() {
     systemctl enable --now NetworkManager.service
     systemctl enable --now snapper-cleanup.timer
     systemctl enable --now strongswan.service
+    systemctl enable --now 
 }

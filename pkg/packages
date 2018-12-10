@@ -25,6 +25,7 @@ snap-pac-grub: Add grub entries every time a snapshot is made
 -- Access
 *pass
 *usbguard
+python-pydbus (aur): Used with py3status usbguard module
 yubikey-manager
 yubico-pam
 yubikey-touch-detector (aur)

@@ -160,6 +160,7 @@ package_couldinho-base() {
     )
 
     install -Dm 0644 zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
+    install -Dm 0600 usbguard-daemon.conf "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"
 }
 
 package_couldinho-desktop() {
@@ -204,6 +205,7 @@ package_couldinho-desktop() {
         python-tzlocal      # Used within the clock for the status bar
         gsimplecal          # GTK calendar for the status bar
         dunst               # Notification library
+        python-pydbus       # Python DBus connector (used by usbguard i3status module)
     )
 
     # Multimedia

@@ -5,6 +5,8 @@ System services
  - lightdm.service
  - snapper-cleanup.timer
  - strongswan.service
+ - usbguard.service
+ - usbguard-dbus.service
 
 User services
  - dunst.service
