@@ -4,6 +4,12 @@ post_install() {
 
 post_upgrade() {
 
+    # Add encryption to kernel
+    cp /etc/couldinho-mkinitcpio.conf /etc/mkinitcpio.conf
+
+    # Use encrypted root system via grub
+    cp /etc/default/couldinho-grub /etc/default/grub
+
     # Move pacman repo details and settings
     cp /etc/couldinho-pacman.conf /etc/pacman.conf
 
@@ -17,6 +23,7 @@ post_upgrade() {
     cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
 
     # Start services
+    systemctl enable --now NetworkManager.service
     systemctl enable --now snapper-cleanup.timer
     systemctl enable --now strongswan.service
 }

@@ -91,6 +91,8 @@ package_couldinho-base() {
 
     install -Dm 0644 couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
     install -Dm 0644 pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
+    install -Dm 0644 grub "$pkgdir/etc/default/couldinho-grub"
+    install -Dm 0644 mkinitcpio.conf "$pkgdir/etc/couldinho-mkinitcpio.conf"
 
     # Boot and base progs
     depends+=(
