@@ -84,7 +84,6 @@ mount -o noatime,nodiratime,discard,compress=lzo,subvol=snapshots /dev/mapper/lu
 # Set up encrypted key for booting
 dd bs=512 count=4 if=/dev/urandom of=/mnt/crypto_keyfile.bin
 chmod 000 /mnt/crypto_keyfile.bin
-chmod 600 /mnt/boot/initramfs-linux*
 cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
 
 ### Install and configure the basic system ###
@@ -111,6 +110,7 @@ echo "en_IE.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 echo "LC_MONETARY=en_IE.UTF-8" >> /mnt/etc/locale.conf
 ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
+chmod 600 /mnt/boot/initramfs-linux*
 
 arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
 arch-chroot /mnt chsh -s /usr/bin/zsh
