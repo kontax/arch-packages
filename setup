@@ -25,8 +25,6 @@ Steps
 set -e
 exec 2> >(while read line; do echo -e "\e[01;31m$line\e[0m"; done)
 
-COMP=""
-
 script_name="$(basename "$0")"
 dotfiles_dir="$(cd "$(dirname "$0")"; pwd)"
 cd "$dotfiles_dir"
@@ -80,6 +78,8 @@ systemctl_enable_start() {
   fi
 }
 
+COMP=$(echo "Desktop\nServer\nDev\nRevEng" | fzy | tr '[:upper:]' '[:lower:]')
+
 if [[ "$(whoami)" == "root" ]]; then
     echo "[*]"
     echo "[*] Setting up Pacman"
@@ -87,11 +87,12 @@ if [[ "$(whoami)" == "root" ]]; then
     copy "etc/pacman.conf"
     copy "etc/pacman.d/couldinho-arch-aur"
 
-    echo "[*] Installing packages - choose distribution type"
-    COMP=$(echo "Desktop\nServer\nDev\nRevEng" | fzy | tr '[:upper:]' '[:lower:]')
+    echo "[*] Installing packages - choose distribution type:"
     pacman -Sy --needed --noconfirm "couldinho-$COMP"
 
+    echo "[*]"
     echo "[*] Copying config files"
+    echo "[*]"
     copy "etc/conf.d/snapper"
     copy "etc/snapper/configs/root"
     copy "etc/snap-pac.conf"

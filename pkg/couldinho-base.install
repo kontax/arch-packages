@@ -1,0 +1,22 @@
+post_install() {
+    post_upgrade
+}
+
+post_upgrade() {
+
+    # Move pacman repo details and settings
+    cp /etc/couldinho-pacman.conf /etc/pacman.conf
+
+    # Move Strongswan config
+    cp /etc/couldinho-ipsec.conf /etc/ipsec.conf
+
+    # Change certificate name to match (certs need to be present)
+    sed -i "s/#HOSTNAME#/$(hostname)/g" /etc/NetworkManager/system-connections/home.coulson.ie.nmconnection
+
+    # Move snapper config
+    cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
+
+    # Start services
+    systemctl enable --now snapper-cleanup.timer
+    systemctl enable --now strongswan.service
+}

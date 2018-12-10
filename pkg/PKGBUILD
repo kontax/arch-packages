@@ -20,6 +20,9 @@ package_couldinho-base() {
         base-devel          # same here
     )
 
+    install -Dm 0644 couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
+    install -Dm 0644 pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
+
     # Boot and base progs
     depends+=(
         grub efibootmgr     # For EFI systems
@@ -46,6 +49,10 @@ package_couldinho-base() {
         iw                          # Move to laptop?
         wget openssh                # Download and connect
     )
+    
+    install -Dm 0644 ipsec.conf "$pkgdir/etc/couldinho-ipsec.conf"
+    install -Dm 0600 home.coulson.ie.nmconnection \
+                     "$pkgdir/etc/NetworkManager/system-connections/home.coulson.ie.nmconnection"
 
     # Shell
     depends+=(
@@ -64,6 +71,10 @@ package_couldinho-base() {
         snap-pac-grub       # Add grub entries for snapshots
     )
 
+    install -Dm 0644 snapper "$pkgdir/etc/conf.d/couldinho-snapper"
+    install -Dm 0644 root "$pkgdir/etc/snapper/configs/root"
+    install -Dm 0644 snap-pac.conf "$pkgdir/etc/snap-pac.conf" # This may need to be moved to install
+
     # Access Control
     depends+=(
         pass                # Text-based password manager
@@ -72,5 +83,82 @@ package_couldinho-base() {
         yubico-pam          # PAM settings for yubikey
         libu2f-server       # Libraries for U2F - login with yubikey
         pam_u2f             # Login to system with U2F
+    )
+
+    install -Dm zz_profile.sh "$pkgdir/etc/profile.d/zz_profile.sh"
+}
+
+package_couldinho-desktop() {
+    install=couldinho-desktop.install
+
+    # base
+    depends+=(
+        couldinho-base
+    )
+
+    # xorg
+    depends=(
+        xorg-server         # X server
+        xorg-xfontsel       # Selecting X11 fonts easily
+        xorg-xinit          # Start up X and various WM's
+        xorg-xprop          # Display X properties
+        xorg-xrandr         # Resize & Rotate
+    )
+
+    # i3
+    depends+=(
+        i3-gaps             # i3 window manager with gaps between windows
+        i3status            # Status bar for i3
+        py3status           # Manage i3status through python
+        i3ipc-python        # IPC for i3 via python
+    )
+
+    # Login manager
+    depends+=(
+        lightdm             # Login manager
+        lightdm-gtk-greeter # Theme for login manager
+    )
+
+    # Further i3 packages
+    depends+=(
+        rofi                # dmenu replacement
+        rofi-calc           # Wrapper for qalculate
+        libqalqulate        # More powerful calculator
+        rofi-dmenu          # Wrapper for things depending on dmenu binary
+        ttf-inconsolata     # Font for terminal and status etc.
+        otf-font-awesome    # Font with icons
+        python-tzlocal      # Used within the clock for the status bar
+        gsimplecal          # GTK calendar for the status bar
+        dunst               # Notification library
+    )
+
+    # Multimedia
+    depends+=(
+        alsa-utils          # Sound support
+        pulseaudio          # Sound server
+        pulseaudio-alsa     # ALSA config for pulseaudio
+        pamixer             # Command line mixer
+    )
+
+    # Terminal + desktop tools
+    depends+=(
+        kitty               # GPU enhanced terminal emulator
+        flameshot           # Screenshot tool
+        compton             # X compositor
+        copyq               # Copy/Paste utility
+        unclutter           # Hide mouse in i3 when not in use
+        ranger              # File manager from terminal (vim keybindings)
+        python-pillow       # Used to view pictures within ranger
+        freerdp             # Remote desktop client
+    )
+
+    # Web
+    depends+=(
+        vivaldi                 # Browser
+        vivaldi-ffmpeg-codecs   # Browser video codecs
+        vivaldi-widevine        # Stream DRM support for vivaldi
+        pepper-flash            # Flash player
+        x265                    # Video compression
+        browserpass             # Browser extenson for pass
     )
 }
