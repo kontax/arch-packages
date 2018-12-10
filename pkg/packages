@@ -10,11 +10,12 @@ fwupd: Firmware updater
 networkmanager-strongswan
 cifs-utils
 
--- zsh
+-- console
 *antigen-git: package manager (aur)
 *prezto-git: config framework (aur)
 *fzy: Fuzzy text selector
 lscolors-git: Colours for ls (aur)
+pydf: Colourised df command
 
 -- Snapper
 snapper: Manage btrfs snapshots

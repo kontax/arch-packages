@@ -135,6 +135,7 @@ package_couldinho-base() {
         prezto-git          # Configuration framework
         fzy                 # Fzy text selector
         lscolors-git        # Colours for ls
+        pydf                # Colourised version of df
     )
 
     # Filesystem
