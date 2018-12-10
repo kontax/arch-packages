@@ -81,6 +81,12 @@ mount -o noatime,nodiratime,discard,compress=lzo,subvol=logs /dev/mapper/luks /m
 mount -o noatime,nodiratime,discard,compress=lzo,subvol=tmp /dev/mapper/luks /mnt/var/tmp
 mount -o noatime,nodiratime,discard,compress=lzo,subvol=snapshots /dev/mapper/luks /mnt/.snapshots
 
+# Set up encrypted key for booting
+dd bs=512 count=4 if=/dev/urandom of=/mnt/crypto_keyfile.bin
+chmod 000 /mnt/crypto_keyfile.bin
+chmod 600 /mnt/boot/initramfs-linux*
+cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
+
 ### Install and configure the basic system ###
 cat >>/etc/pacman.d/couldinho-arch-aur <<EOF
 [options]
@@ -99,35 +105,16 @@ EOF
 pacstrap /mnt couldinho-desktop
 genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
-
-cat >>/mnt/etc/pacman.d/couldinho-arch-aur <<EOF
-[options]
-CacheDir = /var/cache/pacman/pkg
-CacheDir = /var/cache/pacman/couldinho-arch-aur
-
-[couldinho-arch-aur]
-Server = $REPO_URL
-SigLevel = Optional TrustAll
-EOF
-
-cat >>/mnt/etc/pacman.conf <<EOF
-Include = /etc/pacman.d/couldinho-arch-aur
-EOF
-
-echo "en_US.UTF-8" >> /mnt/etc/locale.gen
-echo "en_IE.UTF-8" >> /mnt/etc/locale.gen
+echo "FONT=ter-112n" > /etc/vconsole.conf
+echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
+echo "en_IE.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 echo "LC_MONETARY=en_IE.UTF-8" >> /mnt/etc/locale.conf
+ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 
 arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
 arch-chroot /mnt chsh -s /usr/bin/zsh
 arch-chroot /mnt locale-gen
-
-# Set up encrypted boot process
-dd bs=512 count=4 if=/dev/urandom of=/mnt/crypto_keyfile.bin
-chmod 000 /mnt/crypto_keyfile.bin
-chmod 600 /mnt/boot/initramfs-linux*
-cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
 
 arch-chroot /mnt mkinitcpio -p linux
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
