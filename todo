@@ -16,7 +16,7 @@ i3
  - DONE: flameshot - works fine
  - DONE: group wifi - causes processor to go crazy - set cache_timeout to default
  - lock after time
- - get is_online script working
+ - DONE: get is_online script working - used bash if
 
 Snapper
  - DONE: Test it works from grub - only seems cmdline? - lightdm fails on startup
