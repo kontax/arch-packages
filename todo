@@ -25,7 +25,8 @@ Snapper
 btrfs
 
 Security
- - Keeping config files secure
+ - DONE: Keeping config files secure - git-secret seems to be fine
+ - Implement git-secret
 
 Marks
 
