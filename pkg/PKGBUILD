@@ -11,14 +11,16 @@ groups=(coudinho)
 source=(
     couldinho-arch-aur
     pacman.conf
+    grub
+    mkinitcpio.conf
     ipsec.conf
     home.coulson.ie.nmconnection
     snapper
     root
     snap-pac.conf
-    zz_profile.sh
+    zz_custom.sh
 )
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -156,7 +158,7 @@ package_couldinho-base() {
         pam_u2f             # Login to system with U2F
     )
 
-    install -Dm zz_profile.sh "$pkgdir/etc/profile.d/zz_profile.sh"
+    install -Dm 0644 zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
 }
 
 package_couldinho-desktop() {
@@ -194,7 +196,7 @@ package_couldinho-desktop() {
     depends+=(
         rofi                # dmenu replacement
         rofi-calc           # Wrapper for qalculate
-        libqalqulate        # More powerful calculator
+        libqalculate        # More powerful calculator
         rofi-dmenu          # Wrapper for things depending on dmenu binary
         ttf-inconsolata     # Font for terminal and status etc.
         otf-font-awesome    # Font with icons
