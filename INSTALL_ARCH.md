@@ -92,6 +92,7 @@
                     zsh git openssh wget      # Just enough to create a user and clone dotfiles
                     terminus-font             # To make console font readable on HiDPI screens
                     networkmanager            # Because wired connection may not work after installation
+                    fzy                       # Used to select package installs
     ```
 
 1.  Generate fstab entries:
