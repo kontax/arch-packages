@@ -71,3 +71,4 @@ Software Config
    - Colours for SSH 
 
 Setup file
+ - Replace all instances of username in config files with placeholder - sed -i in install script
