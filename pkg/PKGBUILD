@@ -8,16 +8,85 @@ url="https://github.com/kontax/dotfiles"
 license=(MIT)
 groups=(coudinho)
 
-source=()
-sha256sums=()
+source=(
+    couldinho-arch-aur
+    pacman.conf
+    ipsec.conf
+    home.coulson.ie.nmconnection
+    snapper
+    root
+    snap-pac.conf
+    zz_profile.sh
+)
+sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
 package_couldinho-base() {
     install=couldinho-base.install
 
     # base
     depends=(
-        base                # expand and remote unnecessary
-        base-devel          # same here
+        bash
+        bzip2
+        coreutils
+        device-mapper
+        dhcpcd
+        diffutils
+        e2fsprogs
+        file
+        filesystem
+        findutils
+        gawk
+        gcc-libs
+        gettext
+        glibc
+        grep
+        gzip
+        inetutils
+        iproute2
+        iputils
+        less
+        licenses
+        linux
+        linux-firmware
+        logrotate
+        man-db
+        man-pages
+        mdadm
+        netctl
+        pacman
+        pciutils
+        perl
+        procps-ng
+        psmisc
+        s-nail
+        sed
+        shadow
+        sysfsutils
+        systemd-sysvcompat
+        tar
+        texinfo
+        usbutils
+        util-linux
+        which
+    )
+
+    # base-devel
+    depends+=(
+        autoconf
+        automake
+        binutils
+        bison
+        fakeroot
+        flex
+        gcc
+        groff
+        libtool
+        m4
+        make
+        patch
+        pkgconf
+        sudo
+        systemd
     )
 
     install -Dm 0644 couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
@@ -92,12 +161,12 @@ package_couldinho-desktop() {
     install=couldinho-desktop.install
 
     # base
-    depends+=(
+    depends=(
         couldinho-base
     )
 
     # xorg
-    depends=(
+    depends+=(
         xorg-server         # X server
         xorg-xfontsel       # Selecting X11 fonts easily
         xorg-xinit          # Start up X and various WM's
