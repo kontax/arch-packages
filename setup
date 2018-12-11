@@ -1,27 +1,27 @@
 #!/usr/bin/zsh
 
-System services
- - pcscd.service
- - lightdm.service
- - snapper-cleanup.timer
- - strongswan.service
- - usbguard.service
- - usbguard-dbus.service
-
-User services
- - dunst.service
- - yubikey-touch-detector.service
-
-
-Steps
- - DONE: Add custom repo to sources
- - DONE: Install packages
- - Link/copy config files
- - Start services
- - Add Strongswan config
-   - Trust & add certs (maybe request USB key?)
-   - Add to connman/networkmanager?
-   - change perms 
+#System services
+# - pcscd.service
+# - lightdm.service
+# - snapper-cleanup.timer
+# - strongswan.service
+# - usbguard.service
+# - usbguard-dbus.service
+#
+#User services
+# - dunst.service
+# - yubikey-touch-detector.service
+#
+#
+#Steps
+# - DONE: Add custom repo to sources
+# - DONE: Install packages
+# - Link/copy config files
+# - Start services
+# - Add Strongswan config
+#   - Trust & add certs (maybe request USB key?)
+#   - Add to connman/networkmanager?
+#   - change perms 
 
 
 set -e
@@ -81,5 +81,7 @@ systemctl_enable_start() {
 }
 
 if [ "$(whoami)" != "root" ]; then
-    link 
+    cd stow
+    stow -vn -t $HOME desktop
+    cd ..
 fi
