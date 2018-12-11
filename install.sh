@@ -104,7 +104,7 @@ EOF
 pacstrap /mnt couldinho-desktop
 genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
-echo "FONT=ter-112n" > /etc/vconsole.conf
+echo "FONT=ter-112n" > /mnt/etc/vconsole.conf
 echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 echo "en_IE.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
@@ -117,8 +117,8 @@ arch-chroot /mnt chsh -s /usr/bin/zsh
 arch-chroot /mnt locale-gen
 
 arch-chroot /mnt mkinitcpio -p linux
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 arch-chroot /mnt grub-install
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
