@@ -23,6 +23,7 @@ Snapper
  - DONE: Figure out a rollback - requires a reboot, undochanges is the way forwards
 
 btrfs
+ - Automate filesystem checks
 
 Security
  - DONE: Keeping config files secure - git-secret seems to be fine
@@ -41,7 +42,7 @@ aur
  - DONE: Set up server
  - DONE: Figure out building etc
  - DONE: Can files be remote only? - sort of, just need the db.tar.xz file to repo-add pkg
- - DONE: Clean older than one version = pacman -Sc on build server
+ - Clean older than one version = pacman -Sc on build server (doesn't work)
  - Signing / verifying key
  - Migrate to VPS
  - Build / update server (arch only?)
@@ -73,3 +74,5 @@ Software Config
 
 Setup file
  - Replace all instances of username in config files with placeholder - sed -i in install script
+ - Differentiate between laptop/desktop
+ - Consider how to handle HiDPI
