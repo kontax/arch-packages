@@ -23,6 +23,13 @@ password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || e
 clear
 [[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
 
+passphrase=$(dialog --stdout --passwordbox "Enter passphrase for encrypted volume" 0 0) || exit 1
+clear
+: ${passphrase:?"passphrase cannot be empty"}
+passphrase2=$(dialog --stdout --passwordbox "Enter passphrase for encrypted volume again" 0 0) || exit 1
+clear
+[[ "$passphrase" == "$pasphrase2" ]] || ( echo "Passphrases did not match"; exit 1; )
+
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
 clear
@@ -55,8 +62,8 @@ wipefs "${part_root}"
 
 mkfs.vfat -F32 "${part_boot}"
 mkswap "${part_swap}"
-cryptsetup luksFormat "${part_root}"
-cryptsetup luksOpen "${part_root}" luks
+echo -n ${passphrase} | cryptsetup luksFormat "${part_root}"
+echo -n ${passphrase} | cryptsetup luksOpen "${part_root}" luks
 mkfs.btrfs -L btrfs /dev/mapper/luks
 
 swapon "${part_swap}"
@@ -84,7 +91,7 @@ mount -o noatime,nodiratime,discard,compress=lzo,subvol=snapshots /dev/mapper/lu
 # Set up encrypted key for booting
 dd bs=512 count=4 if=/dev/urandom of=/mnt/crypto_keyfile.bin
 chmod 000 /mnt/crypto_keyfile.bin
-cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
+echo -n ${passphrase} | cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
 
 ### Install and configure the basic system ###
 cat >>/etc/pacman.d/couldinho-arch-aur <<EOF
