@@ -113,7 +113,7 @@ echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 echo "LC_MONETARY=en_IE.UTF-8" >> /mnt/etc/locale.conf
 ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 chmod 600 /mnt/boot/initramfs-linux*
-sed -i "s/#PART_BOOT#/${part_boot}/g" /mnt/etc/default/grub
+sed -i "s|#PART_BOOT#|${part_boot}|g" /mnt/etc/default/grub
 
 arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
 arch-chroot /mnt chsh -s /usr/bin/zsh
