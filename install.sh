@@ -28,7 +28,7 @@ clear
 : ${passphrase:?"passphrase cannot be empty"}
 passphrase2=$(dialog --stdout --passwordbox "Enter passphrase for encrypted volume again" 0 0) || exit 1
 clear
-[[ "$passphrase" == "$pasphrase2" ]] || ( echo "Passphrases did not match"; exit 1; )
+[[ "$passphrase" == "$passphrase2" ]] || ( echo "Passphrases did not match"; exit 1; )
 
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
