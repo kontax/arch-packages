@@ -41,6 +41,7 @@ exec 2> >(tee "stderr.log")
 timedatectl set-ntp true
 
 ### Setup the disk and partitions ###
+echo "[*] Setting up partitions"
 swap_size=$(free --mebi | awk '/Mem:/ {print $2}')
 swap_end=$(( $swap_size + 129 + 1 ))MiB
 
@@ -88,12 +89,14 @@ mount -o noatime,nodiratime,discard,compress=lzo,subvol=logs /dev/mapper/luks /m
 mount -o noatime,nodiratime,discard,compress=lzo,subvol=tmp /dev/mapper/luks /mnt/var/tmp
 mount -o noatime,nodiratime,discard,compress=lzo,subvol=snapshots /dev/mapper/luks /mnt/.snapshots
 
-# Set up encrypted key for booting
+### Set up encrypted key for booting ###
+echo "[*] Creating an encrypted key for booting"
 dd bs=512 count=4 if=/dev/urandom of=/mnt/crypto_keyfile.bin
 chmod 000 /mnt/crypto_keyfile.bin
 echo -n ${passphrase} | cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
 
 ### Install and configure the basic system ###
+echo "[*] Installing packages"
 cat >>/etc/pacman.d/couldinho-arch-aur <<EOF
 [options]
 CacheDir = /var/cache/pacman/pkg
@@ -110,7 +113,8 @@ EOF
 
 pacstrap /mnt couldinho-desktop
 
-# Generate config files
+### Generate config files ###
+echo "[*] Generating base config files"
 genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
 echo "FONT=ter-112n" > /mnt/etc/vconsole.conf
@@ -122,12 +126,16 @@ ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 chmod 600 /mnt/boot/initramfs-linux*
 sed -i "s|#PART_ROOT#|${part_root}|g" /mnt/etc/default/grub
 
+echo "[*] Creating user and shell"
 arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
 arch-chroot /mnt chsh -s /usr/bin/zsh
 arch-chroot /mnt locale-gen
 
+echo "[*] Installing grub"
 arch-chroot /mnt grub-install
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
+echo "[*] DONE"
+
