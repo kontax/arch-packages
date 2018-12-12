@@ -108,7 +108,7 @@ cat >>/etc/pacman.conf <<EOF
 Include = /etc/pacman.d/couldinho-arch-aur
 EOF
 
-pacstrap -i /mnt couldinho-desktop
+pacstrap /mnt couldinho-desktop
 
 # Generate config files
 genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
