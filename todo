@@ -71,6 +71,11 @@ Software Config
    - sort out keyboard shortcuts (especially that ssh/rdp one)
  - zsh
    - Colours for SSH 
+ - dunst
+   - size and config
+ - ranger
+   - shortcuts
+   - dmenu open
 
 Setup file
  - Replace all instances of username in config files with placeholder - sed -i in install script
