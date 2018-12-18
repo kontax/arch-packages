@@ -38,6 +38,8 @@ clear
 exec 1> >(tee "stdout.log")
 exec 2> >(tee "stderr.log")
 
+pacman -Sy --noconfirm --needed git
+
 timedatectl set-ntp true
 
 ### Setup the disk and partitions ###
