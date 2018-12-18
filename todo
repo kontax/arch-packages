@@ -65,6 +65,7 @@ Software Config
  - yubikey
    - Set up pam for login/sudo
    - Multiple keys for GPG
+   - Install keys within install script
  - pia
  - pass
  - kitty
