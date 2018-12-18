@@ -135,7 +135,11 @@ echo "[*] Installing grub"
 arch-chroot /mnt grub-install
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
+echo "[*] Copying dotfiles to home folder"
+DOTFILES="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+cp -r $DOTFILES /mnt/home/$user/
+
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
-echo "[*] DONE"
+echo "[*] DONE - Install setup from HOME/dotfiles"
 
