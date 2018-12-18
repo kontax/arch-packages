@@ -76,6 +76,8 @@ Software Config
  - ranger
    - shortcuts
    - dmenu open
+ - zathura
+   - Open in a new window/workspace
 
 Setup file
  - Replace all instances of username in config files with placeholder - sed -i in install script
