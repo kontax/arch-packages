@@ -2,7 +2,7 @@ GRUB_DEFAULT=0
 GRUB_TIMEOUT=5
 GRUB_DISTRIBUTOR="Arch"
 GRUB_CMDLINE_LINUX_DEFAULT="quiet"
-GRUB_CMDLINE_LINUX="cryptdevice=/dev/sda2:luks:allow-discards"
+GRUB_CMDLINE_LINUX="cryptdevice=#PART_ROOT#:luks:allow-discards"
 GRUB_PRELOAD_MODULES="part_gpt part_msdos"
 GRUB_ENABLE_CRYPTODISK=y
 GRUB_TERMINAL_INPUT=console

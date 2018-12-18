@@ -23,6 +23,13 @@ password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || e
 clear
 [[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
 
+passphrase=$(dialog --stdout --passwordbox "Enter passphrase for encrypted volume" 0 0) || exit 1
+clear
+: ${passphrase:?"passphrase cannot be empty"}
+passphrase2=$(dialog --stdout --passwordbox "Enter passphrase for encrypted volume again" 0 0) || exit 1
+clear
+[[ "$passphrase" == "$passphrase2" ]] || ( echo "Passphrases did not match"; exit 1; )
+
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
 clear
@@ -34,6 +41,7 @@ exec 2> >(tee "stderr.log")
 timedatectl set-ntp true
 
 ### Setup the disk and partitions ###
+echo "[*] Setting up partitions"
 swap_size=$(free --mebi | awk '/Mem:/ {print $2}')
 swap_end=$(( $swap_size + 129 + 1 ))MiB
 
@@ -55,8 +63,8 @@ wipefs "${part_root}"
 
 mkfs.vfat -F32 "${part_boot}"
 mkswap "${part_swap}"
-cryptsetup luksFormat "${part_root}"
-cryptsetup luksOpen "${part_root}" luks
+echo -n ${passphrase} | cryptsetup luksFormat "${part_root}"
+echo -n ${passphrase} | cryptsetup luksOpen "${part_root}" luks
 mkfs.btrfs -L btrfs /dev/mapper/luks
 
 swapon "${part_swap}"
@@ -81,12 +89,14 @@ mount -o noatime,nodiratime,discard,compress=lzo,subvol=logs /dev/mapper/luks /m
 mount -o noatime,nodiratime,discard,compress=lzo,subvol=tmp /dev/mapper/luks /mnt/var/tmp
 mount -o noatime,nodiratime,discard,compress=lzo,subvol=snapshots /dev/mapper/luks /mnt/.snapshots
 
-# Set up encrypted key for booting
+### Set up encrypted key for booting ###
+echo "[*] Creating an encrypted key for booting"
 dd bs=512 count=4 if=/dev/urandom of=/mnt/crypto_keyfile.bin
 chmod 000 /mnt/crypto_keyfile.bin
-cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
+echo -n ${passphrase} | cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
 
 ### Install and configure the basic system ###
+echo "[*] Installing packages"
 cat >>/etc/pacman.d/couldinho-arch-aur <<EOF
 [options]
 CacheDir = /var/cache/pacman/pkg
@@ -102,23 +112,30 @@ Include = /etc/pacman.d/couldinho-arch-aur
 EOF
 
 pacstrap /mnt couldinho-desktop
+
+### Generate config files ###
+echo "[*] Generating base config files"
 genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
-echo "FONT=ter-112n" > /etc/vconsole.conf
+echo "FONT=ter-112n" > /mnt/etc/vconsole.conf
 echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 echo "en_IE.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 echo "LC_MONETARY=en_IE.UTF-8" >> /mnt/etc/locale.conf
 ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 chmod 600 /mnt/boot/initramfs-linux*
+sed -i "s|#PART_ROOT#|${part_root}|g" /mnt/etc/default/grub
 
+echo "[*] Creating user and shell"
 arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
 arch-chroot /mnt chsh -s /usr/bin/zsh
 arch-chroot /mnt locale-gen
 
-arch-chroot /mnt mkinitcpio -p linux
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+echo "[*] Installing grub"
 arch-chroot /mnt grub-install
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
+echo "[*] DONE"
+

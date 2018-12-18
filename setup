@@ -1,27 +1,27 @@
 #!/usr/bin/zsh
 
-System services
- - pcscd.service
- - lightdm.service
- - snapper-cleanup.timer
- - strongswan.service
- - usbguard.service
- - usbguard-dbus.service
-
-User services
- - dunst.service
- - yubikey-touch-detector.service
-
-
-Steps
- - DONE: Add custom repo to sources
- - DONE: Install packages
- - Link/copy config files
- - Start services
- - Add Strongswan config
-   - Trust & add certs (maybe request USB key?)
-   - Add to connman/networkmanager?
-   - change perms 
+#System services
+# - pcscd.service
+# - lightdm.service
+# - snapper-cleanup.timer
+# - strongswan.service
+# - usbguard.service
+# - usbguard-dbus.service
+#
+#User services
+# - dunst.service
+# - yubikey-touch-detector.service
+#
+#
+#Steps
+# - DONE: Add custom repo to sources
+# - DONE: Install packages
+# - Link/copy config files
+# - Start services
+# - Add Strongswan config
+#   - Trust & add certs (maybe request USB key?)
+#   - Add to connman/networkmanager?
+#   - change perms 
 
 
 set -e
@@ -80,26 +80,8 @@ systemctl_enable_start() {
   fi
 }
 
-COMP=$(echo "Desktop\nServer\nDev\nRevEng" | fzy | tr '[:upper:]' '[:lower:]')
-
-if [[ "$(whoami)" == "root" ]]; then
-    echo "[*]"
-    echo "[*] Setting up Pacman"
-    echo "[*]"
-    copy "etc/pacman.conf"
-    copy "etc/pacman.d/couldinho-arch-aur"
-
-    echo "[*] Installing packages - choose distribution type:"
-    pacman -Sy --needed --noconfirm "couldinho-$COMP"
-
-    echo "[*]"
-    echo "[*] Copying config files"
-    echo "[*]"
-    copy "etc/conf.d/snapper"
-    copy "etc/snapper/configs/root"
-    copy "etc/snap-pac.conf"
-    copy "etc/lightdm/lightdm-gtk-greeter.conf"
-    copy "etc/lightdm/lightdm.conf"
-    copy "etc/NetworkManager/system-connections/home.coulson.ie.nmconnection"
-    copy "etc/profile.d/zz_custom.sh"
+if [ "$(whoami)" != "root" ]; then
+    cd stow
+    stow -vn -t $HOME desktop
+    cd ..
 fi
