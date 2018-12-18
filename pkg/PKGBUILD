@@ -106,6 +106,7 @@ package_couldinho-base() {
         terminus-font       # Better font for console
         git                 # Move to devel?
         cifs-utils          # Connect to shared drives
+        stow                # Link dotfiles to home dir
     )
     
     # Base replacements

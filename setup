@@ -63,6 +63,10 @@ if [ "$(whoami)" != "root" ]; then
         echo "Choosing desktop"
         stow -v -t $HOME base
         stow -v -t $HOME desktop
+
+        systemctl_enable_start "user" "yubikey-touch-detector.service"
+        systemctl_enable_start "user" "dunst.service"
+
     fi
     cd ..
 fi
