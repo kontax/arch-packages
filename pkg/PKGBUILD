@@ -149,6 +149,7 @@ package_couldinho-base() {
     install -Dm 0644 snapper "$pkgdir/etc/conf.d/couldinho-snapper"
     install -Dm 0644 root "$pkgdir/etc/snapper/configs/root"
     install -Dm 0644 snap-pac.conf "$pkgdir/etc/snap-pac.conf" # This may need to be moved to install
+    install -Dm 0644 grub-btrfs-config "$pkgdir/etc/default/grub-btrfs/couldinho-config"
 
     # Access Control
     depends+=(

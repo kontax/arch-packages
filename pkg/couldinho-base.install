@@ -22,6 +22,9 @@ post_upgrade() {
     # Change certificate name to match (certs need to be present)
     sed -i "s/#HOSTNAME#/$(hostname)/g" /etc/NetworkManager/system-connections/home.coulson.ie.nmconnection
 
+    # Settings for BTRFS in grub
+    cp /etc/default/grub-btrfs/couldinho-config /etc/default/grub-btrfs/config
+
     # Move snapper config
     cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
 
