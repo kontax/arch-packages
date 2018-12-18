@@ -1,5 +1,5 @@
 pkgbase='couldinho'
-pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-server couldinho-devel couldinho-reveng)
+pkgname=(couldinho-base couldinho-desktop)
 pkgver=1
 pkgrel=1
 pkgdesc="Packages for couldinho systems"
