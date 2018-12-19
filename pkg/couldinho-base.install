@@ -4,6 +4,9 @@ post_install() {
 
 post_upgrade() {
 
+    # Sudoers file
+    cp /etc/couldinho-sudoers /etc/sudoers
+
     # Add encryption to kernel
     cp /etc/couldinho-mkinitcpio.conf /etc/mkinitcpio.conf
 
@@ -32,5 +35,6 @@ post_upgrade() {
     systemctl enable --now NetworkManager.service
     systemctl enable --now snapper-cleanup.timer
     systemctl enable --now strongswan.service
-    systemctl enable --now 
+    systemctl enable --now usbguard.service
+    systemctl enable --now usbguard-dbus.service
 }

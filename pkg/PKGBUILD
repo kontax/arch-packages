@@ -96,6 +96,7 @@ package_couldinho-base() {
     install -Dm 0644 pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
     install -Dm 0644 grub "$pkgdir/etc/default/couldinho-grub"
     install -Dm 0644 mkinitcpio.conf "$pkgdir/etc/couldinho-mkinitcpio.conf"
+    install -Dm 0400 sudoers "$pkgdir/etc/couldinho-sudoers"
 
     # Boot and base progs
     depends+=(
