@@ -19,6 +19,7 @@ source=(
     snapper
     root
     snap-pac.conf
+    grub-btrfs-config
     zz_custom.sh
 )
 sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
