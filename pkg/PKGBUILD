@@ -13,6 +13,7 @@ source=(
     pacman.conf
     grub
     mkinitcpio.conf
+    sudoers
     ipsec.conf
     home.coulson.ie.nmconnection
     snapper
@@ -20,7 +21,7 @@ source=(
     snap-pac.conf
     zz_custom.sh
 )
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
 package_couldinho-base() {
     install=couldinho-base.install
