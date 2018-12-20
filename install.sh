@@ -139,6 +139,7 @@ arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "[*] Cloning dotfiles to home folder"
 git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
+chown -R $user:users /mnt/home/$user/dotfiles
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
