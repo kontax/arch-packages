@@ -32,9 +32,9 @@ post_upgrade() {
     cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
 
     # Start services
-    systemctl enable --now NetworkManager.service
-    systemctl enable --now snapper-cleanup.timer
-    systemctl enable --now strongswan.service
-    systemctl enable --now usbguard.service
-    systemctl enable --now usbguard-dbus.service
+    systemctl enable NetworkManager.service
+    systemctl enable snapper-cleanup.timer
+    systemctl enable strongswan.service
+    systemctl enable usbguard.service
+    systemctl enable usbguard-dbus.service
 }
