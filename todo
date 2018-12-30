@@ -47,6 +47,7 @@ aur
  - Migrate to VPS
  - Build / update server (arch only?)
  - Pacman hook to add pkg to pkglist + group on install
+ - Auto update
 
 Servers
  - packages
@@ -79,6 +80,8 @@ Software Config
    - dmenu open
  - zathura
    - Open in a new window/workspace
+ - usbguard
+   - Auto-allow inbuilt devices
 
 Setup file
  - Replace all instances of username in config files with placeholder - sed -i in install script
