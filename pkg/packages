@@ -32,6 +32,7 @@ yubico-pam
 yubikey-touch-detector (aur)
 libu2f-server (aur)
 pam_u2f (aur)
+git-secret (aur): Helper tool for storing private files in git repo
 
 
 -- DESKTOP --

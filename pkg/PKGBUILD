@@ -164,6 +164,7 @@ package_couldinho-base() {
         yubico-pam          # PAM settings for yubikey
         libu2f-server       # Libraries for U2F - login with yubikey
         pam_u2f             # Login to system with U2F
+        git-secret          # Helper tool for storing private files in a git repo
     )
 
     install -Dm 0644 zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
