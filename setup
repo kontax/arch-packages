@@ -62,7 +62,7 @@ if [ "$(whoami)" != "root" ]; then
     if [[ $system_sel == "desktop" ]]; then
         echo "Choosing desktop"
         stow -v -t $HOME base
-        stow -v -t $HOME desktop
+        stow -v -t $HOME desktop --override '.gnupg'
 
         systemctl_enable_start "user" "yubikey-touch-detector.service"
         systemctl_enable_start "user" "dunst.service"
