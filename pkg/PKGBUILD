@@ -159,6 +159,7 @@ package_couldinho-base() {
     # Access Control
     depends+=(
         pass                # Text-based password manager
+        pass-git-helper     # Credential helper using pass to store details
         usbguard            # USB security configuration
         yubikey-manager     # Yubikey settings
         yubico-pam          # PAM settings for yubikey
