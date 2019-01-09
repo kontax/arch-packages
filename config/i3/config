@@ -1,3 +1,4 @@
+# xmodmap -pke to find keybindings
 # Set font
 font pango:Taskbar, Inconsolata Mono 10
 #font pango: Inconsolata Mono 10, Cantarell 9
@@ -168,6 +169,7 @@ bindcode $mod+Shift+54 reload
 bindcode $mod+Shift+27 restart
 
 # Global hotkeys
+# 49: ~
 bindcode $mod+49 exec copyq toggle
 
 # Workspaces
@@ -183,6 +185,18 @@ set $workspace7 workspace number 7
 set $workspace8 workspace number 8
 set $workspace9 workspace number 9
 set $workspace0 workspace number 10
+
+# Multi-monitor
+# workspace 1 output VGA-1
+# workspace 2 output VGA-2
+# workspace 3 output VGA-1
+# workspace 4 output VGA-2
+# workspace 5 output VGA-1
+# workspace 6 output VGA-2
+# workspace 7 output VGA-1
+# workspace 8 output VGA-2
+# workspace 9 output VGA-1
+# workspace 10 output VGA-2
 
 # Switch to workspace using keypad
 bindcode $numlock+$mod+87 $workspace1
