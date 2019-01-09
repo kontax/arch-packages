@@ -56,13 +56,13 @@ if [ "$(whoami)" != "root" ]; then
     cd stow
     if [[ $system_sel == "base" ]]; then
         echo "Choosing base"
-        stow -v -t $HOME base
+        stow -v -t $HOME base --ignore '.*\.secret'
     fi
 
     if [[ $system_sel == "desktop" ]]; then
         echo "Choosing desktop"
-        stow -v -t $HOME base
-        stow -v -t $HOME desktop --override '.gnupg'
+        stow -v -t $HOME base --ignore '.*\.secret'
+        stow -v -t $HOME desktop --override '\.gnupg/*' --ignore '.*\.secret'
 
         systemctl_enable_start "user" "yubikey-touch-detector.service"
         systemctl_enable_start "user" "dunst.service"
