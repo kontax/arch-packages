@@ -1,0 +1,6 @@
+[user]
+	email = james@coulson.ie
+	name = James Coulson
+[credential]
+	helper = !pass-git-helper $@
+	useHttpPath = true
