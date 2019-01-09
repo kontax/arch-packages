@@ -49,6 +49,7 @@ xorg-xrandr
 rofi
 rofi-calc
 rofi-dmenu
+libqalculate
 kitty
 terminus-font
 ttf-inconsolata
@@ -93,3 +94,7 @@ docker
 *s3cmd: Used to upload packages to amazon s3
 devtools: For developing packages
 
+
+-- CRYPT --
+pcsclite: smartcard lib
+pcsctools: tools for above
