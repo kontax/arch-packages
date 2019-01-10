@@ -120,6 +120,7 @@ package_couldinho-base() {
         exa                 # ls replacement
         ripgrep             # Fuzzy search
         rmtrash             # Delete to bin
+        
     )
 
     # Networking + VPN
@@ -176,12 +177,6 @@ package_couldinho-base() {
 
     install -Dm 0644 zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
     install -Dm 0600 usbguard-daemon.conf "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"
-
-    # Packages
-    depends+=(
-        aurutils-git        # AUR helper
-        pacman-contrib      # Contains checkupdates plus other pacman scripts
-    )
 }
 
 package_couldinho-desktop() {
