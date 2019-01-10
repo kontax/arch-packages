@@ -10,20 +10,22 @@ groups=(coudinho)
 
 source=(
     couldinho-arch-aur
-    pacman.conf
     grub
-    mkinitcpio.conf
-    sudoers
-    ipsec.conf
+    grub-btrfs-config
     home.coulson.ie.nmconnection
-    snapper
+    ipsec.conf
+    mkinitcpio.conf
+    pacman.conf
+    pia.conf
+    pia-login.conf
     root
     snap-pac.conf
-    grub-btrfs-config
-    zz_custom.sh
+    snapper
+    sudoers
     usbguard-daemon.conf
+    zz_custom.sh
 )
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
 package_couldinho-base() {
     install=couldinho-base.install
