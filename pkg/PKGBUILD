@@ -136,8 +136,8 @@ package_couldinho-base() {
     install -Dm 0644 ipsec.conf "$pkgdir/etc/couldinho-ipsec.conf"
     install -Dm 0600 home.coulson.ie.nmconnection \
                      "$pkgdir/etc/NetworkManager/system-connections/home.coulson.ie.nmconnection"
-    install -Dm 0644 pia.conf "$pkgdir/private-internet-access/pia.conf"
-    install -Dm 0600 pia-login.conf "$pkgdir/private-internet-access/login.conf"
+    install -Dm 0644 pia.conf "$pkgdir/etc/private-internet-access/pia.conf"
+    install -Dm 0600 pia-login.conf "$pkgdir/etc/private-internet-access/login.conf"
 
     # Shell
     depends+=(
