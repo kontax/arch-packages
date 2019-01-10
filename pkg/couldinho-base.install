@@ -37,4 +37,7 @@ post_upgrade() {
     systemctl enable strongswan.service
     systemctl enable usbguard.service
     systemctl enable usbguard-dbus.service
+
+    # Need to decrypt pia file
+    echo "Decrypt file located in /etc/private-internet-access/login.conf.secret"
 }
