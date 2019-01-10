@@ -1,7 +1,0 @@
-[options]
-CacheDir = /var/cache/pacman/pkg
-CacheDir = /var/cache/pacman/couldinho-arch-aur
-
-[couldinho-arch-aur]
-Server = https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64/
-SigLevel = Optional TrustAll
