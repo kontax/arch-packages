@@ -17,7 +17,7 @@ source=(
     mkinitcpio.conf
     pacman.conf
     pia.conf
-    pia-login.conf
+    pia-login.conf.secret
     root
     snap-pac.conf
     snapper
@@ -137,7 +137,7 @@ package_couldinho-base() {
     install -Dm 0600 home.coulson.ie.nmconnection \
                      "$pkgdir/etc/NetworkManager/system-connections/home.coulson.ie.nmconnection"
     install -Dm 0644 pia.conf "$pkgdir/etc/private-internet-access/pia.conf"
-    install -Dm 0600 pia-login.conf "$pkgdir/etc/private-internet-access/login.conf"
+    install -Dm 0600 pia-login.conf.secret "$pkgdir/etc/private-internet-access/login.conf.secret"
 
     # Shell
     depends+=(
