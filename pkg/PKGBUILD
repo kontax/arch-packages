@@ -243,11 +243,17 @@ package_couldinho-desktop() {
         freerdp             	# Remote desktop client
     )
 
+    # Networking
+    depends+=(
+        nm-connection-editor        # Gui tool for managing NetworkManager connections
+        networkmanager-dmenu-git    # dmenu for NetworkManager connections
+    )
+
     # Web
     depends+=(
         vivaldi                 # Browser
         vivaldi-ffmpeg-codecs   # Browser video codecs
-        vivaldi-widevine        # Stream DRM support for vivaldi
+        #vivaldi-widevine        # Stream DRM support for vivaldi
         pepper-flash            # Flash player
         x265                    # Video compression
         browserpass             # Browser extenson for pass
