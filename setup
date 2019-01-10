@@ -52,6 +52,7 @@ systemctl_enable_start() {
 if [ "$(whoami)" != "root" ]; then
 
     system_sel=$(printf '%s\n' "${system_options[@]}" | fzy)
+    ln -s ~/dotfiles/bin ~/bin
 
     cd stow
     if [[ $system_sel == "base" ]]; then
