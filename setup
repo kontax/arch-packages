@@ -26,13 +26,16 @@
 set -e
 exec 2> >(while read line; do echo -e "\e[01;31m$line\e[0m"; done)
 
+GPG_KEY="36E285244BD76041"
+AUR_KEY="110037EA14B0244A"
+
 system_options=(base desktop)
 
 script_name="$(basename "$0")"
 dotfiles_dir="$(cd "$(dirname "$0")"; pwd)"
 cd "$dotfiles_dir"
 
-systemctl_enable_start() {
+systemctl_enable() {
   if [ "$#" -eq 1 ]; then
     target="system"
     name="$1"
@@ -41,10 +44,10 @@ systemctl_enable_start() {
     name="$2"
   fi
   if [[ "$target" == "user" ]]; then
-    echo "systemctl --user enable --now "$name""
+    echo "systemctl --user enable "$name""
     systemctl --user enable --now "$name"
   else
-    echo "systemctl enable --now "$name""
+    echo "systemctl enable "$name""
     systemctl enable --now "$name"
   fi
 }
@@ -52,22 +55,68 @@ systemctl_enable_start() {
 if [ "$(whoami)" != "root" ]; then
 
     system_sel=$(printf '%s\n' "${system_options[@]}" | fzy)
-    ln -s ~/dotfiles/bin ~/bin
+
+    if ! gpg -k | grep "$GPG_KEY" > /dev/null; then
+        echo "===================="
+        echo " Importing PGP keys "
+        echo "===================="
+        curl -sL www.coulson.ie/pgp_keys.asc | gpg --import
+        gpg --trusted-key "$GPG_KEY" 2>/dev/null
+        gpg --trusted-key "$AUR_KEY" 2>/dev/null
+    fi
+
+    if [[ ! -a "$HOME/.config/Yubico/u2f_keys" ]]; then
+        echo "===================================="
+        echo " Configuring Yubikey (touch it now) "
+        echo "===================================="
+        mkdir -p "$HOME/.config/Yubico"
+        pamu2fcfg -ujames > "$HOME/.config/Yubico/u2f_keys"
+        # Can't do this as there's no pinentry
+        #gpg --card-status >/dev/null
+    fi
+
+
+    echo "====================="
+    echo " Setting up dotfiles "
+    echo "====================="
 
     cd stow
     if [[ $system_sel == "base" ]]; then
-        echo "Choosing base"
         stow -v -t $HOME base --ignore '.*\.secret'
     fi
 
     if [[ $system_sel == "desktop" ]]; then
-        echo "Choosing desktop"
         stow -v -t $HOME base --ignore '.*\.secret'
         stow -v -t $HOME desktop --override '\.gnupg/*' --ignore '.*\.secret'
 
-        systemctl_enable_start "user" "yubikey-touch-detector.service"
-        systemctl_enable_start "user" "dunst.service"
+        systemctl_enable "user" "yubikey-touch-detector.service"
+        systemctl_enable "user" "dunst.service"
 
     fi
     cd ..
+
+    echo ""
+    echo "======================================="
+    echo " Switching to root user to continue... "
+    echo "======================================="
+    echo "..."
+    sudo -s "$dotfiles_dir/$script_name"
+    exit
+
+fi
+
+if [ "$(whoami)" == "root" ]; then
+
+    echo "========================"
+    echo " Importing certificates "
+    echo "========================"
+    curl -skL www.coulson.ie/Coulson_Root_CA.pem -o /etc/ca-certificates/trust-source/anchors/Coulson_Root_CA.crt
+    curl -skL www.coulson.ie/Coulson_TLS_CA.pem -o /etc/ca-certificates/trust-source/anchors/Coulson_TLS_CA.crt
+    trust extract-compat
+
+    # Decrypt secret files
+    #   * /etc/private-internet-access/login.conf.secret
+
+    mkdir /var/cache/pacman/couldinho-arch-aur
+
 fi
