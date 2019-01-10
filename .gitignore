@@ -1,3 +1,11 @@
-.s3cfg
+## git-secret
+
+# git-secret seed file
 .gitsecret/keys/random_seed
+
+# Files hidden by git-secret
+.s3cfg
+pia-login.conf
+
+# Python compilation directory
 __pycache__/

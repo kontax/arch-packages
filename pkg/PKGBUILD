@@ -127,11 +127,16 @@ package_couldinho-base() {
         networkmanager-strongswan   # IPSEC VPN
         iw                          # Move to laptop?
         wget openssh                # Download and connect
+        openvpn                     # Connect to PIA
+        networkmanager-openvpn      # NetworkManager drivers for OpenVPN
+        private-internet-access-vpn # Scripts for managing PIA
     )
     
     install -Dm 0644 ipsec.conf "$pkgdir/etc/couldinho-ipsec.conf"
     install -Dm 0600 home.coulson.ie.nmconnection \
                      "$pkgdir/etc/NetworkManager/system-connections/home.coulson.ie.nmconnection"
+    install -Dm 0644 pia.conf "$pkgdir/private-internet-access/pia.conf"
+    install -Dm 0600 login.conf "$pkgdir/private-internet-access/login.conf"
 
     # Shell
     depends+=(
