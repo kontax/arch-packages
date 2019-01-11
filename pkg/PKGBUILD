@@ -14,6 +14,8 @@ source=(
     grub-btrfs-config
     home.coulson.ie.nmconnection
     ipsec.conf
+    lightdm.conf
+    lightdm-gtk-greeter.conf
     mkinitcpio.conf
     pacman.conf
     pia.conf
@@ -25,7 +27,7 @@ source=(
     usbguard-daemon.conf
     zz_custom.sh
 )
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -214,6 +216,9 @@ package_couldinho-desktop() {
         lightdm             	# Login manager
         lightdm-gtk-greeter 	# Theme for login manager
     )
+
+    install -Dm 0644 lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
+    install -Dm 0644 lightdm-gtk-greeter.conf "$pkgdir/etc/lightdm/couldinho-lightdm-gtk-greeter.conf"
 
     # Further i3 packages
     depends+=(

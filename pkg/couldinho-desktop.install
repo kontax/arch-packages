@@ -3,5 +3,11 @@ post_install() {
 }
 
 post_upgrade() {
-    systemctl enable --now lightdm.service
+
+    # LightDM config files
+    cp /etc/lightdm/couldinho-lightdm.conf /etc/lightdm/lightdm.conf
+    cp /etc/lightdm/couldinho-lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
+
+    # Enable services
+    systemctl enable lightdm.service
 }
