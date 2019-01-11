@@ -38,7 +38,10 @@ clear
 exec 1> >(tee "stdout.log")
 exec 2> >(tee "stderr.log")
 
-pacman -Sy --noconfirm --needed git
+pacman -Sy --noconfirm --needed git reflector
+
+# Get the fastest mirrors for pacman
+reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
 
 timedatectl set-ntp true
 
