@@ -7,7 +7,11 @@ trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
 REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
 
-### Get infomation from user ###
+
+#####
+# Get information from the user
+##
+
 hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0) || exit 1
 clear
 : ${hostname:?"hostname cannot be empty"}
@@ -34,19 +38,31 @@ devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
 clear
 
-### Set up logging ###
+
+#####
+# Set up logging
+##
+
 exec 1> >(tee "stdout.log")
 exec 2> >(tee "stderr.log")
 
+
+echo ""
+echo "#####"
+echo "# Downloading necessary packages"
+echo "# and set up fastest mirrors"
+echo "##"
+
 pacman -Sy --noconfirm --needed git reflector
-
-# Get the fastest mirrors for pacman
 reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
-
 timedatectl set-ntp true
 
-### Setup the disk and partitions ###
-echo "[*] Setting up partitions"
+
+echo ""
+echo "#####"
+echo "# Setting up partitions"
+echo "##"
+
 swap_size=$(free --mebi | awk '/Mem:/ {print $2}')
 swap_end=$(( $swap_size + 129 + 1 ))MiB
 
@@ -66,7 +82,7 @@ wipefs "${part_boot}"
 wipefs "${part_swap}"
 wipefs "${part_root}"
 
-mkfs.vfat -F32 "${part_boot}"
+mkfs.vfat -n "EFI" -F32 "${part_boot}"
 mkswap "${part_swap}"
 echo -n ${passphrase} | cryptsetup luksFormat "${part_root}"
 echo -n ${passphrase} | cryptsetup luksOpen "${part_root}" luks
@@ -74,7 +90,7 @@ mkfs.btrfs -L btrfs /dev/mapper/luks
 
 swapon "${part_swap}"
 
-# Set up the BTRFS subvolumes
+echo "  [*] Setting up BTRFS subvolumes"
 mount /dev/mapper/luks /mnt
 btrfs subvolume create /mnt/root
 btrfs subvolume create /mnt/home
@@ -94,15 +110,24 @@ mount -o noatime,nodiratime,discard,compress=lzo,subvol=logs /dev/mapper/luks /m
 mount -o noatime,nodiratime,discard,compress=lzo,subvol=tmp /dev/mapper/luks /mnt/var/tmp
 mount -o noatime,nodiratime,discard,compress=lzo,subvol=snapshots /dev/mapper/luks /mnt/.snapshots
 
-### Set up encrypted key for booting ###
-echo "[*] Creating an encrypted key for booting"
+
+echo "  [*] Creating an encrypted key for booting"
 dd bs=512 count=4 if=/dev/urandom of=/mnt/crypto_keyfile.bin
 chmod 000 /mnt/crypto_keyfile.bin
 echo -n ${passphrase} | cryptsetup luksAddKey ${part_root} /mnt/crypto_keyfile.bin
 
-### Install and configure the basic system ###
-echo "[*] Installing packages"
-cat >>/etc/pacman.d/couldinho-arch-aur <<EOF
+
+echo "#####"
+echo "# Installing packages and configuring"
+echo "# the basic system"
+echo "##"
+
+if [[ ! -a /etc/pacman.d/couldinho-arch-aur ]]; then
+    
+    echo ""
+    echo "  [*] Configuring remote AUR details"
+
+    cat >>/etc/pacman.d/couldinho-arch-aur <<EOF
 [options]
 CacheDir = /var/cache/pacman/pkg
 CacheDir = /var/cache/pacman/couldinho-arch-aur
@@ -112,14 +137,16 @@ Server = $REPO_URL
 SigLevel = Optional TrustAll
 EOF
 
-cat >>/etc/pacman.conf <<EOF
+    cat >>/etc/pacman.conf <<EOF
 Include = /etc/pacman.d/couldinho-arch-aur
 EOF
+fi
 
+echo "  [*] Installing packages"
 pacstrap /mnt couldinho-desktop
 
-### Generate config files ###
-echo "[*] Generating base config files"
+
+echo "  [*] Generating base config files"
 mkdir /mnt/var/cache/pacman/couldinho-arch-aur
 genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
@@ -132,18 +159,23 @@ ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 chmod 600 /mnt/boot/initramfs-linux*
 sed -i "s|#PART_ROOT#|${part_root}|g" /mnt/etc/default/grub
 
-echo "[*] Creating user and shell"
+echo "  [*] Creating user and shell"
 arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
 arch-chroot /mnt chsh -s /usr/bin/zsh
 arch-chroot /mnt locale-gen
 
-echo "[*] Installing grub"
+echo "  [*] Installing grub"
 arch-chroot /mnt grub-install
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
-echo "[*] Cloning dotfiles to home folder"
+echo "  [*] Cloning dotfiles to home folder"
 git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
 arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
+
+echo "  [*] Installing certificates"
+curl -skL www.coulson.ie/Coulson_Root_CA.pem -o /mnt/ca-certificates/trust-source/anchors/Coulson_Root_CA.crt
+curl -skL www.coulson.ie/Coulson_TLS_CA.pem -o /mnt/ca-certificates/trust-source/anchors/Coulson_TLS_CA.crt
+arch-chroot /mnt trust extract-compat
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
