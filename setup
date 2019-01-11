@@ -60,9 +60,9 @@ if [ "$(whoami)" != "root" ]; then
         echo "===================="
         echo " Importing PGP keys "
         echo "===================="
-        curl -sL www.coulson.ie/pgp_keys.asc | gpg --import
-        gpg --trusted-key "$GPG_KEY" 2>/dev/null
-        gpg --trusted-key "$AUR_KEY" 2>/dev/null
+        curl -skL www.coulson.ie/pgp_keys.asc | gpg --import
+        echo -e "5\ny\n" | gpg --command-fd 0 --expert --edit-key "$GPG_KEY" trust
+        echo -e "5\ny\n" | gpg --command-fd 0 --expert --edit-key "$AUR_KEY" trust
     fi
 
     if [[ ! -a "$HOME/.config/Yubico/u2f_keys" ]]; then
@@ -105,7 +105,7 @@ if [ "$(whoami)" != "root" ]; then
 
 fi
 
-if [ "$(whoami)" == "root" ]; then
+if [[ "$(whoami)" == "root" ]]; then
 
     echo "========================"
     echo " Importing certificates "
