@@ -120,6 +120,7 @@ pacstrap /mnt couldinho-desktop
 
 ### Generate config files ###
 echo "[*] Generating base config files"
+mkdir /mnt/var/cache/pacman/couldinho-arch-aur
 genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
 echo "FONT=ter-112n" > /mnt/etc/vconsole.conf

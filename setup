@@ -117,6 +117,4 @@ if [[ "$(whoami)" == "root" ]]; then
     # Decrypt secret files
     #   * /etc/private-internet-access/login.conf.secret
 
-    mkdir /var/cache/pacman/couldinho-arch-aur
-
 fi
