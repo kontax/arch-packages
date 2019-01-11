@@ -45,10 +45,10 @@ systemctl_enable() {
   fi
   if [[ "$target" == "user" ]]; then
     echo "systemctl --user enable "$name""
-    systemctl --user enable --now "$name"
+    systemctl --user enable "$name"
   else
     echo "systemctl enable "$name""
-    systemctl enable --now "$name"
+    systemctl enable "$name"
   fi
 }
 
