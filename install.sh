@@ -173,8 +173,8 @@ git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
 arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
 
 echo "  [*] Installing certificates"
-curl -skL www.coulson.ie/Coulson_Root_CA.pem -o /mnt/ca-certificates/trust-source/anchors/Coulson_Root_CA.crt
-curl -skL www.coulson.ie/Coulson_TLS_CA.pem -o /mnt/ca-certificates/trust-source/anchors/Coulson_TLS_CA.crt
+curl -skL www.coulson.ie/Coulson_Root_CA.pem -o /mnt/etc/ca-certificates/trust-source/anchors/Coulson_Root_CA.crt
+curl -skL www.coulson.ie/Coulson_TLS_CA.pem -o /mnt/etc/ca-certificates/trust-source/anchors/Coulson_TLS_CA.crt
 arch-chroot /mnt trust extract-compat
 
 echo "$user:$password" | chpasswd --root /mnt
