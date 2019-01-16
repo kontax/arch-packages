@@ -1,0 +1,19 @@
+post_install() {
+    post_upgrade
+}
+
+post_upgrade() {
+    CONF_PASS=Testing123
+    if [ ! -z $CONF_LOC ]; then
+        curl -kL $CONF_LOC/conf.tar.aes -o /tmp/conf.tar.aes
+        openssl aes-128-cbc -d -salt \
+            -in /tmp/conf.tar.aes -out /tmp/conf.tar -iter 10000 \
+            -k $CONF_PASS
+
+        tar xf /tmp/conf.tar -C /tmp/
+        cp -r /tmp/conf/* /home/james/dev/pkg_test/build/
+        rm /tmp/conf*
+    else
+        echo "No config files selected"
+    fi
+}

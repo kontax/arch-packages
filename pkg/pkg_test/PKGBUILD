@@ -1,0 +1,15 @@
+pkgname='pkg_test'
+pkgver=1
+pkgrel=1
+pkgdesc="Test package system"
+arch=(x86_64)
+url="https://github.com/kontax/pkg_test"
+license=(MIT)
+
+source=(script.sh)
+sha256sums=(SKIP)
+
+package() {
+    install=pkg_test.install
+    install -Dm 0644 script.sh "$pkgdir/home/james/dev/pkg_test/build/script.sh"
+}
