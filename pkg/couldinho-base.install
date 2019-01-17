@@ -16,14 +16,8 @@ post_upgrade() {
     # Move pacman repo details and settings
     cp /etc/couldinho-pacman.conf /etc/pacman.conf
 
-    # Move Strongswan config
-    cp /etc/couldinho-ipsec.conf /etc/ipsec.conf
-
     # Move USBGuard config
     cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
-
-    # Change certificate name to match (certs need to be present)
-    sed -i "s/#HOSTNAME#/$(hostname)/g" /etc/NetworkManager/system-connections/home.coulson.ie.nmconnection
 
     # Settings for BTRFS in grub
     cp /etc/default/grub-btrfs/couldinho-config /etc/default/grub-btrfs/config
@@ -31,13 +25,26 @@ post_upgrade() {
     # Move snapper config
     cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
 
+    # Pull and decrypt sensitive configuration files
+    if [ ! -z $CONF_FILE_LOCATION ]; then
+
+        curl -kL $CONF_FILE_LOCATION/base-conf-files.tar.gz.aes -o /tmp/base-conf-files.tar.gz.aes
+
+        openssl aes-256-cbc -d \
+            -salt \
+            -in /tmp/base-conf-files.tar.gz.aes \
+            -out /tmp/ \
+            #-iter 10000 \ # This isn't enabled in ubuntu yet
+            -k $CONF_FILE_PASS
+
+        /tmp/base-conf-files/run.sh
+
+    fi
+
     # Start services
     systemctl enable NetworkManager.service
     systemctl enable snapper-cleanup.timer
     systemctl enable strongswan.service
     systemctl enable usbguard.service
     systemctl enable usbguard-dbus.service
-
-    # Need to decrypt pia file
-    echo "Decrypt file located in /etc/private-internet-access/login.conf.secret"
 }

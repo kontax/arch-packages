@@ -12,14 +12,11 @@ source=(
     couldinho-arch-aur
     grub
     grub-btrfs-config
-    home.coulson.ie.nmconnection
-    ipsec.conf
     lightdm.conf
     lightdm-gtk-greeter.conf
     mkinitcpio.conf
     pacman.conf
     pia.conf
-    pia-login.conf.secret
     root
     snap-pac.conf
     snapper
@@ -27,7 +24,7 @@ source=(
     usbguard-daemon.conf
     zz_custom.sh
 )
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
 package_couldinho-base() {
     install=couldinho-base.install

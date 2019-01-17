@@ -2,6 +2,11 @@
 # WARNING: this script will destroy data on the selected disk.
 # This script can be run by executing the following:
 #   curl -sL https://git.io/coul-install | bash
+# Note: In order to download personal config files, install with
+# the following environment variables:
+#   CONF_FILE_LOCATION=<location>
+#   CONF_FILE_PASS=<decrypt-pass>
+
 set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
