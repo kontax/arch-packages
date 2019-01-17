@@ -95,12 +95,12 @@ if [ "$(whoami)" != "root" ]; then
     fi
     cd ..
 
-    echo ""
-    echo "======================================="
-    echo " Switching to root user to continue... "
-    echo "======================================="
-    echo "..."
-    sudo -s "$dotfiles_dir/$script_name"
-    exit
+    #echo ""
+    #echo "======================================="
+    #echo " Switching to root user to continue... "
+    #echo "======================================="
+    #echo "..."
+    #sudo -s "$dotfiles_dir/$script_name"
+    #exit
 
 fi
