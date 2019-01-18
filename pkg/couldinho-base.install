@@ -26,18 +26,28 @@ post_upgrade() {
     cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
 
     # Pull and decrypt sensitive configuration files
-    if [ ! -z $CONF_FILE_LOCATION ]; then
+    if [ -n $CONF_FILE_LOCATION ]; then
 
-        curl -kL $CONF_FILE_LOCATION/base-conf-files.tar.gz.aes -o /tmp/base-conf-files.tar.gz.aes
+        FILENAME="base-conf-files.tar.gz"
+        TMP_LOC=/tmp/base-conf-files
+
+        # Use the IP when available (eg. during pacstrap)
+        if [ -n $CONF_FILE_IP ]; then
+            curl -kL $CONF_FILE_IP/$FILENAME.aes -o /tmp/$FILENAME.aes
+        else
+            curl -kL $CONF_FILE_LOCATION/$FILENAME.aes -o /tmp/$FILENAME.aes
+        fi
 
         openssl aes-256-cbc -d \
             -salt \
-            -in /tmp/base-conf-files.tar.gz.aes \
-            -out /tmp/ \
+            -in /tmp/$FILENAME.aes \
+            -out /tmp/$FILENAME \
             -k $CONF_FILE_PASS
             #-iter 10000 \ # This isn't enabled in ubuntu yet
 
-        /tmp/base-conf-files/run.sh
+        tar xf /tmp/$FILENAME -C /tmp/
+        sed -i "s#TMP_LOC=#TMP_LOC=$TMP_LOC#g" /tmp/base-conf-files/run.sh
+        $TMP_LOC/run.sh
 
     else
 
