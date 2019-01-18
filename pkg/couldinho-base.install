@@ -34,8 +34,8 @@ post_upgrade() {
             -salt \
             -in /tmp/base-conf-files.tar.gz.aes \
             -out /tmp/ \
-            #-iter 10000 \ # This isn't enabled in ubuntu yet
             -k $CONF_FILE_PASS
+            #-iter 10000 \ # This isn't enabled in ubuntu yet
 
         /tmp/base-conf-files/run.sh
 
