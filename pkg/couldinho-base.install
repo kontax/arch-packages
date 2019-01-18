@@ -39,6 +39,10 @@ post_upgrade() {
 
         /tmp/base-conf-files/run.sh
 
+    else
+
+        echo "No config files selected"
+
     fi
 
     # Start services
