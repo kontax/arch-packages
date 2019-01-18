@@ -44,6 +44,25 @@ devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
 clear
 
+config=$(dialog --stdout --inputbox "Enter location of config files (leave blank if required)" 0 0)
+clear
+
+if [ -n $config ]; then
+
+    conf_pass=$(dialog --stdout --passwordbox "Enter passphrase to decrypt config files" 0 0) || exit 1
+    clear
+    : ${conf_pass:?"passphrase cannot be empty"}
+    conf_pass2=$(dialog --stdout --passwordbox "Enter passphrase to decript config files again" 0 0) || exit 1
+    clear
+    [[ "$conf_pass" == "$conf_pass2" ]] || ( echo "Passphrases did not match"; exit 1; )
+
+fi
+
+# Environment variables for personal config files
+# The IP needs to be pulled for now due to pacstrap not having DNS lookup
+CONF_FILE_LOCATION=$config
+CONF_FILE_IP=$(host -t -a $config 8.8.8.8 2>/dev/null | egrep "^$config" | awk '{ print $4 }'
+CONF_FILE_PASS=$conf_pass
 
 #####
 # Set up logging
