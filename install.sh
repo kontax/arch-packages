@@ -165,9 +165,11 @@ ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 chmod 600 /mnt/boot/initramfs-linux*
 sed -i "s|#PART_ROOT#|${part_root}|g" /mnt/etc/default/grub
 
-echo "  [*] Creating user and shell"
-arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
-arch-chroot /mnt chsh -s /usr/bin/zsh
+if ! id -u $user 2>/dev/null; then
+    echo "  [*] Creating user and shell"
+    arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
+    arch-chroot /mnt chsh -s /usr/bin/zsh
+fi
 arch-chroot /mnt locale-gen
 
 echo "  [*] Installing grub"
