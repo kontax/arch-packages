@@ -203,5 +203,5 @@ arch-chroot /mnt trust extract-compat
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
-echo "[*] DONE - Install setup from HOME/dotfiles"
+echo "[*] DONE - Install setup from $HOME/dotfiles"
 
