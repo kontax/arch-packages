@@ -22,7 +22,7 @@ user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
 clear
 : ${user:?"user cannot be empty"}
 
-password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
+export password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
 clear
 : ${password:?"password cannot be empty"}
 password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
