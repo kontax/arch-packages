@@ -181,7 +181,7 @@ ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 chmod 600 /mnt/boot/initramfs-linux*
 sed -i "s|#PART_ROOT#|${part_root}|g" /mnt/etc/default/grub
 
-if ! id -u $user 2>/dev/null; then
+if ! arch-chroot /mnt id -u $user 2>/dev/null; then
     echo "  [*] Creating user and shell"
     arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
     arch-chroot /mnt chsh -s /usr/bin/zsh
