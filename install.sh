@@ -57,9 +57,9 @@ fi
 # Environment variables for personal config files
 # The IP needs to be pulled for now due to pacstrap not having DNS lookup
 conf_url=${config#*//}
-CONF_FILE_LOCATION=$config
-CONF_FILE_IP=$(host -t a $conf_url 8.8.8.8 2>/dev/null | egrep "^$conf_url" | awk '{ print $4 }')
-CONF_FILE_PASS=$conf_pass
+export CONF_FILE_LOCATION=$config
+export CONF_FILE_IP=$(host -t a $conf_url 8.8.8.8 2>/dev/null | egrep "^$conf_url" | awk '{ print $4 }')
+export CONF_FILE_PASS=$conf_pass
 
 #####
 # Set up logging
