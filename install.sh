@@ -181,27 +181,30 @@ ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 chmod 600 /mnt/boot/initramfs-linux*
 sed -i "s|#PART_ROOT#|${part_root}|g" /mnt/etc/default/grub
 
-if ! arch-chroot /mnt id -u $user 2>/dev/null; then
-    echo "  [*] Creating user and shell"
-    arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
-    arch-chroot /mnt chsh -s /usr/bin/zsh
-fi
 arch-chroot /mnt locale-gen
 
 echo "  [*] Installing grub"
 arch-chroot /mnt grub-install
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
-echo "  [*] Cloning dotfiles to home folder"
-git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
-arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
+if ! arch-chroot /mnt id -u $user 2>/dev/null; then
+    
+    echo "#####"
+    echo "# Setting up user account and home folder,"
+    echo "# including the dotfile repo."
+    echo "##"
 
-echo "  [*] Installing certificates"
-curl -skL www.coulson.ie/Coulson_Root_CA.pem -o /mnt/etc/ca-certificates/trust-source/anchors/Coulson_Root_CA.crt
-curl -skL www.coulson.ie/Coulson_TLS_CA.pem -o /mnt/etc/ca-certificates/trust-source/anchors/Coulson_TLS_CA.crt
-arch-chroot /mnt trust extract-compat
+    echo "  [*] Creating user and shell"
+    arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
+    arch-chroot /mnt chsh -s /usr/bin/zsh
 
-echo "$user:$password" | chpasswd --root /mnt
-echo "root:$password" | chpasswd --root /mnt
+    echo "$user:$password" | chpasswd --root /mnt
+    echo "root:$password" | chpasswd --root /mnt
+
+    echo "  [*] Cloning dotfiles to home folder"
+    git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
+    arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
+
+fi
 echo "[*] DONE - Install setup from $HOME/dotfiles"
 
