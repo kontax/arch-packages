@@ -46,8 +46,8 @@ post_upgrade() {
             #-iter 10000 \ # This isn't enabled in ubuntu yet
 
         tar xf /tmp/$FILENAME -C /tmp/
-        sed -i "s#TMP_LOC=#TMP_LOC=$TMP_LOC#g" /tmp/base-conf-files/run.sh
-        $TMP_LOC/run.sh
+        #sed -i "s#TMP_LOC=#TMP_LOC=$TMP_LOC#g" /tmp/base-conf-files/run.sh
+        $TMP_LOC/run.sh $USER $password
 
     else
 

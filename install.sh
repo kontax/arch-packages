@@ -58,7 +58,6 @@ fi
 # The IP needs to be pulled for now due to pacstrap not having DNS lookup
 conf_url=${config#*//}
 export CONF_FILE_LOCATION=$config
-export CONF_FILE_IP=$(host -t a $conf_url 8.8.8.8 2>/dev/null | egrep "^$conf_url" | awk '{ print $4 }')
 export CONF_FILE_PASS=$conf_pass
 
 #####
@@ -187,24 +186,38 @@ echo "  [*] Installing grub"
 arch-chroot /mnt grub-install
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
-if ! arch-chroot /mnt id -u $user 2>/dev/null; then
     
-    echo "#####"
-    echo "# Setting up user account and home folder,"
-    echo "# including the dotfile repo."
-    echo "##"
+echo "#####"
+echo "# Setting up user account and home folder,"
+echo "# including the dotfile repo."
+echo "##"
 
-    echo "  [*] Creating user and shell"
-    arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
-    arch-chroot /mnt chsh -s /usr/bin/zsh
+echo "  [*] Creating user and shell"
+arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
+arch-chroot /mnt chsh -s /usr/bin/zsh
 
-    echo "$user:$password" | chpasswd --root /mnt
-    echo "root:$password" | chpasswd --root /mnt
+echo "$user:$password" | chpasswd --root /mnt
+echo "root:$password" | chpasswd --root /mnt
 
-    echo "  [*] Cloning dotfiles to home folder"
-    git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
-    arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
+echo "  [*] Cloning dotfiles to home folder"
+git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
+arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
 
+if [[ -d $CONF_FILE_LOCATION ]]; then
+    FILENAME="base-conf-files.tar.gz"
+    TMP_LOC=/tmp/base-conf-files
+    curl -kL $CONF_FILE_LOCATION/$FILENAME.aes -o /mnt/tmp/$FILENAME.aes
+
+    openssl aes-256-cbc -d \
+        -salt \
+        -in /mnt/tmp/$FILENAME.aes \
+        -out /mnt/tmp/$FILENAME \
+        -k $CONF_FILE_PASS
+        #-iter 10000 # this isn't enabled in ubuntu yet
+
+    tar xf /mnt/tmp/$FILENAME -C /mnt/tmp/
+    arch-chroot /mnt $TMP_LOC/run.sh $USER $password
 fi
+
 echo "[*] DONE - Install setup from $HOME/dotfiles"
 
