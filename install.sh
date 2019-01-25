@@ -203,7 +203,7 @@ echo "  [*] Cloning dotfiles to home folder"
 git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
 arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
 
-if [[ -d $CONF_FILE_LOCATION ]]; then
+if [[ -v CONF_FILE_LOCATION ]]; then
     FILENAME="base-conf-files.tar.gz"
     TMP_LOC=/tmp/base-conf-files
     curl -kL $CONF_FILE_LOCATION/$FILENAME.aes -o /mnt/tmp/$FILENAME.aes
