@@ -217,7 +217,7 @@ if [[ -v CONF_FILE_LOCATION ]]; then
 
     tar xf /mnt/$TMP_LOC/$FILENAME.tar.gz -C /mnt/$TMP_LOC/
     arch-chroot /mnt $TMP_LOC/$FILENAME/run.sh $user $password
-    rm -r /mnt/$TMP_LOC*
+    rm -r /mnt/$TMP_LOC/$FILENAME*
 fi
 
 echo "[*] DONE - Install setup from $HOME/dotfiles"
