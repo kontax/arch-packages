@@ -205,7 +205,7 @@ arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
 
 if [[ -v CONF_FILE_LOCATION ]]; then
     FILENAME="base-conf-files"
-    TMP_LOC=/root
+    TMP_LOC=/home/$user
     curl -kL $CONF_FILE_LOCATION/$FILENAME.tar.gz.aes -o /mnt/$TMP_LOC/$FILENAME.tar.gz.aes
 
     openssl aes-256-cbc -d \
