@@ -176,6 +176,7 @@ package_couldinho-base() {
     depends+=(
         aurutils-git        # AUR helper
         pacman-contrib      # Contains checkupdates plus other pacman scripts
+        reflector           # Automatically sort out pacman mirrorlist
     )
 }
 
