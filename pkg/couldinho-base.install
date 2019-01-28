@@ -14,11 +14,7 @@ function install_config_files {
         TMP_LOC=/tmp/base-conf-files
 
         # Use the IP when available (eg. during pacstrap)
-        if [ -n $CONF_FILE_IP ]; then
-            curl -kL $CONF_FILE_IP/$FILENAME.aes -o /tmp/$FILENAME.aes
-        else
-            curl -kL $CONF_FILE_LOCATION/$FILENAME.aes -o /tmp/$FILENAME.aes
-        fi
+        curl -kL $CONF_FILE_LOCATION/$FILENAME.aes -o /tmp/$FILENAME.aes
 
         openssl aes-256-cbc -d \
             -salt \
@@ -28,8 +24,7 @@ function install_config_files {
             #-iter 10000 \ # This isn't enabled in ubuntu yet
 
         tar xf /tmp/$FILENAME -C /tmp/
-        #sed -i "s#TMP_LOC=#TMP_LOC=$TMP_LOC#g" /tmp/base-conf-files/run.sh
-        $TMP_LOC/run.sh $USER $password
+        $TMP_LOC/run.sh $USER
 
     else
 
