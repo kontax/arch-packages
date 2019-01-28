@@ -216,7 +216,7 @@ if [[ -v CONF_FILE_LOCATION ]]; then
         #-iter 10000 # this isn't enabled in ubuntu yet
 
     tar xf /mnt/$TMP_LOC/$FILENAME.tar.gz -C /mnt/$TMP_LOC/
-    arch-chroot /mnt $TMP_LOC/$FILENAME/run.sh $user $password
+    arch-chroot /mnt $TMP_LOC/$FILENAME/run.sh $user
     rm -r /mnt/$TMP_LOC/$FILENAME*
 fi
 
