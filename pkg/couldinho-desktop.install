@@ -1,3 +1,38 @@
+function can_resolve_hostname {
+    if ping -q -c 1 -W 1 www.example.com > /dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function install_config_files {
+    
+    if [ -n $CONF_FILE_LOCATION ]; then
+
+        FILENAME="base-conf-files.tar.gz"
+        TMP_LOC=/tmp/base-conf-files
+
+        # Use the IP when available (eg. during pacstrap)
+        curl -kL $CONF_FILE_LOCATION/$FILENAME.aes -o /tmp/$FILENAME.aes
+
+        openssl aes-256-cbc -d \
+            -salt \
+            -in /tmp/$FILENAME.aes \
+            -out /tmp/$FILENAME \
+            -k $CONF_FILE_PASS
+            #-iter 10000 \ # This isn't enabled in ubuntu yet
+
+        tar xf /tmp/$FILENAME -C /tmp/
+        $TMP_LOC/run.sh $USER
+
+    else
+
+        echo "No config files selected"
+
+    fi
+}
+
 post_install() {
     post_upgrade
 }
@@ -7,7 +42,18 @@ post_upgrade() {
     # LightDM config files
     cp /etc/lightdm/couldinho-lightdm.conf /etc/lightdm/lightdm.conf
     cp /etc/lightdm/couldinho-lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
+    
+    # Pull and decrypt sensitive configuration files
+    if ! can_resolve_hostname; then
+        echo "===="
+        echo "* Cannot resolve hostnames, probably due to being in pacstrap."
+        echo "* This script should be handled by the install script instead."
+        echo "==="
+    else
+        install_config_files
+    fi
 
     # Enable services
     systemctl enable lightdm.service
 }
+
