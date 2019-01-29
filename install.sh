@@ -6,6 +6,9 @@
 set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
+exec 1> >(tee "stdout.log")
+exec 2> >(tee "stderr.log")
+
 # System options to choose from
 SYSTEM_OPTIONS=(
     base        "Base system" \
@@ -16,27 +19,31 @@ REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
 export SNAP_PAC_SKIP=y
 
 # Dialog options
-HEIGHT=15
-WIDTH=40
-CHOICE_HEIGHT=4
+HEIGHT=0
+WIDTH=0
+CHOICE_HEIGHT=0
 BACKTITLE="Arch Linux install script"
+
 
 # Dialog Functions
 function get_input {
-    title=$1
-    desc=$2
+    title="$1"
+    desc="$2"
 
-    dialog --clear \
-           --stdout \
-           --backtitle "$BACKTITLE" \
-           --title "$title" \
-           --inputbox "$desc" \
-           0 0
+    input=$(
+        dialog --clear \
+               --stdout \
+               --backtitle "$BACKTITLE" \
+               --title "$title" \
+               --inputbox "$desc" \
+               $HEIGHT $WIDTH
+    )
+    echo "$input"
 }
 
 function get_password {
-    title=$1
-    desc=$2
+    title="$1"
+    desc="$2"
 
     init_pass=$(
         dialog --clear \
@@ -44,35 +51,39 @@ function get_password {
                --backtitle "$BACKTITLE" \
                --title "$title" \
                --passwordbox "$desc" \
-               0 0
-    ) || exit 1
-    clear
+               $HEIGHT $WIDTH
+    )
+    : ${init_pass:?"password cannot be empty"}
+    
     test_pass=$(
         dialog --clear \
                --stdout \
                --backtitle "$BACKTITLE" \
                --title "$title" \
                --passwordbox "$desc again" \
-               0 0
-    ) || exit 1
-    [[ "$init_pass" == "$test_pass" ]] || ( echo "Passwords did not match"; exit 1; )
+               $HEIGHT $WIDTH
+    )
+    if [[ "$init_pass" != "$test_pass" ]]; then
+        echo "Passwords did not match" >&2
+        exit 1
+    fi
     echo $init_pass
 }
 
-
 function get_choice {
-    title=$1
-    desc=$2
-    options=$3
-
+    title="$1"
+    shift
+    desc="$2"
+    shift
+    options=("$@")
     dialog --clear \
-           --backtitle "$BACKTITLE" \
-           --title "$title" \
-           --menu "$desc" \
-           0 0 0 \
-           "${options[@]}" \
-           2>&1 >/dev/null
-}
+        --stdout \
+         --backtitle "$BACKTITLE" \
+         --title "$title" \
+         --menu "$desc" \
+         $HEIGHT $WIDTH $CHOICE_HEIGHT \
+         "${options[@]}"
+ }
 
 
 #####
@@ -88,76 +99,28 @@ clear
 
 password=$(get_password "User" "Enter admin password") || exit 1
 clear
-: ${password:?"password cannot be empty"}
 
 passphrase=$(get_password "User" "Enter passphrase for encrypted volume") || exit 1
 clear
-: ${passphrase:?"password cannot be empty"}
 
-devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
-device=$(get_choice "Installation" "Select installation disk") || exit 1
+devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac | tr '\n' ' ')
+read -r -a devicelist <<< $devicelist
+device=$(get_choice "Installation" "Select installation disk" "${devicelist[@]}") || exit 1
 clear
+
 
 config=$(get_input "Config" "Enter location of config files (leave blank if required)") || exit 1
 clear
 
-if [ -n $config ]; thne
-    conf_pass=$(get_password "Config" "Enter passphrase to descrypt config files") || exit 1
+if [[ -v config ]]; then
+    conf_pass=$(get_password "Config" "Enter passphrase to decrypt config files") || exit 1
     clear
 fi
 
-system=$(get_choice "System" "Choose a system" $SYSTEM_OPTIONS) || exit 1
+system=$(get_choice "System" "Choose a system" "${SYSTEM_OPTIONS[@]}") || exit 1
 clear
+: ${system:?"system cannot be empty"}
 
-
-
-
-
-#hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0) || exit 1
-#clear
-#: ${hostname:?"hostname cannot be empty"}
-#
-#user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
-#clear
-#: ${user:?"user cannot be empty"}
-#
-#export password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
-#clear
-#: ${password:?"password cannot be empty"}
-#password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
-#clear
-#[[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
-#
-#passphrase=$(dialog --stdout --passwordbox "Enter passphrase for encrypted volume" 0 0) || exit 1
-#clear
-#: ${passphrase:?"passphrase cannot be empty"}
-#passphrase2=$(dialog --stdout --passwordbox "Enter passphrase for encrypted volume again" 0 0) || exit 1
-#clear
-#[[ "$passphrase" == "$passphrase2" ]] || ( echo "Passphrases did not match"; exit 1; )
-#
-#devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
-#device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
-#clear
-#
-#config=$(dialog --stdout --inputbox "Enter location of config files (leave blank if required)" 0 0)
-#clear
-#
-#if [ -n $config ]; then
-#
-#    conf_pass=$(dialog --stdout --passwordbox "Enter passphrase to decrypt config files" 0 0) || exit 1
-#    clear
-#    : ${conf_pass:?"passphrase cannot be empty"}
-#    conf_pass2=$(dialog --stdout --passwordbox "Enter passphrase to decrypt config files again" 0 0) || exit 1
-#    clear
-#    [[ "$conf_pass" == "$conf_pass2" ]] || ( echo "Passphrases did not match"; exit 1; )
-#
-#fi
-#
-#dialog --clear --backtitle "Arch Linux Install Script" --title "Choose a system" --menu "Choose a system:" \
-#    15 50 4 \
-#    base "Base system" \
-#    desktop "Dual monitor desktop with i3wm" \
-#    2>"${system}"
 
 echo ""
 echo "====="
