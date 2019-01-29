@@ -54,6 +54,18 @@ if [ -n $config ]; then
 
 fi
 
+dialog --clear --backtitle "Arch Linux Install Script" --title "Choose a system" --menu "Choose a system:" \
+    15 50 4 \
+    base "Base system" \
+    desktop "Dual monitor desktop with i3wm" \
+    2>"${system}"
+
+echo ""
+echo "====="
+echo "* INSTALLING $system "
+echo "==="
+echo ""
+
 # Environment variables for personal config files
 # The IP needs to be pulled for now due to pacstrap not having DNS lookup
 conf_url=${config#*//}
@@ -204,7 +216,7 @@ git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
 arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
 
 if [[ -v CONF_FILE_LOCATION ]]; then
-    FILENAME="base-conf-files"
+    FILENAME="$system-conf-files"
     TMP_LOC=/home/$user
     curl -kL $CONF_FILE_LOCATION/$FILENAME.tar.gz.aes -o /mnt/$TMP_LOC/$FILENAME.tar.gz.aes
 
