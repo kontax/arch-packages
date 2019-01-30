@@ -24,7 +24,7 @@ function install_config_files {
             #-iter 10000 \ # This isn't enabled in ubuntu yet
 
         tar xf /tmp/$FILENAME -C /tmp/
-        $TMP_LOC/run.sh $USER
+        $TMP_LOC/run.sh $CONF_FILE_USER
 
     else
 
