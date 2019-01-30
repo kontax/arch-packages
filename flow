@@ -1,0 +1,11 @@
+1. Install.sh
+  > Install full system - no personal files
+  > Chroot + clone dotfiles
+  > Environment variable outlining system (in /etc/profile.d probably)
+  > All files that can be standardised should be (ie. /etc/i3 rather than ~/.config/i3)
+
+2. Setup
+  > Different script for each system config
+  > Setup links personal files + system-wide secret files
+  > Files copies or links between different systems? Eg. gnupg.conf desktop == base
+  > Setup should install system within script - should work in exising system
