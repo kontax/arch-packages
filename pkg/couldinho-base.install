@@ -19,6 +19,9 @@ post_upgrade() {
     # Move pacman repo details and settings
     cp /etc/couldinho-pacman.conf /etc/pacman.conf
 
+    # vimrc
+    cp /etc/couldinho-vimrc /etc/vimrc
+
     # Move USBGuard config
     cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
 

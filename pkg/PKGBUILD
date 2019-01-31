@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(f7b44c053ac4b3db4fdee15c297f44ef5be1b61728ef03292d3842a33f752da4)
+sha256sums=(a9178408939f56fef54ef187920d376775c6b42ba96bb6decb5b5bbc1952cb1f)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -88,7 +88,7 @@ package_couldinho-base() {
     install -Dm 0644 base/etc/pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
     install -Dm 0644 base/etc/pacman.d/couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
     install -Dm 0400 base/etc/sudoers "$pkgdir/etc/couldinho-sudoers"
-    install -Dm 0400 base/etc/vimrc "$pkgdir/etc/couldinho-couldinho-vimrc"
+    install -Dm 0644 base/etc/vimrc "$pkgdir/etc/couldinho-vimrc"
 
     # Boot and base progs
     depends+=(
