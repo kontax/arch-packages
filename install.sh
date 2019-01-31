@@ -112,7 +112,7 @@ clear
 config=$(get_input "Config" "Enter location of config files (leave blank if required)") || exit 1
 clear
 
-if [[ -v config ]]; then
+if [ ! -z $config ]; then
     conf_pass=$(get_password "Config" "Enter passphrase to decrypt config files") || exit 1
     clear
 fi
@@ -130,9 +130,11 @@ echo ""
 
 # Environment variables for personal config files
 # The IP needs to be pulled for now due to pacstrap not having DNS lookup
-conf_url=${config#*//}
-export CONF_FILE_LOCATION=$config
-export CONF_FILE_PASS=$conf_pass
+if [ ! -z $config ]; then
+    conf_url=${config#*//}
+    export CONF_FILE_LOCATION=$config
+    export CONF_FILE_PASS=$conf_pass
+fi
 
 #####
 # Set up logging
@@ -277,7 +279,7 @@ echo "  [*] Cloning dotfiles to home folder"
 git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
 arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
 
-if [[ -v CONF_FILE_LOCATION ]]; then
+if [ -z CONF_FILE_LOCATION ]; then
     FILENAME="$system-conf-files"
     TMP_LOC=/home/$user
     curl -kL $CONF_FILE_LOCATION/$FILENAME.tar.gz.aes -o /mnt/$TMP_LOC/$FILENAME.tar.gz.aes
