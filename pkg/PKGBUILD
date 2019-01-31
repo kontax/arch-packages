@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(SKIP)
+sha256sums=(f7b44c053ac4b3db4fdee15c297f44ef5be1b61728ef03292d3842a33f752da4)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -220,7 +220,7 @@ package_couldinho-desktop() {
     )
 
     install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-config"
-    install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/i3status.conf"
+    install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
     install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
 
     # Login manager
@@ -272,6 +272,7 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/vm.py "$pkgdir/etc/xdg/kitty/vm.py"
+    install -Dm 0644 desktop/etc/xdg/compton.conf "$pkgdir/etc/xdg/couldinho-compton.conf"
 
     # Networking
     depends+=(
