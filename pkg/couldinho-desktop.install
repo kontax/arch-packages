@@ -5,7 +5,7 @@ post_install() {
 post_upgrade() {
 
     # System environment variables
-    cp /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
+    mv /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
 
     # i3 global configuration
     cp /etc/i3/couldinho-config /etc/i3/config
