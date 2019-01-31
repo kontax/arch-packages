@@ -99,3 +99,6 @@ set secure
 " Set column 110 with a color to notify.
 set colorcolumn=110
 highlight ColorColumn ctermbg=White
+
+" Arch Linux specific
+runtime! archlinux.vim

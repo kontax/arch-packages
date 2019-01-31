@@ -10,6 +10,7 @@ groups=(coudinho)
 
 source=(
     couldinho-arch-aur
+    gitstatus
     grub
     grub-btrfs-config
     lightdm.conf
@@ -24,7 +25,7 @@ source=(
     usbguard-daemon.conf
     zz_custom.sh
 )
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -113,6 +114,8 @@ package_couldinho-base() {
         cifs-utils          # Connect to shared drives
         stow                # Link dotfiles to home dir
     )
+
+    install -Dm 0644 gitstatus "$pkgdir/etc/gitstatus"
     
     # Base replacements
     depends+=(
