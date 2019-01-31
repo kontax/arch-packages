@@ -2,8 +2,8 @@
 prezto_apply_patches() (
   if [ "$(whoami)" != "root" ]; then
     cd "$HOME/.antigen/bundles/sorin-ionescu/prezto"
-    patch -p1 -f -r - --no-backup-if-mismatch < "$HOME/zsh/zprezto-patches/prompt.patch" >/dev/null 2>&1
-    patch -p1 -f -r - --no-backup-if-mismatch < "$HOME/zsh/zprezto-patches/wordchars.patch" >/dev/null 2>&1
+    patch -p1 -f -r - --no-backup-if-mismatch < "/etc/zsh/zprezto-patches/prompt.patch" >/dev/null 2>&1
+    patch -p1 -f -r - --no-backup-if-mismatch < "/etc/zsh/zprezto-patches/wordchars.patch" >/dev/null 2>&1
   fi
 )
 
