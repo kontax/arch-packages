@@ -9,3 +9,8 @@
   > Setup links personal files + system-wide secret files
   > Files copies or links between different systems? Eg. gnupg.conf desktop == base
   > Setup should install system within script - should work in exising system
+
+3. Sources
+  > GitHub
+  > Personal git
+  > Server
