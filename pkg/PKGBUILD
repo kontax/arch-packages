@@ -6,28 +6,15 @@ pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
 license=(MIT)
-groups=(coudinho)
+groups=(couldinho)
 
-source=(
-    couldinho-arch-aur
-    grub
-    grub-btrfs-config
-    lightdm.conf
-    lightdm-gtk-greeter.conf
-    mkinitcpio.conf
-    pacman.conf
-    pia.conf
-    root
-    snap-pac.conf
-    snapper
-    sudoers
-    usbguard-daemon.conf
-    zz_custom.sh
-)
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+source=(conf-files.tar.xz)
+sha256sums=(f24e98911fbe358d67f218cd71bf12030b27e975bf19d1dd7e7a126588d7e341)
 
 package_couldinho-base() {
     install=couldinho-base.install
+
+    install -Dm 0644 base/etc/profile.d/couldinho-base.sh "$pkgdir/etc/profile.d/couldinho-base.sh"
 
     # base
     depends=(
@@ -96,11 +83,12 @@ package_couldinho-base() {
         systemd
     )
 
-    install -Dm 0644 couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
-    install -Dm 0644 pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
-    install -Dm 0644 grub "$pkgdir/etc/default/couldinho-grub"
-    install -Dm 0644 mkinitcpio.conf "$pkgdir/etc/couldinho-mkinitcpio.conf"
-    install -Dm 0400 sudoers "$pkgdir/etc/couldinho-sudoers"
+    install -Dm 0644 base/etc/default/grub "$pkgdir/etc/default/couldinho-grub"
+    install -Dm 0644 base/etc/mkinitcpio.conf "$pkgdir/etc/couldinho-mkinitcpio.conf"
+    install -Dm 0644 base/etc/pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
+    install -Dm 0644 base/etc/pacman.d/couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
+    install -Dm 0400 base/etc/sudoers "$pkgdir/etc/couldinho-sudoers"
+    install -Dm 0644 base/etc/vimrc "$pkgdir/etc/couldinho-vimrc"
 
     # Boot and base progs
     depends+=(
@@ -113,6 +101,8 @@ package_couldinho-base() {
         cifs-utils          # Connect to shared drives
         stow                # Link dotfiles to home dir
     )
+
+    install -Dm 0644 base/etc/gitconfig "$pkgdir/etc/gitconfig"
     
     # Base replacements
     depends+=(
@@ -132,7 +122,7 @@ package_couldinho-base() {
         private-internet-access-vpn # Scripts for managing PIA
     )
     
-    install -Dm 0644 pia.conf "$pkgdir/etc/private-internet-access/pia.conf"
+    install -Dm 0644 base/etc/private-internet-access/pia.conf "$pkgdir/etc/private-internet-access/pia.conf"
 
     # Shell
     depends+=(
@@ -144,6 +134,26 @@ package_couldinho-base() {
         pydf                # Colourised version of df
     )
 
+    install -Dm 0644 base/etc/zsh/antigen.zsh "$pkgdir/etc/zsh/antigen.zsh"
+    install -Dm 0644 base/etc/zsh/aliases.zsh "$pkgdir/etc/zsh/aliases.zsh"
+    install -Dm 0644 base/etc/zsh/env.zsh "$pkgdir/etc/zsh/env.zsh"
+    install -Dm 0644 base/etc/zsh/fuzzy.zsh "$pkgdir/etc/zsh/fuzzy.zsh"
+    install -Dm 0644 base/etc/zsh/git.zsh "$pkgdir/etc/zsh/git.zsh"
+    install -Dm 0644 base/etc/zsh/keybindings.zsh "$pkgdir/etc/zsh/keybindings.zsh"
+    install -Dm 0644 base/etc/zsh/opts.zsh "$pkgdir/etc/zsh/opts.zsh"
+    install -Dm 0644 base/etc/zsh/pacman.zsh "$pkgdir/etc/zsh/pacman.zsh"
+    install -Dm 0644 base/etc/zsh/prezto.zsh "$pkgdir/etc/zsh/prezto.zsh"
+    install -Dm 0644 base/etc/zsh/prezto-patches.zsh "$pkgdir/etc/zsh/prezto-patches.zsh"
+    install -Dm 0644 base/etc/zsh/prompt.zsh "$pkgdir/etc/zsh/prompt.zsh"
+    install -Dm 0644 base/etc/zsh/sandboxd.zsh "$pkgdir/etc/zsh/sandboxd.zsh"
+    install -Dm 0644 base/etc/zsh/ssh.zsh "$pkgdir/etc/zsh/ssh.zsh"
+    install -Dm 0644 base/etc/zsh/title.zsh "$pkgdir/etc/zsh/title.zsh"
+    install -Dm 0644 base/etc/zsh/zsh-notify.zsh "$pkgdir/etc/zsh/zsh-notify.zsh"
+    install -Dm 0644 base/etc/zsh/zshrc "$pkgdir/etc/zsh/couldinho-zshrc"
+    install -Dm 0644 base/etc/zsh/zprezto-patches/prompt.patch "$pkgdir/etc/zsh/zprezto-patches/prompt.patch"
+    install -Dm 0644 base/etc/zsh/zprezto-patches/wordchars.patch \
+                 "$pkgdir/etc/zsh/zprezto-patches/wordchars.patch"
+
     # Filesystem
     depends+=(
         btrfs-progs         # BTRFS filesystem tools
@@ -152,10 +162,10 @@ package_couldinho-base() {
         snap-pac-grub       # Add grub entries for snapshots
     )
 
-    install -Dm 0644 snapper "$pkgdir/etc/conf.d/couldinho-snapper"
-    install -Dm 0644 root "$pkgdir/etc/snapper/configs/root"
-    install -Dm 0644 snap-pac.conf "$pkgdir/etc/snap-pac.conf" # This may need to be moved to install
-    install -Dm 0644 grub-btrfs-config "$pkgdir/etc/default/grub-btrfs/couldinho-config"
+    install -Dm 0644 base/etc/conf.d/snapper "$pkgdir/etc/conf.d/couldinho-snapper"
+    install -Dm 0644 base/etc/snapper/configs/root "$pkgdir/etc/snapper/configs/root"
+    install -Dm 0644 base/etc/snap-pac.conf "$pkgdir/etc/snap-pac.conf"
+    install -Dm 0644 base/etc/default/grub-btrfs/config "$pkgdir/etc/default/grub-btrfs/couldinho-config"
 
     # Access Control
     depends+=(
@@ -169,8 +179,9 @@ package_couldinho-base() {
         git-secret          # Helper tool for storing private files in a git repo
     )
 
-    install -Dm 0644 zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
-    install -Dm 0600 usbguard-daemon.conf "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"
+    install -Dm 0644 base/etc/profile.d/zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
+    install -Dm 0600 base/etc/usbguard/usbguard-daemon.conf \
+        "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"
 
     # Packages
     depends+=(
@@ -183,6 +194,8 @@ package_couldinho-base() {
 
 package_couldinho-desktop() {
     install=couldinho-desktop.install
+
+    install -Dm 0644 desktop/etc/profile.d/couldinho-desktop.sh "$pkgdir/etc/profile.d/couldinho-desktop.sh"
 
     # base
     depends=(
@@ -206,14 +219,19 @@ package_couldinho-desktop() {
         i3ipc-python            # IPC for i3 via python
     )
 
+    install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-config"
+    install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
+    install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
+
     # Login manager
     depends+=(
         lightdm             	# Login manager
         lightdm-gtk-greeter 	# Theme for login manager
     )
 
-    install -Dm 0644 lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
-    install -Dm 0644 lightdm-gtk-greeter.conf "$pkgdir/etc/lightdm/couldinho-lightdm-gtk-greeter.conf"
+    install -Dm 0644 desktop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
+    install -Dm 0644 desktop/etc/lightdm/lightdm-gtk-greeter.conf \
+        "$pkgdir/etc/lightdm/couldinho-lightdm-gtk-greeter.conf"
 
     # Further i3 packages
     depends+=(
@@ -251,6 +269,11 @@ package_couldinho-desktop() {
         freerdp             	# Remote desktop client
     )
 
+    install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
+    install -Dm 0644 desktop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
+    install -Dm 0644 desktop/etc/xdg/kitty/vm.py "$pkgdir/etc/xdg/kitty/vm.py"
+    install -Dm 0644 desktop/etc/xdg/compton.conf "$pkgdir/etc/xdg/couldinho-compton.conf"
+
     # Networking
     depends+=(
         nm-connection-editor        # Gui tool for managing NetworkManager connections
@@ -266,4 +289,13 @@ package_couldinho-desktop() {
         x265                    # Video compression
         browserpass             # Browser extenson for pass
     )
+
+    # General scripts
+    install -Dm 0755 desktop/usr/local/bin/i3-autoname-workspaces "$pkgdir/usr/local/bin/i3-autoname-workspaces"
+    install -Dm 0755 desktop/usr/local/bin/i3exit "$pkgdir/usr/local/bin/i3exit"
+    install -Dm 0755 desktop/usr/local/bin/is_online "$pkgdir/usr/local/bin/is_online"
+    install -Dm 0755 desktop/usr/local/bin/rdp "$pkgdir/usr/local/bin/rdp"
+    install -Dm 0755 desktop/usr/local/bin/renumber-sessions "$pkgdir/usr/local/bin/renumber-sessions"
+    install -Dm 0755 desktop/usr/local/bin/rofi-calc "$pkgdir/usr/local/bin/rofi-calc"
+    install -Dm 0755 desktop/usr/local/bin/set-brightness "$pkgdir/usr/local/bin/set-brightness"
 }

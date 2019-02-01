@@ -9,3 +9,11 @@ pia-login.conf
 
 # Python compilation directory
 __pycache__/
+
+# Build directories
+build/
+
+# Archives
+*.tar.xz
+*.tar.gz
+*.tar

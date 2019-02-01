@@ -1,0 +1,25 @@
+# Lazy-loading
+. /etc/zsh/sandboxd.zsh
+
+# Load environment variables
+. /usr/share/LS_COLORS/dircolors.sh
+. /etc/zsh/env.zsh
+
+# Load terminal configuration
+. /etc/zsh/title.zsh
+. /etc/zsh/prompt.zsh
+
+# Load plugins
+. /etc/zsh/prezto.zsh
+. /etc/zsh/zsh-notify.zsh
+. /etc/zsh/antigen.zsh
+. /etc/zsh/prezto-patches.zsh
+
+# Load custom configurations
+. /etc/zsh/opts.zsh
+. /etc/zsh/keybindings.zsh
+. /etc/zsh/aliases.zsh
+. /etc/zsh/pacman.zsh
+. /etc/zsh/git.zsh
+. /etc/zsh/fuzzy.zsh
+. /etc/zsh/ssh.zsh
