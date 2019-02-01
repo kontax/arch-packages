@@ -280,20 +280,7 @@ git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
 arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
 
 if [ -z CONF_FILE_LOCATION ]; then
-    FILENAME="$system-conf-files"
-    TMP_LOC=/home/$user
-    curl -kL $CONF_FILE_LOCATION/$FILENAME.tar.gz.aes -o /mnt/$TMP_LOC/$FILENAME.tar.gz.aes
-
-    openssl aes-256-cbc -d \
-        -salt \
-        -in /mnt/$TMP_LOC/$FILENAME.tar.gz.aes \
-        -out /mnt/$TMP_LOC/$FILENAME.tar.gz \
-        -k $CONF_FILE_PASS
-        #-iter 10000 # this isn't enabled in ubuntu yet
-
-    tar xf /mnt/$TMP_LOC/$FILENAME.tar.gz -C /mnt/$TMP_LOC/
-    arch-chroot /mnt $TMP_LOC/$FILENAME/run.sh $user
-    rm -r /mnt/$TMP_LOC/$FILENAME*
+    echo "Not implemented yet"
 fi
 
 echo "[*] DONE - Install setup from $HOME/dotfiles"
