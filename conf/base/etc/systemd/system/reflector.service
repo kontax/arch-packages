@@ -1,0 +1,8 @@
+[Unit]
+Description=Pacman mirrorlist update
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/reflector -p https -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist

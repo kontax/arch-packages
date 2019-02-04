@@ -40,4 +40,5 @@ post_upgrade() {
     systemctl enable strongswan.service
     systemctl enable usbguard.service
     systemctl enable usbguard-dbus.service
+    systemctl enable reflector.timer
 }
