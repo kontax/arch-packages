@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop)
 pkgver=1
-pkgrel=1
+pkgrel=3
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(f24e98911fbe358d67f218cd71bf12030b27e975bf19d1dd7e7a126588d7e341)
+sha256sums=(545580117c9303973be6cbca0adf9a825d69a6cad1e82e3a94c423e8b0273a09)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -190,6 +190,9 @@ package_couldinho-base() {
         pacman-contrib      # Contains checkupdates plus other pacman scripts
         reflector           # Automatically sort out pacman mirrorlist
     )
+
+    install -Dm 0644 base/etc/systemd/system/reflector.service "$pkgdir/etc/systemd/system/reflector.service"
+    install -Dm 0644 base/etc/systemd/system/reflector.timer "$pkgdir/etc/systemd/system/reflector.timer"
 }
 
 package_couldinho-desktop() {
@@ -267,6 +270,7 @@ package_couldinho-desktop() {
         ranger              	# File manager from terminal (vim keybindings)
         python-pillow       	# Used to view pictures within ranger
         freerdp             	# Remote desktop client
+        xsecurelock             # Desktop lock screen
     )
 
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
