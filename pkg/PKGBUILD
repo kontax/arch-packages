@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop)
 pkgver=1
-pkgrel=4
+pkgrel=5
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -252,6 +252,8 @@ package_couldinho-desktop() {
         pinentry-dmenu          # Enter GPG pins using dmenu
     )
 
+    install -Dm 0644 desktop/etc/rofi.conf "$pkgdir/etc/rofi.conf"
+
     # Multimedia
     depends+=(
         alsa-utils          	# Sound support
@@ -302,4 +304,31 @@ package_couldinho-desktop() {
     install -Dm 0755 desktop/usr/local/bin/renumber-sessions "$pkgdir/usr/local/bin/renumber-sessions"
     install -Dm 0755 desktop/usr/local/bin/rofi-calc "$pkgdir/usr/local/bin/rofi-calc"
     install -Dm 0755 desktop/usr/local/bin/set-brightness "$pkgdir/usr/local/bin/set-brightness"
+}
+
+package_couldinho-laptop() {
+    install=couldinho-laptop.install
+
+    install -Dm 0644 laptop/etc/profile.d/couldinho-laptop.sh "$pkgdir/etc/profile.d/couldinho-laptop.sh"
+
+    # base + desktop
+    depends=(
+        couldinho-desktop
+    )
+
+    # Laptop specific programs
+    depends+=(
+        light                   # Program to change backlight
+    )
+
+    # i3
+    install -Dm 0644 laptop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
+
+    # Login manager
+    install -Dm 0644 laptop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
+    install -Dm 0644 laptop/etc/lightdm/lightdm-gtk-greeter.conf \
+        "$pkgdir/etc/lightdm/couldinho-lightdm-gtk-greeter.conf"
+
+    # Further i3 packages
+    install -Dm 0644 desktop/etc/rofi.conf "$pkgdir/etc/rofi.conf"
 }
