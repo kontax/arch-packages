@@ -13,6 +13,7 @@ exec 2> >(tee "stderr.log")
 SYSTEM_OPTIONS=(
     base        "Base system" \
     desktop     "Dual monitor desktop with i3wm" \
+    laptop      "HiDPI laptop with i3status options" \
 )
 
 REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
