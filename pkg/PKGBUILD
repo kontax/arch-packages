@@ -1,5 +1,5 @@
 pkgbase='couldinho'
-pkgname=(couldinho-base couldinho-desktop)
+pkgname=(couldinho-base couldinho-desktop couldinho-laptop)
 pkgver=1
 pkgrel=5
 pkgdesc="Packages for couldinho systems"
@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(4b9e7b3f10cd692ad14ef001ef3451ef5037c050457ced648b898c838069e47e)
+sha256sums=(0d2b34b119beff801d1fc0d8051da98716023f57b16a81a24fee39d4287923a6)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -325,7 +325,6 @@ package_couldinho-laptop() {
     install -Dm 0644 laptop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
 
     # Login manager
-    install -Dm 0644 laptop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
     install -Dm 0644 laptop/etc/lightdm/lightdm-gtk-greeter.conf \
         "$pkgdir/etc/lightdm/couldinho-lightdm-gtk-greeter.conf"
 
