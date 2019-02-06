@@ -8,10 +8,10 @@ post_upgrade() {
     mv /etc/profile.d/couldinho-laptop.sh /etc/profile.d/couldinho.sh
 
     # i3 global configuration
-    cp /etc/couldinho-i3status.conf /etc/i3status.conf
+    mv /etc/couldinho-i3status.conf /etc/i3status.conf
 
     # LightDM config files
-    cp /etc/lightdm/couldinho-lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
+    mv /etc/lightdm/couldinho-lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
 
     # Enable services
     systemctl enable lightdm.service

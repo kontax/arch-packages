@@ -8,35 +8,35 @@ post_upgrade() {
     mv /etc/profile.d/couldinho-base.sh /etc/profile.d/couldinho.sh
 
     # Sudoers file
-    cp /etc/couldinho-sudoers /etc/sudoers
+    mv /etc/couldinho-sudoers /etc/sudoers
 
     # Add encryption to kernel
-    cp /etc/couldinho-mkinitcpio.conf /etc/mkinitcpio.conf
+    mv /etc/couldinho-mkinitcpio.conf /etc/mkinitcpio.conf
 
     # Use encrypted root system via grub
     part_root=$(grep cryptdevice /etc/default/grub | sed 's/.*cryptdevice=\(.*\)/\1/g' | cut -d ':' -f 1)
     if [ ! -z $part_root ]; then
         sed -i "s|#PART_ROOT#|${part_root}|g" /etc/default/couldinho-grub
     fi
-    cp /etc/default/couldinho-grub /etc/default/grub
+    mv /etc/default/couldinho-grub /etc/default/grub
 
     # Move pacman repo details and settings
-    cp /etc/couldinho-pacman.conf /etc/pacman.conf
+    mv /etc/couldinho-pacman.conf /etc/pacman.conf
 
     # vimrc
-    cp /etc/couldinho-vimrc /etc/vimrc
+    mv /etc/couldinho-vimrc /etc/vimrc
 
     # Move USBGuard config
-    cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
+    mv -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
 
     # Settings for BTRFS in grub
-    cp /etc/default/grub-btrfs/couldinho-config /etc/default/grub-btrfs/config
+    mv /etc/default/grub-btrfs/couldinho-config /etc/default/grub-btrfs/config
 
     # Move snapper config
-    cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
+    mv /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
 
     # zsh settings
-    cp /etc/zsh/couldinho-zshrc /etc/zsh/zshrc
+    mv /etc/zsh/couldinho-zshrc /etc/zsh/zshrc
 
     # Start services
     systemctl enable NetworkManager.service
