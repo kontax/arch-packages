@@ -325,5 +325,5 @@ package_couldinho-laptop() {
     install -Dm 0644 laptop/etc/i3status.conf "$pkgdir/etc/couldinho-laptop-i3status.conf"
     install -Dm 0644 laptop/etc/lightdm/lightdm-gtk-greeter.conf \
         "$pkgdir/etc/lightdm/couldinho-laptop-lightdm-gtk-greeter.conf"
-    install -Dm 0644 laptop/etc/rofi.conf "$pkgdir/etc/rofi.conf"
+    install -Dm 0644 laptop/etc/rofi.conf "$pkgdir/etc/couldinho-laptop-rofi.conf"
 }
