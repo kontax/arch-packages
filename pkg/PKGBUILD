@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop)
 pkgver=1
-pkgrel=5
+pkgrel=6
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(0d2b34b119beff801d1fc0d8051da98716023f57b16a81a24fee39d4287923a6)
+sha256sums=(9ea8efc710bf2fd4e701eebbc8cc0be4cca821d2b7958698caadf68ed4883494)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -89,6 +89,9 @@ package_couldinho-base() {
     install -Dm 0644 base/etc/pacman.d/couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
     install -Dm 0400 base/etc/sudoers "$pkgdir/etc/couldinho-sudoers"
     install -Dm 0644 base/etc/vimrc "$pkgdir/etc/couldinho-vimrc"
+    install -Dm 0644 base/etc/vconsole.conf "$pkgdir/etc/vconsole.conf"
+    install -Dm 0644 base/usr/share/kbd/keymaps/i386/qwerty/jc.map.gz \
+                "$pkgdir/usr/share/kbd/keymaps.i386/qwerty/jc.map.gz"
 
     # Boot and base progs
     depends+=(
@@ -213,6 +216,10 @@ package_couldinho-desktop() {
         xorg-xprop          	# Display X properties
         xorg-xrandr         	# Resize & Rotate
     )
+
+    install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
+                    "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
+    install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
 
     # i3
     depends+=(
