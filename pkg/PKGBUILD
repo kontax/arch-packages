@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(9ea8efc710bf2fd4e701eebbc8cc0be4cca821d2b7958698caadf68ed4883494)
+sha256sums=(c83cc2005eb9e18b74ea0a674546bd03c4ed208335238829f09e37d3400bc546)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -91,7 +91,7 @@ package_couldinho-base() {
     install -Dm 0644 base/etc/vimrc "$pkgdir/etc/couldinho-vimrc"
     install -Dm 0644 base/etc/vconsole.conf "$pkgdir/etc/vconsole.conf"
     install -Dm 0644 base/usr/share/kbd/keymaps/i386/qwerty/jc.map.gz \
-                "$pkgdir/usr/share/kbd/keymaps.i386/qwerty/jc.map.gz"
+                "$pkgdir/usr/share/kbd/keymaps/i386/qwerty/jc.map.gz"
 
     # Boot and base progs
     depends+=(
