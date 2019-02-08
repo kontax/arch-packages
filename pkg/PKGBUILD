@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(c83cc2005eb9e18b74ea0a674546bd03c4ed208335238829f09e37d3400bc546)
+sha256sums=(3cced64c69113b7a0b0480d700f6eb6cdbbc04fe7c97f346f163bceca39debed)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -253,7 +253,8 @@ package_couldinho-desktop() {
         otf-font-awesome    	# Font with icons
         python-tzlocal      	# Used within the clock for the status bar
         gsimplecal          	# GTK calendar for the status bar
-        dunst               	# Notification library
+        dunst               	# Notification server
+        libnotify               # Notification library
         python-pydbus           # Python DBus connector (used by usbguard i3status module)
         yubikey-touch-detector  # i3status notification for when yubikey needs attention 
         pinentry-dmenu          # Enter GPG pins using dmenu
