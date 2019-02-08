@@ -1,16 +1,18 @@
 #!/bin/bash
 
-CONF_ARCHIVE="conf-files.tar.xz"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+GIT_ROOT=$(git -C $DIR rev-parse --show-toplevel)
+CONF_ARCHIVE="$GIT_ROOT/pkg/conf-files.tar.xz"
 
 # Package config files
 if [ -f $CONF_ARCHIVE ]; then
     rm $CONF_ARCHIVE
 fi
-tar -cf $CONF_ARCHIVE -C ../conf/ .
+tar -cf $CONF_ARCHIVE -C $GIT_ROOT/conf/ .
 
 # Set checksums
 CHKSUM=$(sha256sum $CONF_ARCHIVE | awk '{ print $1 }')
-sed -i "s/sha256sums.*/sha256sums=($CHKSUM)/g" PKGBUILD
+sed -i "s/sha256sums.*/sha256sums=($CHKSUM)/g" "$GIT_ROOT/pkg/PKGBUILD"
 
 # Build the package
 #cd build && aur chroot
