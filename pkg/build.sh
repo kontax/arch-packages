@@ -15,7 +15,12 @@ CHKSUM=$(sha256sum $CONF_ARCHIVE | awk '{ print $1 }')
 sed -i "s/sha256sums.*/sha256sums=($CHKSUM)/g" "$GIT_ROOT/pkg/PKGBUILD"
 
 # Build the package
-#cd build && aur chroot
+if [ -d build ]; then
+    rm -r build
+fi
+mkdir build
+cp *.install PKGBUILD conf-files.tar.xz -t build
+cd build && aur chroot
 
 # TODO: Add the built packages to the remote repo
 # scp *.pkg.tar.xz $SERVER
