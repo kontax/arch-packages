@@ -275,11 +275,11 @@ arch-chroot /mnt chsh -s /usr/bin/zsh
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
 
-if [ -z CONF_FILE_LOCATION ]; then
-    echo "Not implemented yet"
-    #echo "  [*] Cloning dotfiles to home folder"
-    #git clone https://github.com/kontax/dotfiles.git /mnt/home/$user/dotfiles
-    arch-chroot /mnt chown -R $user:users /home/$user/dotfiles
+if [ ! -z $CONF_FILE_LOCATION ]; then
+    echo "  [*] Cloning dotfiles to home folder"
+    arch-chroot /mnt sudo -u $user bash < <( \
+        curl -skL $CONF_FILE_LOCATION \
+        | openssl aes-256-cbc -salt -d -k "$CONF_FILE_PASS")
 fi
 
 echo "[*] DONE - Install setup from $HOME/dotfiles"
