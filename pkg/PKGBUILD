@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(3cced64c69113b7a0b0480d700f6eb6cdbbc04fe7c97f346f163bceca39debed)
+sha256sums=(57e966bdac4e5cf05025445d70ab4f7346a822274a5e6b2412ae5640e6d36640)
 
 package_couldinho-base() {
     install=couldinho-base.install
