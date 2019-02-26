@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop)
 pkgver=1
-pkgrel=6
+pkgrel=7
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -178,7 +178,7 @@ package_couldinho-base() {
         yubikey-manager     # Yubikey settings
         yubico-pam          # PAM settings for yubikey
         libu2f-server       # Libraries for U2F - login with yubikey
-        pam_u2f             # Login to system with U2F
+        pam-u2f             # Login to system with U2F
         git-secret          # Helper tool for storing private files in a git repo
     )
 
@@ -281,6 +281,7 @@ package_couldinho-desktop() {
         python-pillow       	# Used to view pictures within ranger
         freerdp             	# Remote desktop client
         xsecurelock             # Desktop lock screen
+        rr                      # Replaying debugger TODO: Move to reveng
     )
 
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
