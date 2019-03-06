@@ -1,5 +1,5 @@
 [user]
-	email = james@coulson.ie
+	email = github@coulson.ie
 	name = James Coulson
 [credential]
 	helper = !pass-git-helper $@
