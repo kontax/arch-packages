@@ -2,7 +2,8 @@
 
 A collection of packages and scripts used for easy system install/maintenance.
 
-This collection of packages is tuned to my specific system
+This collection of packages is tuned to my specific system, and will overwrite anything already installed
+on an existing system.
 
 ## Installation
 
