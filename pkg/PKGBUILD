@@ -342,3 +342,19 @@ package_couldinho-laptop() {
         "$pkgdir/etc/lightdm/couldinho-laptop-lightdm-gtk-greeter.conf"
     install -Dm 0644 laptop/etc/rofi.conf "$pkgdir/etc/couldinho-laptop-rofi.conf"
 }
+
+#package_couldinho-dev() {
+#    install=couldinho-dev.install
+#
+#    install -Dm 0644 dev/etc/profile.d/coudinho-dev.sh "$pkgdir/etc/profile.d/couldinho-dev.sh"
+#
+#    depends=(
+#        couldinho-base
+#    )
+#
+#    # AWS
+#    depends+=(
+#        aws-cli                 # Command line interface to AWS
+#        npm                     # Node package manager (used for serverless)
+#    )
+#}
