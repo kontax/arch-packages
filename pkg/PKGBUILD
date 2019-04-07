@@ -270,6 +270,12 @@ package_couldinho-desktop() {
         pamixer             	# Command line mixer
     )
 
+    # Documents
+    depends+=(
+        zathura                 # PDF viewer with vim bindings
+        zathura-pdf-mupdf       # MuPDF plugin for zathura
+    )
+
     # Terminal + desktop tools
     depends+=(
         kitty               	# GPU enhanced terminal emulator
