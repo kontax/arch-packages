@@ -358,3 +358,18 @@ package_couldinho-laptop() {
 #        npm                     # Node package manager (used for serverless)
 #    )
 #}
+#
+#package_couldinho-sec() {
+#   install=couldinho-sec.install
+#
+#    install -Dm 0644 dev/etc/profile.d/coudinho-sec.sh "$pkgdir/etc/profile.d/couldinho-sec.sh"
+#
+#    depends=(
+#        couldinho-base
+#    )
+#
+#   # Files
+#   depends+=(
+#       010editor               # Text/hex editor with templates
+#   )
+#)
