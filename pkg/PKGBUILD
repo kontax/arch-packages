@@ -334,6 +334,7 @@ package_couldinho-laptop() {
     # Laptop specific programs
     depends+=(
         light                   # Program to change backlight
+        010editor               # Test auto-build
     )
 
     # Overwrite desktop files
