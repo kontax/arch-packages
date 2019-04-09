@@ -20,11 +20,4 @@ if [ -d build ]; then
 fi
 mkdir build
 cp *.install PKGBUILD conf-files.tar.xz -t build
-cd build && aur chroot
-
-# TODO: Add the built packages to the remote repo
-# scp *.pkg.tar.xz $SERVER
-# update server ...
-
-# Clean up
-# cd .. && rm -r build
+cd build
