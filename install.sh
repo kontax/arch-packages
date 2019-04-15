@@ -182,7 +182,7 @@ wipefs "${part_root}"
 
 mkfs.vfat -n "EFI" -F32 "${part_boot}"
 mkswap "${part_swap}"
-echo -n ${passphrase} | cryptsetup luksFormat "${part_root}"
+echo -n ${passphrase} | cryptsetup luksFormat --type luks1 "${part_root}"
 echo -n ${passphrase} | cryptsetup luksOpen "${part_root}" luks
 mkfs.btrfs -L btrfs /dev/mapper/luks
 
