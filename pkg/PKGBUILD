@@ -308,7 +308,7 @@ package_couldinho-desktop() {
         vivaldi-widevine        # Stream DRM support for vivaldi
         pepper-flash            # Flash player
         x265                    # Video compression
-        browserpass             # Browser extenson for pass
+        browserpass-chromium    # Browser extenson for pass
     )
 
     # General scripts
@@ -334,7 +334,6 @@ package_couldinho-laptop() {
     # Laptop specific programs
     depends+=(
         light                   # Program to change backlight
-        010editor               # Test auto-build
     )
 
     # Overwrite desktop files
