@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(57e966bdac4e5cf05025445d70ab4f7346a822274a5e6b2412ae5640e6d36640)
+sha256sums=(62dc3d5c7a6560e7f2ab721353fa987be125e7452c3dc6a299f2530a0577cf28)
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -346,7 +346,7 @@ package_couldinho-laptop() {
 #package_couldinho-dev() {
 #    install=couldinho-dev.install
 #
-#    install -Dm 0644 dev/etc/profile.d/coudinho-dev.sh "$pkgdir/etc/profile.d/couldinho-dev.sh"
+#    install -Dm 0644 dev/etc/profile.d/couldinho-dev.sh "$pkgdir/etc/profile.d/couldinho-dev.sh"
 #
 #    depends=(
 #        couldinho-base
@@ -362,7 +362,7 @@ package_couldinho-laptop() {
 package_couldinho-sec() {
     install=couldinho-sec.install
 
-    install -Dm 0644 sec/etc/profile.d/coudinho-sec.sh "$pkgdir/etc/profile.d/couldinho-sec.sh"
+    install -Dm 0644 sec/etc/profile.d/couldinho-sec.sh "$pkgdir/etc/profile.d/couldinho-sec.sh"
 
     depends=(
         couldinho-base
@@ -379,4 +379,4 @@ package_couldinho-sec() {
         ida-free                # Hexrays reversen engineering framework
         ghidra-bin              # Reverse engineering framework similar to IDA
     )
-)
+}
