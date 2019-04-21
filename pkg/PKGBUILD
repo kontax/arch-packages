@@ -1,7 +1,7 @@
 pkgbase='couldinho'
-pkgname=(couldinho-base couldinho-desktop couldinho-laptop)
+pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=7
+pkgrel=8
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -359,17 +359,24 @@ package_couldinho-laptop() {
 #    )
 #}
 #
-#package_couldinho-sec() {
-#   install=couldinho-sec.install
-#
-#    install -Dm 0644 dev/etc/profile.d/coudinho-sec.sh "$pkgdir/etc/profile.d/couldinho-sec.sh"
-#
-#    depends=(
-#        couldinho-base
-#    )
-#
-#   # Files
-#   depends+=(
-#       010editor               # Text/hex editor with templates
-#   )
-#)
+package_couldinho-sec() {
+    install=couldinho-sec.install
+
+    install -Dm 0644 sec/etc/profile.d/coudinho-sec.sh "$pkgdir/etc/profile.d/couldinho-sec.sh"
+
+    depends=(
+        couldinho-base
+    )
+
+    # Binary
+    depends+=(
+        010editor               # Text/hex editor with templates
+    )
+
+    # Reversing
+    depends+=(
+        radare2                 # Command line reverse engineering framework
+        ida-free                # Hexrays reversen engineering framework
+        ghidra-bin              # Reverse engineering framework similar to IDA
+    )
+)
