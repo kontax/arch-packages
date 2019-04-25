@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=8
+pkgrel=9
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -378,5 +378,7 @@ package_couldinho-sec() {
         radare2                 # Command line reverse engineering framework
         ida-free                # Hexrays reversen engineering framework
         ghidra-bin              # Reverse engineering framework similar to IDA
+        gef-git                 # GDB Enhanced Features
+        voltron-git             # UI Toolkit for various debuggers (ie. GDB and LLDB)
     )
 }
