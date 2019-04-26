@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=10
+pkgrel=11
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -287,7 +287,6 @@ package_couldinho-desktop() {
         python-pillow       	# Used to view pictures within ranger
         freerdp             	# Remote desktop client
         xsecurelock             # Desktop lock screen
-        rr                      # Replaying debugger TODO: Move to reveng
     )
 
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
@@ -312,6 +311,7 @@ package_couldinho-desktop() {
     )
 
     # General scripts
+    install -Dm 0755 desktop/usr/local/bin/check-aur-became-official "$pkgdir/usr/local/bin/check-aur-became-official"
     install -Dm 0755 desktop/usr/local/bin/i3-autoname-workspaces "$pkgdir/usr/local/bin/i3-autoname-workspaces"
     install -Dm 0755 desktop/usr/local/bin/i3exit "$pkgdir/usr/local/bin/i3exit"
     install -Dm 0755 desktop/usr/local/bin/is_online "$pkgdir/usr/local/bin/is_online"
@@ -379,5 +379,6 @@ package_couldinho-sec() {
         ida-free                # Hexrays reversen engineering framework
         ghidra-bin              # Reverse engineering framework similar to IDA
         gef-git                 # GDB Enhanced Features
+        rr                      # Replaying debugger
     )
 }
