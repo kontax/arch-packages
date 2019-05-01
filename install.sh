@@ -167,8 +167,8 @@ swap_end=$(( $swap_size + 129 + 1 ))MiB
 bios=$(if [ -f /sys/firmware/efi/fw_platform_size ]; then echo "gpt"; else echo "msdos"; fi)
 part=$(if [[ $bios == "gpt" ]]; then echo "ESP"; else echo "primary"; fi)
 
-parted --script "${device}" -- mklabel $bios \
-  mkpart ESP fat32 1Mib 129MiB \
+parted --script "${device}" -- mklabel ${bios} \
+  mkpart ${part} fat32 1Mib 129MiB \
   set 1 boot on \
   mkpart primary linux-swap 129MiB ${swap_end} \
   mkpart primary ${swap_end} 100%
