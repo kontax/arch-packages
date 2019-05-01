@@ -14,6 +14,7 @@ SYSTEM_OPTIONS=(
     base        "Base system" \
     desktop     "Dual monitor desktop with i3wm" \
     laptop      "HiDPI laptop with i3status options" \
+    sec         "Reversing & exploitation software" \
 )
 
 REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
@@ -163,8 +164,10 @@ echo "##"
 
 swap_size=$(free --mebi | awk '/Mem:/ {print $2}')
 swap_end=$(( $swap_size + 129 + 1 ))MiB
+bios=$(if [ -f /sys/firmware/efi/fw_platform_size ]; then echo "gpt"; else echo "msdos"; fi)
+part=$(if [[ $bios == "gpt" ]]; then echo "ESP"; else echo "primary"; fi)
 
-parted --script "${device}" -- mklabel gpt \
+parted --script "${device}" -- mklabel $bios \
   mkpart ESP fat32 1Mib 129MiB \
   set 1 boot on \
   mkpart primary linux-swap 129MiB ${swap_end} \
@@ -259,7 +262,7 @@ sed -i "s|#PART_ROOT#|${part_root}|g" /mnt/etc/default/grub
 arch-chroot /mnt locale-gen
 
 echo "  [*] Installing grub"
-arch-chroot /mnt grub-install
+arch-chroot /mnt grub-install ${device}
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
     
