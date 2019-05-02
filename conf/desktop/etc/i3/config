@@ -1,6 +1,6 @@
 # xmodmap -pke to find keybindings
 # Set font
-font pango:Taskbar, Inconsolata Mono 10
+font pango:Taskbar, Inconsolata 10
 #font pango: Inconsolata Mono 10, Cantarell 9
 
 # Gaps
