@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# A hook to increment the PKGBUILD version number whenever the
+# repository is about to be commited.
+
+# Get the number of files within the relevant directory (conf or pkg) being commited
+update_pkgbuild=$(git diff --cached --name-only | egrep 'conf/|pkg/' | wc -l)
+if [ ! $update_pkgbuild -gt 0 ]; then
+    echo "No PKGBUILD version update"
+    exit 0
+fi
+
+pkgver=$(grep pkgver pkg/PKGBUILD | sed 's/pkgver=//g')
+pkgrel=$(grep pkgrel pkg/PKGBUILD | sed 's/pkgrel=//g')
+new_pkgrel=$(($pkgrel+1))
+
+sed -i -r 's/(pkgrel=)([0-9]+)/echo "\1$((\2+1))"/ge' pkg/PKGBUILD
+git add pkg/PKGBUILD
+echo "Updated PKGBUILD from $pkgver-$pkgrel to $pkgver-$new_pkgrel"
+exit 0
