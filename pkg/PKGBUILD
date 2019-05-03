@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=14
+pkgrel=15
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -367,11 +367,6 @@ package_couldinho-sec() {
     depends=(
         couldinho-base
     )
-
-    # Binary
-#    depends+=(
-#        010editor               # Text/hex editor with templates
-#    )
 
     # Reversing
     depends+=(
