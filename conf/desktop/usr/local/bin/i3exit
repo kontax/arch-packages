@@ -1,7 +1,7 @@
 #!/bin/bash
 
 before_lock() {
-  setxkbmap -layout us; sleep 0.2; setxkbmap -layout us,ru  # reset keyboard layout to english, works only with sleep
+  setxkbmap -layout us; sleep 0.2; setxkbmap -layout jc  # reset keyboard layout to english, works only with sleep
   py3-cmd refresh keyboard_layout
   killall compton
   usbguard set-parameter InsertedDevicePolicy reject
