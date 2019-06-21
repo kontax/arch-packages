@@ -1,0 +1,9 @@
+post_install() {
+    post_upgrade
+}
+
+post_upgrade() {
+
+    # System environment variables
+    mv /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
+}
