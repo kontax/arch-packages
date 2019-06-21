@@ -8,6 +8,7 @@ export SPACESHIP_PROMPT_ORDER=(
   host
   git_branch
   git_status
+  venv
   exec_time
   line_sep
   jobs

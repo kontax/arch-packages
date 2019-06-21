@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=18
+pkgrel=19
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -356,6 +356,11 @@ package_couldinho-laptop() {
 #    depends+=(
 #        aws-cli                 # Command line interface to AWS
 #        npm                     # Node package manager (used for serverless)
+#    )
+#   
+#    # Software
+#    depends+=(
+#        nasm                    # x86 assembler
 #    )
 #}
 #
