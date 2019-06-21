@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=19
+pkgrel=21
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -321,6 +321,73 @@ package_couldinho-desktop() {
     install -Dm 0755 desktop/usr/local/bin/set-brightness "$pkgdir/usr/local/bin/set-brightness"
 }
 
+package_couldinho-dev() {
+    install=couldinho-dev.install
+
+    # No dotfile scripts are installed here - use the next dependency
+    install -Dm 0644 desktop/etc/profile.d/couldinho-desktop.sh "$pkgdir/etc/profile.d/couldinho-desktop.sh"
+
+    depends=(
+        couldinho-base
+        couldinho-desktop
+    )
+
+    # Platforms/Languages
+    depends+=(
+        docker                  # Containerisation
+        rust                    # The rust programming language and tools
+        nasm                    # x86 Assembler
+    )
+
+    # IDE's
+    depends+=(
+        pycharm-professional    # Python IDE by JetBrains
+    )
+
+    # Cloud
+    depends+=(
+        aws-cli                 # Command line interface to AWS
+        npm                     # Node package manager (used for serverless)
+    )
+}
+
+package_couldinho-sec() {
+    install=couldinho-sec.install
+
+    # No dotfile scripts are installed here - use the next dependency
+    install -Dm 0644 desktop/etc/profile.d/couldinho-desktop.sh "$pkgdir/etc/profile.d/couldinho-desktop.sh"
+
+    depends=(
+        couldinho-desktop
+    )
+
+    # Binary
+    depends+=(
+        010editor               # Binary editor with templates
+        ltrace                  # Trace library calls
+        strace                  # Trace system calls and signals
+    )
+
+    # Network
+    depends+=(
+        nmap                    # Network mapper
+    )
+
+    # Reversing
+    depends+=(
+        radare2                 # Command line reverse engineering framework
+        ida-free                # Hexrays reversen engineering framework
+        ghidra-bin              # Reverse engineering framework similar to IDA
+        rr                      # Replaying debugger
+        voltron-git             # A more useful display for GDB
+        gef-git                 # GDB Enhanced Features
+        python-capstone         # GEF optional dependency
+        python-unicorn          # GEF optional dependency
+        python-keystone         # GEF optional dependency
+        python-ropper           # GEF optional dependency
+    )
+}
+
 package_couldinho-laptop() {
     install=couldinho-laptop.install
 
@@ -341,54 +408,4 @@ package_couldinho-laptop() {
     install -Dm 0644 laptop/etc/lightdm/lightdm-gtk-greeter.conf \
         "$pkgdir/etc/lightdm/couldinho-laptop-lightdm-gtk-greeter.conf"
     install -Dm 0644 laptop/etc/rofi.conf "$pkgdir/etc/couldinho-laptop-rofi.conf"
-}
-
-#package_couldinho-dev() {
-#    install=couldinho-dev.install
-#
-#    install -Dm 0644 dev/etc/profile.d/couldinho-dev.sh "$pkgdir/etc/profile.d/couldinho-dev.sh"
-#
-#    depends=(
-#        couldinho-base
-#    )
-#
-#    # AWS
-#    depends+=(
-#        aws-cli                 # Command line interface to AWS
-#        npm                     # Node package manager (used for serverless)
-#    )
-#   
-#    # Software
-#    depends+=(
-#        nasm                    # x86 assembler
-#    )
-#}
-#
-package_couldinho-sec() {
-    install=couldinho-sec.install
-
-    install -Dm 0644 sec/etc/profile.d/couldinho-sec.sh "$pkgdir/etc/profile.d/couldinho-sec.sh"
-
-    depends=(
-        couldinho-base
-    )
-
-    # Binary
-    depends+=(
-        010editor               # Binary editor with templates
-    )
-
-    # Reversing
-    depends+=(
-        radare2                 # Command line reverse engineering framework
-        ida-free                # Hexrays reversen engineering framework
-        ghidra-bin              # Reverse engineering framework similar to IDA
-        rr                      # Replaying debugger
-        voltron-git             # A more useful display for GDB
-        gef-git                 # GDB Enhanced Features
-        python-capstone         # GEF optional dependency
-        python-unicorn          # GEF optional dependency
-        python-keystone         # GEF optional dependency
-        python-ropper           # GEF optional dependency
-    )
 }
