@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=24
+pkgrel=25
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -325,7 +325,7 @@ package_couldinho-dev() {
     install=couldinho-dev.install
 
     # No dotfile scripts are installed here - use the next dependency
-    install -Dm 0644 desktop/etc/profile.d/couldinho-desktop.sh "$pkgdir/etc/profile.d/couldinho-desktop.sh"
+    #install -Dm 0644 dev/etc/profile.d/couldinho-dev.sh "$pkgdir/etc/profile.d/couldinho-dev.sh"
 
     depends=(
         couldinho-base
@@ -361,7 +361,7 @@ package_couldinho-sec() {
     install=couldinho-sec.install
 
     # No dotfile scripts are installed here - use the next dependency
-    install -Dm 0644 desktop/etc/profile.d/couldinho-desktop.sh "$pkgdir/etc/profile.d/couldinho-desktop.sh"
+    #install -Dm 0644 sec/etc/profile.d/couldinho-sec.sh "$pkgdir/etc/profile.d/couldinho-sec.sh"
 
     depends=(
         couldinho-desktop
