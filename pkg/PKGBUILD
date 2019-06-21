@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=22
+pkgrel=23
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -287,7 +287,6 @@ package_couldinho-desktop() {
         python-pillow       	# Used to view pictures within ranger
         freerdp             	# Remote desktop client
         xsecurelock             # Desktop lock screen
-        gdb                     # GNU debugger TODO: Move to dev
     )
 
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
@@ -345,6 +344,12 @@ package_couldinho-dev() {
         pycharm-professional    # Python IDE by JetBrains
     )
 
+    # Debugging
+    depends+=(
+        gdb                     # GNU debugger
+        rr                      # Replaying debugger
+    )
+
     # Cloud
     depends+=(
         aws-cli                 # Command line interface to AWS
@@ -379,7 +384,6 @@ package_couldinho-sec() {
         radare2                 # Command line reverse engineering framework
         ida-free                # Hexrays reversen engineering framework
         ghidra-bin              # Reverse engineering framework similar to IDA
-        rr                      # Replaying debugger
         voltron-git             # A more useful display for GDB
         gef-git                 # GDB Enhanced Features
         python-capstone         # GEF optional dependency
