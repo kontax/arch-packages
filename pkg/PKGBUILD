@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=26
+pkgrel=27
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -377,7 +377,8 @@ package_couldinho-sec() {
     # Network
     depends+=(
         nmap                    # Network mapper
-        wireshark               # Network analyzer
+        wireshark-cli           # Network analyzer - CLI tools
+        wireshark-qt            # Network analyzer - GUI
     )
 
     # Reversing
