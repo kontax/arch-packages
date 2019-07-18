@@ -24,7 +24,8 @@ WINDOW_ICONS = {
     "teams-for-linux": "",
     "vivaldi-stable": "󰁃",
     "slack": "󰀡",
-    "zathura": "󰁅"
+    "zathura": "󰁆",
+    "jetbrains-pycharm": "󰁅"
 }
 
 DEFAULT_ICON = "󰀏"
