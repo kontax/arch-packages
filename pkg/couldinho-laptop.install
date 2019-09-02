@@ -21,7 +21,8 @@ post_upgrade() {
     cp /etc/xdg/kitty/couldinho-laptop-kitty.conf /etc/xdg/kitty/kitty.conf
 
     # Input
-    cp /usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf /usr/share/X11/xorg.conf.d/40-libinput.conf
+    cp /usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf \
+        /usr/share/X11/xorg.conf.d/40-libinput.conf
 
     # Enable services
     systemctl enable lightdm.service
