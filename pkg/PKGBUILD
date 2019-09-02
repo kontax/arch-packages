@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=29
+pkgrel=30
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -412,7 +412,11 @@ package_couldinho-laptop() {
 
     # Overwrite desktop files
     install -Dm 0644 laptop/etc/i3status.conf "$pkgdir/etc/couldinho-laptop-i3status.conf"
+    install -Dm 0644 laptop/etc/i3/config "$pkgdir/etc/i3/couldinho-laptop-config"
     install -Dm 0644 laptop/etc/lightdm/lightdm-gtk-greeter.conf \
         "$pkgdir/etc/lightdm/couldinho-laptop-lightdm-gtk-greeter.conf"
     install -Dm 0644 laptop/etc/rofi.conf "$pkgdir/etc/couldinho-laptop-rofi.conf"
+    install -Dm 0644 laptop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/couldinho-laptop-kitty.conf"
+    install -Dm 0644 laptop/usr/share/X11/xorg.conf.d/40-libinput.conf \
+        "$pkgdir/usr/share/X11/xorg.conf.d/40-libinput.conf"
 }
