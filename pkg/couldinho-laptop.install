@@ -9,12 +9,19 @@ post_upgrade() {
 
     # i3 global configuration
     cp /etc/couldinho-laptop-i3status.conf /etc/i3status.conf
+    cp /etc/i3/couldinho-laptop-config /etc/i3/config
 
     # LightDM config files
     cp /etc/lightdm/couldinho-laptop-lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
 
     # Rofi
     cp /etc/couldinho-laptop-rofi.conf /etc/rofi.conf
+
+    # Terminal
+    cp /etc/xdg/kitty/couldinho-laptop-kitty.conf /etc/xdg/kitty/kitty.conf
+
+    # Input
+    cp /usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf /usr/share/X11/xorg.conf.d/40-libinput.conf
 
     # Enable services
     systemctl enable lightdm.service
