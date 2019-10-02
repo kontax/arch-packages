@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=32
+pkgrel=33
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -397,6 +397,11 @@ package_couldinho-sec() {
         python-unicorn          # GEF optional dependency
         python-keystone         # GEF optional dependency
         python-ropper           # GEF optional dependency
+    )
+    
+    # Cracking
+    depends+=(
+        john                    # John the Ripper password cracker
     )
 }
 
