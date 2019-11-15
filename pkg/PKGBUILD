@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=32
+pkgrel=34
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -123,6 +123,9 @@ package_couldinho-base() {
         openvpn                     # Connect to PIA
         networkmanager-openvpn      # NetworkManager drivers for OpenVPN
         private-internet-access-vpn # Scripts for managing PIA
+        gnu-netcat                  # GNU netcat - contains -e for executables
+        #openbsd-netcat             # OpenBSD netcat #TODO: Find a way to install both
+        socat                       # Similar to netcat
     )
     
     install -Dm 0644 base/etc/private-internet-access/pia.conf "$pkgdir/etc/private-internet-access/pia.conf"
@@ -163,6 +166,8 @@ package_couldinho-base() {
         snapper             # Snapshot manager
         snap-pac            # Hooks for pacman for auto-snapshotting
         snap-pac-grub       # Add grub entries for snapshots
+        zip                 # Zipping tool
+        unzip               # Unzipping tool
     )
 
     install -Dm 0644 base/etc/conf.d/snapper "$pkgdir/etc/conf.d/couldinho-snapper"
@@ -395,6 +400,11 @@ package_couldinho-sec() {
         python-unicorn          # GEF optional dependency
         python-keystone         # GEF optional dependency
         python-ropper           # GEF optional dependency
+    )
+    
+    # Cracking
+    depends+=(
+        john                    # John the Ripper password cracker
     )
 }
 
