@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=31
+pkgrel=32
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -226,7 +226,7 @@ package_couldinho-desktop() {
         i3-gaps                 # i3 window manager with gaps between windows
         i3status                # Status bar for i3
         py3status               # Manage i3status through python
-        i3ipc-python            # IPC for i3 via python
+        python-i3ipc            # IPC for i3 via python
     )
 
     install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-config"
@@ -379,6 +379,9 @@ package_couldinho-sec() {
         nmap                    # Network mapper
         wireshark-cli           # Network analyzer - CLI tools
         wireshark-qt            # Network analyzer - GUI
+        burpsuite               # Security testing web applications
+        dirbuster               # Brute force directories and filenames
+        wfuzz                   # Brute force web applications
     )
 
     # Reversing
