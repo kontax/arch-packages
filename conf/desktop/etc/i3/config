@@ -316,5 +316,5 @@ bindcode $mod+Shift+58 mode $mode_workspaces_monitors
 
 # Autostart some apps
 
-exec_always "killall compton; compton &"
+exec_always "killall picom; picom &"
 exec_always "pgrep -x unclutter || (unclutter &)"
