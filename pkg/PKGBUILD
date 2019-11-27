@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=38
+pkgrel=39
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -188,6 +188,7 @@ package_couldinho-base() {
     )
 
     install -Dm 0644 base/etc/profile.d/zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
+    install -dm 0750 base/etc/usbguard "$pkgdir/etc/usbguard"
     install -Dm 0600 base/etc/usbguard/usbguard-daemon.conf \
         "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"
 
