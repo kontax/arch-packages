@@ -13,7 +13,6 @@ ZSH_HIGHLIGHT_STYLES[comment]='fg=white,bold'
       user
       dir
       vcs
-      kubecontext
       virtualenv
       pyenv
       rust_version
@@ -182,21 +181,6 @@ ZSH_HIGHLIGHT_STYLES[comment]='fg=white,bold'
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FORMAT='d h m s'
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_VISUAL_IDENTIFIER_EXPANSION=
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_CONTENT_EXPANSION='%B${P9K_CONTENT}'
-
-  #############[ kubecontext: current kubernetes context (https://kubernetes.io/) ]#############
-  typeset -g POWERLEVEL9K_KUBECONTEXT_PREFIX='%fat '
-  typeset -g POWERLEVEL9K_KUBECONTEXT_VISUAL_IDENTIFIER_EXPANSION='☸️'
-
-  typeset -g POWERLEVEL9K_KUBECONTEXT_CLASSES=(
-      '*-prod-*'  PROD
-      '*'         DEFAULT)
-  typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_FOREGROUND=blue
-  typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_FOREGROUND=red
-
-  typeset -g POWERLEVEL9K_KUBECONTEXT_CONTENT_EXPANSION='%B'
-  POWERLEVEL9K_KUBECONTEXT_CONTENT_EXPANSION+='${P9K_KUBECONTEXT_CLOUD_CLUSTER:-${P9K_KUBECONTEXT_NAME}}'
-  POWERLEVEL9K_KUBECONTEXT_CONTENT_EXPANSION+='${${:-/$P9K_KUBECONTEXT_NAMESPACE}:#/default}'
-  typeset -g TRANSIENT_PROMPT_KUBECONTEXT_CMD='(*/|)(kubectl|helm)'
 
   ##########################[ virtualenv: python virtual environment ]##########################
   typeset -g POWERLEVEL9K_VIRTUALENV_FOREGROUND=blue
