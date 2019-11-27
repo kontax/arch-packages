@@ -285,7 +285,7 @@ package_couldinho-desktop() {
     depends+=(
         kitty               	# GPU enhanced terminal emulator
         flameshot           	# Screenshot tool
-        compton             	# X compositor
+        picom                	# X compositor
         copyq               	# Copy/Paste utility
         unclutter           	# Hide mouse in i3 when not in use
         ranger              	# File manager from terminal (vim keybindings)
@@ -297,7 +297,7 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/vm.py "$pkgdir/etc/xdg/kitty/vm.py"
-    install -Dm 0644 desktop/etc/xdg/compton.conf "$pkgdir/etc/xdg/couldinho-compton.conf"
+    install -Dm 0644 desktop/etc/xdg/picom.conf "$pkgdir/etc/xdg/couldinho-picom.conf"
 
     # Networking
     depends+=(

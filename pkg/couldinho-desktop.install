@@ -12,7 +12,7 @@ post_upgrade() {
     cp /etc/couldinho-i3status.conf /etc/i3status.conf
 
     # Compton compositor settings
-    cp /etc/xdg/couldinho-compton.conf /etc/xdg/compton.conf
+    cp /etc/xdg/couldinho-picom.conf /etc/xdg/picom.conf
 
     # LightDM config files
     cp /etc/lightdm/couldinho-lightdm.conf /etc/lightdm/lightdm.conf
