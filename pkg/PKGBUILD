@@ -60,7 +60,7 @@ package_couldinho-base() {
         texinfo
         usbutils
         util-linux
-        vim
+        nvim
         which
     )
 
