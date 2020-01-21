@@ -102,7 +102,7 @@ package_couldinho-base() {
         git                 # Move to devel?
         cifs-utils          # Connect to shared drives
         stow                # Link dotfiles to home dir
-        nvim                # Vim replacement
+        neovim              # Vim replacement
         python-pynvim       # Python modules for neovim
     )
 
