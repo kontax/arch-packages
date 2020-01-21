@@ -23,8 +23,11 @@ post_upgrade() {
     # Move pacman repo details and settings
     cp /etc/couldinho-pacman.conf /etc/pacman.conf
 
-    # vimrc
+    # neovim config and symlinks
     cp /etc/couldinho-vimrc /etc/vimrc
+    ln -s /usr/bin/nvim /usr/bin/vim
+    ln -s /usr/bin/nvim /usr/bin/vi
+    nvim --headless +PlugInstall +qa # Unlikely to work during install
 
     # Move USBGuard config
     cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf

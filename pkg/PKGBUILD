@@ -60,7 +60,6 @@ package_couldinho-base() {
         texinfo
         usbutils
         util-linux
-        nvim
         which
     )
 
@@ -103,9 +102,13 @@ package_couldinho-base() {
         git                 # Move to devel?
         cifs-utils          # Connect to shared drives
         stow                # Link dotfiles to home dir
+        nvim                # Vim replacement
+        python-pynvim       # Python modules for neovim
     )
 
     install -Dm 0644 base/etc/gitconfig "$pkgdir/etc/gitconfig"
+    install -Dm 0644 base/usr/share/nvim/runtime/autoload/plug.vim \
+        "$pkgdir/usr/share/nvim/runtime/autoload/plug.vim"
     
     # Base replacements
     depends+=(
