@@ -2,4 +2,4 @@
 source /usr/share/nvim/archlinux.vim
 
 " Source customised config files
-source ./bootstrap.vim
+source /etc/xdg/nvim/bootstrap.vim
