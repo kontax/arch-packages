@@ -25,9 +25,9 @@ post_upgrade() {
 
     # neovim config and symlinks
     cp /etc/couldinho-vimrc /etc/vimrc
+    mv /etc/xdg/nvim/couldinho-sysinit.vim /etc/xdg/nvim/sysinit.vim
     ln -s /usr/bin/nvim /usr/bin/vim
     ln -s /usr/bin/nvim /usr/bin/vi
-    nvim --headless +PlugInstall +qa # Unlikely to work during install
 
     # Move USBGuard config
     cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
