@@ -34,6 +34,7 @@ post_upgrade() {
     fi
     chmod 775 $PLUGIN_HOME
     chgrp users $PLUGIN_HOME
+    chgrp users /etc/xdg/nvim/autoload
     #setfacl -R -m group:users:rw-,d:group:users:rw- $PLUGIN_HOME
 
     # Move USBGuard config
