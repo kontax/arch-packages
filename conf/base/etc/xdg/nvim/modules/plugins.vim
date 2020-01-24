@@ -13,7 +13,7 @@ if executable('curl')
 
         augroup plug_init
             autocmd!
-            autocmd VimEnter * PlugInstall --sync | quit source $MYVIMRC
+            autocmd VimEnter * PlugInstall --sync | quit | source $MYVIMRC
         augroup END
     endif
 else
@@ -25,7 +25,7 @@ endif
 let g:PLUGIN_HOME="/usr/share/nvim/site"
 
 " Initialise vim-plug
-call plug#begin()
+call plug#begin(g:PLUGIN_HOME)
 
 " Load plugin list for vim-plug to manage.
 execute 'source' Dot('plugins.vim')

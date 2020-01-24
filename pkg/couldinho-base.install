@@ -29,6 +29,13 @@ post_upgrade() {
     ln -s /usr/bin/nvim /usr/bin/vim
     ln -s /usr/bin/nvim /usr/bin/vi
 
+    # Make the plugins dir writable by the users group
+    PLUGIN_HOME=/usr/share/nvim/site
+    if [ ! -d $PLUGIN_HOME ]; then
+        mkdir $PLUGIN_HOME
+    fi
+    setfacl -d -m group:users:rwx $PLUGIN_HOME
+
     # Move USBGuard config
     cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
 
