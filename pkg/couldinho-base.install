@@ -24,8 +24,6 @@ post_upgrade() {
     cp /etc/couldinho-pacman.conf /etc/pacman.conf
 
     # neovim config and symlinks
-    cp /etc/couldinho-vimrc /etc/vimrc
-    mv /etc/xdg/nvim/couldinho-sysinit.vim /etc/xdg/nvim/sysinit.vim
     ln -s /usr/bin/nvim /usr/bin/vim
     ln -s /usr/bin/nvim /usr/bin/vi
 
@@ -34,7 +32,9 @@ post_upgrade() {
     if [ ! -d $PLUGIN_HOME ]; then
         mkdir $PLUGIN_HOME
     fi
-    setfacl -d -m group:users:rwx $PLUGIN_HOME
+    chmod 775 $PLUGIN_HOME
+    chgrp users $PLUGIN_HOME
+    #setfacl -R -m group:users:rw-,d:group:users:rw- $PLUGIN_HOME
 
     # Move USBGuard config
     cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
