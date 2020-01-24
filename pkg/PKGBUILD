@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=48
+pkgrel=49
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -104,7 +104,7 @@ package_couldinho-base() {
         stow                # Link dotfiles to home dir
         neovim              # Vim replacement
         python-pynvim       # Python modules for neovim
-        nodejs              # JS dev for use in coc.vim     # TODO: Move to dev
+        nodejs              # JS dev for use in coc.vim #TODO: Move to dev
         npm                 # Node package manager
     )
 
@@ -117,7 +117,7 @@ package_couldinho-base() {
         "$pkgdir/etc/xdg/nvim/plugins.vim"
     install -dm 0664 "$pkgdir/etc/xdg/nvim/autoload"
     cp -r base/etc/xdg/nvim/modules "$pkgdir/etc/xdg/nvim/modules"
-    
+
     # Base replacements
     depends+=(
         exa                 # ls replacement
@@ -138,7 +138,7 @@ package_couldinho-base() {
         #openbsd-netcat             # OpenBSD netcat #TODO: Find a way to install both
         socat                       # Similar to netcat
     )
-    
+
     install -Dm 0644 base/etc/private-internet-access/pia.conf "$pkgdir/etc/private-internet-access/pia.conf"
 
     # Shell
