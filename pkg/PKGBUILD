@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=47
+pkgrel=48
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -115,7 +115,7 @@ package_couldinho-base() {
         "$pkgdir/etc/xdg/nvim/bootstrap.vim"
     install -Dm 0644 base/etc/xdg/nvim/plugins.vim \
         "$pkgdir/etc/xdg/nvim/plugins.vim"
-    install -Dm 0664 "$pkgdir/etc/xdg/nvim/autoload"
+    install -dm 0664 "$pkgdir/etc/xdg/nvim/autoload"
     cp -r base/etc/xdg/nvim/modules "$pkgdir/etc/xdg/nvim/modules"
     
     # Base replacements
