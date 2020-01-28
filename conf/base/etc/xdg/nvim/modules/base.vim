@@ -55,6 +55,10 @@ set scrolloff=3                     " Show 3 lines of context around the cursor
 set list                            " Enable invisible characters
 
 set visualbell                      " Flash screen on errors
+set cmdheight=2                     " Extra space for messages
+set signcolumn=yes                  " Always show the signcolumn
+set updatetime=300                  " Reduce time for diagnostic messages
+set shortmess+=c                    " Don't show ins-completion-menu messages
 
 
 """ Split Windows
