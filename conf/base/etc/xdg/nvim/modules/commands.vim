@@ -11,4 +11,7 @@ augroup configgroup
     autocmd FileType python vnoremap <silent> <leader>c :s/^/#/<cr>:noh<cr>
     autocmd FileType cs     nnoremap <buffer> <leader>c I//<esc>
     autocmd FileType cs     vnoremap <silent> <leader>c :s/^/\/\//<cr>:noh<cr>
+
+    " Indentation
+    autocmd FileType yaml   setlocal shiftwidth=2 softtabstop=2 expandtab
 augroup END
