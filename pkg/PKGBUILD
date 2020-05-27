@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=66
+pkgrel=67
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -414,6 +414,7 @@ package_couldinho-sec() {
         ghidra-bin              # Reverse engineering framework similar to IDA
         voltron-git             # A more useful display for GDB
         gef-git                 # GDB Enhanced Features
+        pwngdb                  # GDB for pwn
         python-capstone         # GEF optional dependency
         python-unicorn          # GEF optional dependency
         python-keystone         # GEF optional dependency
