@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=60
+pkgrel=61
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -395,7 +395,7 @@ package_couldinho-sec() {
         ltrace                  # Trace library calls
         strace                  # Trace system calls and signals
         binwalk                 # Find and extract file types within a file
-        lief                    # ELF instrumentation
+        bgrep                   # Binary file grepping
     )
 
     # Network
