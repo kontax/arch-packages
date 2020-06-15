@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=67
+pkgrel=68
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -224,35 +224,28 @@ package_couldinho-desktop() {
         couldinho-base
     )
 
-    # xorg
+    # sway
     depends+=(
-        xorg-server         	# X server
-        xorg-xfontsel       	# Selecting X11 fonts easily
-        xorg-xinit          	# Start up X and various WM's
-        xorg-xprop          	# Display X properties
-        xorg-xrandr         	# Resize & Rotate
+        xorg-server-xwayland    # Wayland X server
+        sway                    # Tiling window manager for wayland
+        swaylock                # Lockscreen for sway
+        waybar                  # Status bar for sway
+        python-i3ipc            # IPC for i3 via python
     )
 
+    install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/sway/couldinho-config"
+    install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
+    install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
     install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
                     "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
     install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
 
-    # i3
+    # Wayland packages
     depends+=(
-        i3-gaps                 # i3 window manager with gaps between windows
-        i3status                # Status bar for i3
-        py3status               # Manage i3status through python
-        python-i3ipc            # IPC for i3 via python
-    )
-
-    install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-config"
-    install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
-    install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
-
-    # Login manager
-    depends+=(
-        lightdm             	# Login manager
-        lightdm-gtk-greeter 	# Theme for login manager
+        mako                    # Wayland notification daemon
+        wofi                    # Wayland dmenu replacement
+        slurp                   # Screenshot selection program for wayland
+        flashfocus-git          # Tiling window animations
     )
 
     install -Dm 0644 desktop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
@@ -261,15 +254,11 @@ package_couldinho-desktop() {
 
     # Further i3 packages
     depends+=(
-        rofi                	# dmenu replacement
-        rofi-calc           	# Wrapper for qalculate
-        libqalculate        	# More powerful calculator
-        rofi-dmenu          	# Wrapper for things depending on dmenu binary
-        ttf-inconsolata     	# Font for terminal and status etc.
-        otf-font-awesome    	# Font with icons
-        python-tzlocal      	# Used within the clock for the status bar
-        gsimplecal          	# GTK calendar for the status bar
-        dunst               	# Notification server
+        libqalculate            # More powerful calculator
+        ttf-inconsolata         # Font for terminal and status etc.
+        otf-font-awesome        # Font with icons
+        gsimplecal              # GTK calendar for the status bar
+        dunst                   # Notification server
         libnotify               # Notification library
         python-pydbus           # Python DBus connector (used by usbguard i3status module)
         yubikey-touch-detector  # i3status notification for when yubikey needs attention 
@@ -280,10 +269,10 @@ package_couldinho-desktop() {
 
     # Multimedia
     depends+=(
-        alsa-utils          	# Sound support
-        pulseaudio          	# Sound server
-        pulseaudio-alsa     	# ALSA config for pulseaudio
-        pamixer             	# Command line mixer
+        alsa-utils              # Sound support
+        pulseaudio              # Sound server
+        pulseaudio-alsa         # ALSA config for pulseaudio
+        pamixer                 # Command line mixer
     )
 
     # Documents
@@ -294,21 +283,16 @@ package_couldinho-desktop() {
 
     # Terminal + desktop tools
     depends+=(
-        kitty               	# GPU enhanced terminal emulator
-        flameshot           	# Screenshot tool
-        picom                	# X compositor
-        copyq               	# Copy/Paste utility
-        unclutter           	# Hide mouse in i3 when not in use
-        ranger              	# File manager from terminal (vim keybindings)
-        python-pillow       	# Used to view pictures within ranger
-        freerdp             	# Remote desktop client
+        kitty                   # GPU enhanced terminal emulator
+        ranger                  # File manager from terminal (vim keybindings)
+        python-pillow           # Used to view pictures within ranger
+        freerdp                 # Remote desktop client
         xsecurelock             # Desktop lock screen
     )
 
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/vm.py "$pkgdir/etc/xdg/kitty/vm.py"
-    install -Dm 0644 desktop/etc/xdg/picom.conf "$pkgdir/etc/xdg/couldinho-picom.conf"
 
     # Networking
     depends+=(
@@ -324,11 +308,7 @@ package_couldinho-desktop() {
         pepper-flash            # Flash player
         x265                    # Video compression
         browserpass-chromium    # Browser extenson for pass
-    )
-
-    # Utils
-    depends+=(
-        #wire-desktop-beta       # Encrypted messenger
+        qutebrowser             # Browser with vim bindings
     )
 
     # General scripts
