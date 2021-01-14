@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=67
+pkgrel=68
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -132,7 +132,7 @@ package_couldinho-base() {
         wget openssh                # Download and connect
         openvpn                     # Connect to PIA
         networkmanager-openvpn      # NetworkManager drivers for OpenVPN
-        private-internet-access-vpn # Scripts for managing PIA
+        #private-internet-access-vpn # Scripts for managing PIA
         gnu-netcat                  # GNU netcat - contains -e for executables
         #openbsd-netcat             # OpenBSD netcat #TODO: Find a way to install both
         socat                       # Similar to netcat
