@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
 pkgver=1
-pkgrel=70
+pkgrel=71
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -10,6 +10,8 @@ groups=(couldinho)
 
 source=(conf-files.tar.xz)
 sha256sums=(62dc3d5c7a6560e7f2ab721353fa987be125e7452c3dc6a299f2530a0577cf28)
+
+# Comment for update
 
 package_couldinho-base() {
     install=couldinho-base.install
