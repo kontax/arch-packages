@@ -56,7 +56,7 @@ function get_password {
                $HEIGHT $WIDTH
     )
     : ${init_pass:?"password cannot be empty"}
-    
+
     test_pass=$(
         dialog --clear \
                --stdout \
@@ -86,6 +86,17 @@ function get_choice {
          $HEIGHT $WIDTH $CHOICE_HEIGHT \
          "${options[@]}"
  }
+
+
+echo ""
+echo "#####"
+echo "# Downloading necessary packages"
+echo "# and set up fastest mirrors"
+echo "##"
+
+pacman -Sy --noconfirm --needed git reflector dialog
+reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
+timedatectl set-ntp true
 
 
 #####
@@ -137,24 +148,6 @@ if [ ! -z $config ]; then
     export CONF_FILE_LOCATION=$config
     export CONF_FILE_PASS=$conf_pass
 fi
-
-#####
-# Set up logging
-##
-
-exec 1> >(tee "stdout.log")
-exec 2> >(tee "stderr.log")
-
-
-echo ""
-echo "#####"
-echo "# Downloading necessary packages"
-echo "# and set up fastest mirrors"
-echo "##"
-
-pacman -Sy --noconfirm --needed git reflector
-reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
-timedatectl set-ntp true
 
 
 echo ""
@@ -224,7 +217,7 @@ echo "# the basic system"
 echo "##"
 
 if [[ ! -a /etc/pacman.d/couldinho-arch-aur ]]; then
-    
+
     echo ""
     echo "  [*] Configuring remote AUR details"
 
@@ -265,7 +258,7 @@ echo "  [*] Installing grub"
 arch-chroot /mnt grub-install ${device}
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
-    
+
 echo "#####"
 echo "# Setting up user account and home folder,"
 echo "# including the dotfile repo."
