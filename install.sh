@@ -161,7 +161,7 @@ if [ ! -z $config ]; then
     clear
 fi
 
-system=$(get_choice "System" "Choose a system" "${SYSTEM_OPTIONS[@]}") || exit 1
+system=$(get_multi_choice "System" "Choose a system" "${SYSTEM_OPTIONS[@]}") || exit 1
 clear
 : ${system:?"system cannot be empty"}
 
