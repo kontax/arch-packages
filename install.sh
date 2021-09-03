@@ -11,10 +11,10 @@ exec 2> >(tee "stderr.log")
 
 # System options to choose from
 SYSTEM_OPTIONS=(
-    base        "Base system" \
-    desktop     "Dual monitor desktop with i3wm" \
-    laptop      "HiDPI laptop with i3status options" \
-    sec         "Reversing & exploitation software" \
+    base        "Base system" off \
+    desktop     "Dual monitor desktop with i3wm" off \
+    laptop      "HiDPI laptop with i3status options" off \
+    sec         "Reversing & exploitation software" off \
 )
 
 REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
@@ -56,6 +56,22 @@ function get_password {
                $HEIGHT $WIDTH
     )
     : ${init_pass:?"password cannot be empty"}
+    echo $init_pass
+}
+
+function get_new_password {
+    title="$1"
+    desc="$2"
+
+    init_pass=$(
+        dialog --clear \
+               --stdout \
+               --backtitle "$BACKTITLE" \
+               --title "$title" \
+               --passwordbox "$desc" \
+               $HEIGHT $WIDTH
+    )
+    : ${init_pass:?"password cannot be empty"}
 
     test_pass=$(
         dialog --clear \
@@ -71,6 +87,21 @@ function get_password {
     fi
     echo $init_pass
 }
+
+function get_multi_choice {
+    title="$1"
+    shift
+    desc="$2"
+    shift
+    options=("$@")
+    dialog --clear \
+        --stdout \
+         --backtitle "$BACKTITLE" \
+         --title "$title" \
+         --checklist "$desc" \
+         $HEIGHT $WIDTH $CHOICE_HEIGHT \
+         "${options[@]}"
+ }
 
 function get_choice {
     title="$1"
@@ -110,10 +141,10 @@ user=$(get_input "User" "Enter admin username") || exit 1
 clear
 : ${user:?"user cannot be empty"}
 
-password=$(get_password "User" "Enter admin password") || exit 1
+password=$(get_new_password "User" "Enter admin password") || exit 1
 clear
 
-passphrase=$(get_password "User" "Enter passphrase for encrypted volume") || exit 1
+passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
 clear
 
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac | tr '\n' ' ')
