@@ -451,3 +451,24 @@ package_couldinho-laptop() {
     install -Dm 0644 laptop/usr/share/X11/xorg.conf.d/40-libinput.conf \
         "$pkgdir/usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf"
 }
+
+package_couldinho-vmware() {
+    install=couldinho-vmware.install
+
+    # base + desktop
+    depends=(
+        couldinho-desktop
+    )
+
+    # VMWare specific programs
+    depends+=(
+        light                   # Program to change backlight
+        open-vm-tools           # Open source version of VMWare Tools
+        xf86-input-vmmouse      # VMWare mouse driver
+        xf86-video-vmware       # VMWare video driver
+        gtkmm3                  # C++ bindings for GTK+ 3 - used for VMWare copy/paste
+    )
+
+    install -Dm 0644 vmware/etc/i3/config "$pkgdir/etc/i3/couldinho-config"
+
+}

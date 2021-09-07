@@ -14,7 +14,9 @@ SYSTEM_OPTIONS=(
     base        "Base system" off \
     desktop     "Dual monitor desktop with i3wm" off \
     laptop      "HiDPI laptop with i3status options" off \
+    dev         "Developer software" off \
     sec         "Reversing & exploitation software" off \
+    vmware      "Includes VMWare virtual drivers" off \
 )
 
 REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
