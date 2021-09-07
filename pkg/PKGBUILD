@@ -244,7 +244,7 @@ package_couldinho-desktop() {
         python-i3ipc            # IPC for i3 via python
     )
 
-    install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-config"
+    install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-desktop-config"
     install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
     install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
 
@@ -469,6 +469,6 @@ package_couldinho-vmware() {
         gtkmm3                  # C++ bindings for GTK+ 3 - used for VMWare copy/paste
     )
 
-    install -Dm 0644 vmware/etc/i3/config "$pkgdir/etc/i3/couldinho-config"
+    install -Dm 0644 vmware/etc/i3/config "$pkgdir/etc/i3/couldinho-vmware-config"
 
 }
