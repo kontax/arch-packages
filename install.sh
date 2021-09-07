@@ -170,7 +170,7 @@ clear
 # Extracting packages to install for selected systems
 system=""
 for s in ${user_system[@]}; do
-    system+="couldinho-$s"
+    system+="couldinho-$s "
 done
 
 
