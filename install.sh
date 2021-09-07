@@ -163,9 +163,15 @@ if [ ! -z $config ]; then
     clear
 fi
 
-system=$(get_multi_choice "System" "Choose a system" "${SYSTEM_OPTIONS[@]}") || exit 1
+user_system=$(get_multi_choice "System" "Choose a system" "${SYSTEM_OPTIONS[@]}") || exit 1
 clear
 : ${system:?"system cannot be empty"}
+
+# Extracting packages to install for selected systems
+system=""
+for s in ${user_system[@]}; do
+    system+="couldinho-$s"
+done
 
 
 echo ""
