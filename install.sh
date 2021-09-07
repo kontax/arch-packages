@@ -276,7 +276,7 @@ EOF
 fi
 
 echo "  [*] Installing packages"
-pacstrap /mnt couldinho-$system
+pacstrap /mnt $system
 
 
 echo "  [*] Generating base config files"
