@@ -1,5 +1,5 @@
 alias cp='cp -r --reflink=auto'
-alias df='pydf'
+alias df='dfrs'
 alias diff='kitty +kitten diff'
 alias dragall='dragon-drag-and-drop --and-exit --all'
 alias dragon='dragon-drag-and-drop --and-exit'
