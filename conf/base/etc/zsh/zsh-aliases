@@ -1,0 +1,326 @@
+#!/usr/bin/env zsh
+
+## generic
+
+command -v dfrs      &> /dev/null    && alias df='dfrs'
+command -v git       &> /dev/null    && alias diff='git diff --no-index'
+command -v trash-put &> /dev/null    && alias rm='trash-put'
+command -v fd        &> /dev/null    && alias fd='fd --hidden --follow'                            || alias fd='find . -name'
+command -v rg        &> /dev/null    && alias rg='rg --hidden --follow --smart-case 2>/dev/null'   || alias rg='grep --color=auto --exclude-dir=.git -R'
+command -v exa       &> /dev/null    && alias ls='exa --group --git --group-directories-first'     || alias ls='ls --color=auto --group-directories-first -h'
+command -v exa       &> /dev/null    && alias la='ll -a'                                           || alias la='ll -A'
+command -v exa       &> /dev/null    && alias lk='ll -s=size'                                      || alias lk='ll -r --sort=size'
+command -v exa       &> /dev/null    && alias lm='ll -s=modified'                                  || alias lm='ll -r --sort=time'
+
+alias e="$EDITOR"
+alias cp='cp -r --reflink=auto'
+alias mkdir='mkdir -p'
+alias hexdump='od -A x -t x1z -v'
+alias http-serve='python -m http.server'
+alias htpasswd='openssl passwd -apr1'
+alias ip='ip -color -brief'
+alias locate='locate -i'
+alias o='xdg-open'
+alias rm!='\rm -rf'
+alias rsync='rsync --verbose --archive --info=progress2 --human-readable --partial'
+alias sudo='sudo -E '
+alias tree='tree -a -I .git --dirsfirst'
+alias ll='ls -l'
+alias utc='env TZ=UTC date'
+alias battery-normal='sudo cctk --PrimaryBattChargeCfg=custom:50-86 --ValSetupPwd="$(pass personal/bios)"'
+alias battery-full='sudo cctk --PrimaryBattChargeCfg=standard --ValSetupPwd="$(pass personal/bios)"'
+alias gpg-change-card='gpg-connect-agent "scd serialno" "learn --force" /bye'
+
+function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
+compdef _directories md
+
+e64() { [[ $# == 1 ]] && base64 -w0 <<<"$1" || base64 -w0 }
+d64() { [[ $# == 1 ]] && base64 --decode <<<"$1" || base64 --decode }
+
+p() { ping "${1:-1.1.1.1}" }
+
+tmpd() { cd "$(mktemp -d -t "${1:-tmp}.XXXXXXXXXX")" }
+
+x() { PAGER="less -+F" xplr | IFS= read -r dir && cd -- "${dir:-.}" }
+
+## kubectl
+
+alias k='kubectl'
+alias kc='kubectx "$(kubectx | fzf --height=10%)"'
+alias kn='kubens "$(kubens | fzf --height=10%)"'
+alias kd='k describe'
+alias kd!='kd --all-namespaces'
+alias kdp='kd pod'
+alias kdel='k delete'
+alias ke='k exec -ti'
+alias kg='k get'
+alias kg!='kg --all-namespaces'
+alias kgd='kg deployment'
+alias kgd!='kgd --all-namespaces'
+alias kgp='kg pod'
+alias kgp!='kgp --all-namespaces'
+alias kgs='kg service'
+alias kgs!='kgs --all-namespaces'
+alias kl='kubectl logs -f'
+
+kout() {
+    while IFS= read -rd: config; do
+        [ -f "$config" ] || continue
+        sed -i -E '/^\s*(access-token|expires-in|expires-on|refresh-token)/d' "$config"
+    done <<< "${KUBECONFIG:-$HOME/.kube/config}:"
+}
+
+## docker-compose
+
+alias dc='docker-compose'
+alias dcu='dc up -d'
+alias dcd='dc down'
+alias dcr='dcd; dcu'
+alias dcp='dc pull'
+alias dcl='dc logs -t -f --tail=1000'
+alias dce='dc exec'
+alias dcs='dc ps'
+
+## systemctl
+
+alias sys='systemctl'
+alias sysu='systemctl --user'
+alias status='sys status'
+alias statusu='sysu status'
+alias start='sys start'
+alias startu='sysu start'
+alias stop='sys stop'
+alias stopu='sysu stop'
+alias restart='sys restart'
+alias restartu='sysu restart'
+alias enable='sys enable'
+alias enableu='sysu enable'
+alias disable='sys disable'
+alias disableu='sysu disable'
+alias reload='sys daemon-reload'
+alias reloadu='sysu daemon-reload'
+alias timers='sys list-timers'
+alias timersu='sysu list-timers'
+
+## git
+
+alias g='git'
+alias ga='g add'
+alias gaa='ga --all'
+alias gap='ga -p'
+alias gb='g branch'
+alias gba='g branch --all'
+alias gbd='g branch -D'
+alias gbda='g branch --no-color --merged | command grep -vE "^(\*|\s*(main|master|develop|dev)\s*$)" | command xargs -n 1 g branch -d'
+alias gbo='g branch --set-upstream-to=origin/$(g symbolic-ref --short HEAD) $(g symbolic-ref --short HEAD)'
+alias gbu='g branch --set-upstream-to=upstream/$(g symbolic-ref --short HEAD) $(g symbolic-ref --short HEAD)'
+alias gbsb='g bisect bad'
+alias gbsg='g bisect good'
+alias gbsr='g bisect reset'
+alias gbss='g bisect start'
+alias gc='g commit -v'
+alias gc!='gc --amend'
+alias gac='gaa && gc'
+alias gac!='gaa && gc!'
+alias gacm='gaa && gcm'
+alias gcm='gc -m'
+alias gcf='gc --fixup'
+alias gcfh='gc --fixup HEAD'
+alias gacf='gaa && gc --fixup'
+alias gacfh='gaa && gc --fixup HEAD'
+alias gco='g checkout'
+alias gcom='gco main || gco master'
+alias gcob='gco -b'
+alias gcop='gco -p'
+alias gcp='g cherry-pick'
+alias gcpa='gcp --abort'
+alias gcpc='gcp --continue'
+alias gd='g diff'
+alias gds='gd --cached'
+alias gf='g fetch --tags'
+alias gu='gf origin main:main'
+alias gl='g pull --tags -f --rebase --autostash'
+alias glog="g log --graph --pretty='%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit"
+alias gloga="glog --all"
+alias glogp='g log -p'
+alias gm='g merge'
+alias gma='gm --abort'
+alias gp='g push -u'
+alias gpf='gp --force-with-lease'
+alias gpf!='gp --force'
+alias gra='g remote add'
+alias grr='g remote remove'
+alias grv='g remote -v'
+alias grba='g rebase --abort'
+alias grbc='g rebase --continue'
+alias grbi='g rebase -i'
+alias grbm='g rebase -i main'
+alias grbom='g rebase -i origin/main'
+alias gr='g reset'
+alias gr!='gr --hard'
+alias grh='gr HEAD'
+alias grh!='gr! HEAD'
+alias garh!='gaa && gr! HEAD'
+alias gs='g show --show-signature'
+alias gst='g stash'
+alias gstp='gst pop'
+alias gstc='gst clear'
+alias gss!='g status'
+alias gss='gss! -sb'
+alias gsa='g submodule add'
+alias gsu='g submodule update --remote'
+alias gsr='g submodule-remove'
+
+gcl() {
+    git clone --recursive "$@"
+    cd -- "${${${@: -1}##*/}%*.git}"
+}
+
+grf() {
+    upstream="$(git remote get-url upstream 2>/dev/null || git remote get-url origin)"
+    if [[ $# == 1 ]]; then
+        if [[ "$upstream" == https* ]]; then
+            fork=$(echo "$upstream" | awk -v name="$1" -F/ '{ print $1 "/" $2 "/" $3 "/" name "/" $5 }')
+        else
+            fork=$(echo "$upstream" | awk -v name="$1" -F/ '{ print "https://github.com/" name "/" $2 }')
+        fi
+
+        git remote remove "$1" 2>/dev/null
+        git remote add "$1" "$fork"
+        git fetch "$1"
+    else
+        myfork=$(echo "$upstream" | awk -v name="$USER" -F/ '{ print "git@github.com:" name "/" $5 }')
+
+        git remote remove upstream 2>/dev/null
+        git remote remove origin 2>/dev/null
+
+        git remote add upstream "$upstream"
+        git remote add origin "$myfork"
+
+        git fetch upstream
+        git fetch origin
+
+        git branch --set-upstream-to=upstream/main main
+    fi
+}
+
+### pacman
+
+alias paci='SNAP_PAC_SKIP=true pac -Sy'
+alias paci!='pac -Sy -dd'
+alias pacr='SNAP_PAC_SKIP=true pac -Rs'
+alias pacr!='pac -Rs -dd'
+alias pacf='SNAP_PAC_SKIP=true pac -U'
+alias pacF='pacman -F'
+alias pacq='pacman -Si'
+alias pacl='pacman -Ql'
+alias pacdiff='sudo \pacdiff; refresh-waybar-updates'
+
+pac() {
+    sudo -E pacman "$@" || return 1
+
+    is_removal=0
+    while [[ "$1" == -* ]]; do
+        [[ "$1" == "-R"* ]] && is_removal=1
+        shift
+    done
+    if (( is_removal )); then
+        echo "\nCleaning up AUR repo..."
+        repo-remove -s /var/cache/pacman/maximbaz-local/maximbaz-local.db.tar "$@"
+    fi
+
+    echo "\nCleaning up repo cache..."
+    sudo -E paccache -vr -c /var/cache/pacman/pkg -c /var/cache/pacman/maximbaz-local
+    sudo -E paccache -vruk0 -c /var/cache/pacman/pkg -c /var/cache/pacman/maximbaz-local
+
+    refresh-waybar-updates
+    rehash
+}
+command -v pacman &> /dev/null && compdef pac=pacman
+
+pacs() {
+    [ $# -lt 1 ] && { >&2 echo "No search term provided"; return 1; }
+    sudo -E pacman -Sy
+    tmp=$(mktemp -d)
+
+    {
+        NO_COLOR=true aur search -n -k NumVotes $(basename -a "$@" | xargs)
+        pacman -Ss $(basename -a "$@" | xargs)
+    } |
+    while read -r pkg; do
+        read -r desc
+        name="${pkg%% *}"
+        mkdir -p "$tmp/${name%/*}"
+        echo "$pkg" >>$tmp/pkgs
+        echo "$desc" >$tmp/$name
+    done
+    [ -s $tmp/pkgs ] || { >&2 echo "No packages found"; rm -rf "$tmp"; return 2; }
+
+    aur_pkgs=()
+    repo_pkgs=()
+    cat $tmp/pkgs | fzf --tac --preview-window=wrap --preview="cat $tmp/{1}; echo; echo; pacman -Si \$(basename {1}) 2>/dev/null; true" |
+    while read -r pkg; do
+        title="${pkg%% *}"
+        if [ "${title%/*}" = "aur" ]; then
+            aur_pkgs+=("${title#*/}")
+        else
+            repo_pkgs+=("${title#*/}")
+        fi
+    done
+    rm -rf "$tmp"
+
+    if (( ${#aur_pkgs[@]} )); then
+        aur sync -Sc "${aur_pkgs[@]}"
+        post_aur
+    fi
+    SNAP_PAC_SKIP=true pac -Sy "${aur_pkgs[@]}" "${repo_pkgs[@]}"
+}
+
+pacu() {
+    xargs -a <(aur vercmp-devel | cut -d: -f1) aur sync -Scu --rebuild "$@"
+    post_aur
+    pac -Syu
+}
+
+pacQ() {
+    [[ $# == 1 ]] || return 1;
+    [ -e "$1" ] && file="$1" || file="$(which "$1")"
+    [ -e "$file" ] || { echo >&2 "File '$1' not found, aborting."; return 1; }
+    pacman -Qo "$file"
+}
+
+aurs() {
+    aur sync -Sc "$@"
+    sudo -E pacman -Sy
+    refresh-waybar-updates
+    post_aur
+}
+alias aurs!='aurs --nover-argv -f'
+
+aurb() {
+    aur build -Scf --pkgver "$@"
+    sudo -E pacman -Sy
+    refresh-waybar-updates
+    post_aur
+}
+
+post_aur() {
+    find ~/.cache/aurutils/sync -name .git -execdir git clean -fx \; >/dev/null
+    find /var/cache/pacman/maximbaz-local -group root -delete >/dev/null
+}
+
+refresh-waybar-updates() {
+    systemctl --user start waybar-updates.service
+}
+
+rga-fzf() {
+    RG_PREFIX="rga --files-with-matches"
+    xdg-open "$(
+        FZF_DEFAULT_COMMAND="$RG_PREFIX $@" \
+            fzf --sort --preview="[[ ! -z {} ]] && rga --pretty --context 5 {q} {}" \
+                --bind=tab:down,btab:up \
+                --phony -q "$1" \
+                --bind "change:reload:$RG_PREFIX {q}" \
+                --preview-window="70%:wrap"
+    )"
+}
