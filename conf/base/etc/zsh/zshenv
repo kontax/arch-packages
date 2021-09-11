@@ -2,11 +2,9 @@
 
 if [ -n "${ZSH_VERSION-}" ]; then
     : ${ZDOTDIR:=~}
-    setopt no_global_rcs
     if [[ -o no_interactive && -z "${Z4H_BOOTSTRAPPING-}" ]]; then
         return
     fi
-    setopt no_rcs
     unset Z4H_BOOTSTRAPPING
 fi
 
@@ -30,5 +28,3 @@ if [ ! -e "$Z4H"/z4h.zsh ]; then
 fi
 
 . "$Z4H"/z4h.zsh || return
-
-setopt rcs
