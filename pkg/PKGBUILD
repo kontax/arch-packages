@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=1
-pkgrel=73
+pkgrel=74
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -226,11 +226,11 @@ package_couldinho-desktop() {
 
     # xorg
     depends+=(
-        xorg-server         	# X server
-        xorg-xfontsel       	# Selecting X11 fonts easily
-        xorg-xinit          	# Start up X and various WM's
-        xorg-xprop          	# Display X properties
-        xorg-xrandr         	# Resize & Rotate
+        xorg-server             # X server
+        xorg-xfontsel           # Selecting X11 fonts easily
+        xorg-xinit              # Start up X and various WM's
+        xorg-xprop              # Display X properties
+        xorg-xrandr             # Resize & Rotate
     )
 
     install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
@@ -251,8 +251,8 @@ package_couldinho-desktop() {
 
     # Login manager
     depends+=(
-        lightdm             	# Login manager
-        lightdm-gtk-greeter 	# Theme for login manager
+        lightdm                 # Login manager
+        lightdm-gtk-greeter     # Theme for login manager
     )
 
     install -Dm 0644 desktop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
@@ -261,15 +261,15 @@ package_couldinho-desktop() {
 
     # Further i3 packages
     depends+=(
-        rofi                	# dmenu replacement
-        rofi-calc           	# Wrapper for qalculate
-        libqalculate        	# More powerful calculator
-        rofi-dmenu          	# Wrapper for things depending on dmenu binary
-        ttf-inconsolata     	# Font for terminal and status etc.
-        otf-font-awesome    	# Font with icons
-        python-tzlocal      	# Used within the clock for the status bar
-        gsimplecal          	# GTK calendar for the status bar
-        dunst               	# Notification server
+        rofi                    # dmenu replacement
+        rofi-calc               # Wrapper for qalculate
+        libqalculate            # More powerful calculator
+        rofi-dmenu              # Wrapper for things depending on dmenu binary
+        ttf-inconsolata         # Font for terminal and status etc.
+        otf-font-awesome        # Font with icons
+        python-tzlocal          # Used within the clock for the status bar
+        gsimplecal              # GTK calendar for the status bar
+        dunst                   # Notification server
         libnotify               # Notification library
         python-pydbus           # Python DBus connector (used by usbguard i3status module)
         yubikey-touch-detector  # i3status notification for when yubikey needs attention 
@@ -280,10 +280,10 @@ package_couldinho-desktop() {
 
     # Multimedia
     depends+=(
-        alsa-utils          	# Sound support
-        pulseaudio          	# Sound server
-        pulseaudio-alsa     	# ALSA config for pulseaudio
-        pamixer             	# Command line mixer
+        alsa-utils              # Sound support
+        pulseaudio              # Sound server
+        pulseaudio-alsa         # ALSA config for pulseaudio
+        pamixer                 # Command line mixer
     )
 
     # Documents
@@ -294,14 +294,14 @@ package_couldinho-desktop() {
 
     # Terminal + desktop tools
     depends+=(
-        kitty               	# GPU enhanced terminal emulator
-        flameshot           	# Screenshot tool
-        picom                	# X compositor
-        copyq               	# Copy/Paste utility
-        unclutter           	# Hide mouse in i3 when not in use
-        ranger              	# File manager from terminal (vim keybindings)
-        python-pillow       	# Used to view pictures within ranger
-        freerdp             	# Remote desktop client
+        kitty                   # GPU enhanced terminal emulator
+        flameshot               # Screenshot tool
+        picom                   # X compositor
+        copyq                   # Copy/Paste utility
+        unclutter               # Hide mouse in i3 when not in use
+        ranger                  # File manager from terminal (vim keybindings)
+        python-pillow           # Used to view pictures within ranger
+        freerdp                 # Remote desktop client
         xsecurelock             # Desktop lock screen
     )
 
