@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=1
-pkgrel=74
+pkgrel=76
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -143,32 +143,17 @@ package_couldinho-base() {
     # Shell
     depends+=(
         zsh                 # Better shell
-        antigen-git         # Package manager
-        prezto-git          # Configuration framework
+        direnv              # Shell extension managing environment
         fzy                 # Fzy text selector
         lscolors-git        # Colours for ls
         dfrs                # Colourised version of df
     )
 
-    install -Dm 0644 base/etc/zsh/antigen.zsh "$pkgdir/etc/zsh/antigen.zsh"
-    install -Dm 0644 base/etc/zsh/aliases.zsh "$pkgdir/etc/zsh/aliases.zsh"
-    install -Dm 0644 base/etc/zsh/env.zsh "$pkgdir/etc/zsh/env.zsh"
-    install -Dm 0644 base/etc/zsh/fuzzy.zsh "$pkgdir/etc/zsh/fuzzy.zsh"
-    install -Dm 0644 base/etc/zsh/git.zsh "$pkgdir/etc/zsh/git.zsh"
-    install -Dm 0644 base/etc/zsh/keybindings.zsh "$pkgdir/etc/zsh/keybindings.zsh"
-    install -Dm 0644 base/etc/zsh/opts.zsh "$pkgdir/etc/zsh/opts.zsh"
-    install -Dm 0644 base/etc/zsh/pacman.zsh "$pkgdir/etc/zsh/pacman.zsh"
-    install -Dm 0644 base/etc/zsh/prezto.zsh "$pkgdir/etc/zsh/prezto.zsh"
-    install -Dm 0644 base/etc/zsh/prezto-patches.zsh "$pkgdir/etc/zsh/prezto-patches.zsh"
-    install -Dm 0644 base/etc/zsh/prompt.zsh "$pkgdir/etc/zsh/prompt.zsh"
-    install -Dm 0644 base/etc/zsh/sandboxd.zsh "$pkgdir/etc/zsh/sandboxd.zsh"
-    install -Dm 0644 base/etc/zsh/ssh.zsh "$pkgdir/etc/zsh/ssh.zsh"
-    install -Dm 0644 base/etc/zsh/title.zsh "$pkgdir/etc/zsh/title.zsh"
-    install -Dm 0644 base/etc/zsh/zsh-notify.zsh "$pkgdir/etc/zsh/zsh-notify.zsh"
     install -Dm 0644 base/etc/zsh/zshrc "$pkgdir/etc/zsh/couldinho-zshrc"
-    install -Dm 0644 base/etc/zsh/zprezto-patches/prompt.patch "$pkgdir/etc/zsh/zprezto-patches/prompt.patch"
-    install -Dm 0644 base/etc/zsh/zprezto-patches/wordchars.patch \
-                 "$pkgdir/etc/zsh/zprezto-patches/wordchars.patch"
+    install -Dm 0644 base/etc/zsh/p10k.zsh "$pkgdir/etc/zsh/couldinho-p10k.zsh"
+    install -Dm 0644 base/etc/zsh/zprofile "$pkgdir/etc/zsh/couldinho-zprofile"
+    install -Dm 0644 base/etc/zsh/zsh-aliases "$pkgdir/etc/zsh/couldinho-zsh-aliases"
+    install -Dm 0644 base/etc/zsh/zshenv "$pkgdir/etc/zsh/couldinho-zshenv"
 
     # Filesystem
     depends+=(

@@ -306,6 +306,7 @@ echo "##"
 echo "  [*] Creating user and shell"
 arch-chroot /mnt useradd -m -s /usr/bin/zsh -g users -G wheel,uucp,video,audio,storage,games,input "$user"
 arch-chroot /mnt chsh -s /usr/bin/zsh
+arch-chroot /mnt sudo -u "$user" zsh -ic true
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
