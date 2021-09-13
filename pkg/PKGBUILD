@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=1
-pkgrel=80
+pkgrel=81
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -139,6 +139,7 @@ package_couldinho-base() {
         #openbsd-netcat             # OpenBSD netcat #TODO: Find a way to install both
         socat                       # Similar to netcat
         bandwhich                   # Terminal bandwith utilization tool
+        croc                        # Send files securely to another computer
     )
 
     # Shell
@@ -194,6 +195,8 @@ package_couldinho-base() {
         aurutils-git        # AUR helper
         pacman-contrib      # Contains checkupdates plus other pacman scripts
         reflector           # Automatically sort out pacman mirrorlist
+        urlwatch            # Tool for monitoring webpage updates
+        python-chump-git    # Pushover dependency for urlwatch
     )
 
     install -Dm 0644 base/etc/systemd/system/reflector.service "$pkgdir/etc/systemd/system/reflector.service"
