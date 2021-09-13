@@ -85,8 +85,8 @@ setopt IGNORE_EOF
 
 ###
 
-[ -z "$EDITOR" ] && export EDITOR='vim'
-[ -z "$VISUAL" ] && export VISUAL='vim'
+[ -z "$EDITOR" ] && export EDITOR='nvim'
+[ -z "$VISUAL" ] && export VISUAL='nvim'
 
 export DIRENV_LOG_FORMAT=
 export FZF_DEFAULT_OPTS="--reverse --multi"
