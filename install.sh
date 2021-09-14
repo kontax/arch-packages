@@ -7,7 +7,7 @@ set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
 exec 1> >(tee "stdout.log")
-exec 2> >(tee "stderr.log")
+exec 2> >(tee "stderr.log" >&2)
 
 # System options to choose from
 SYSTEM_OPTIONS=(
@@ -227,7 +227,7 @@ fi
 
 echo -e "\n  [*] Formatting partitions"
 
-mkfs.vfat -n "EFI" -F32 "${part_boot}"
+mkfs.vfat -n "EFI" -F 32 "${part_boot}"
 echo -n ${passphrase} | cryptsetup luksFormat \
     --type luks2 \
     --pbkdf argon2id \
@@ -248,17 +248,17 @@ btrfs subvolume create /mnt/swap
 btrfs subvolume create /mnt/snapshots
 umount /mnt
 
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=root /dev/mapper/luks /mnt
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=root       /dev/mapper/luks /mnt
 mkdir -p /mnt/{mnt/btrfs-root,boot/efi,home,var/{cache/pacman,log,tmp,lib/docker},swap,.snapshots}
 mount "${part_boot}" /mnt/boot/efi
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=/ /dev/mapper/luks /mnt/mnt/btrfs-root
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=home /dev/mapper/luks /mnt/home
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=pkgs /dev/mapper/luks /mnt/var/cache/pacman
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=docker /dev/mapper/luks /mnt/var/lib/docker
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=logs /dev/mapper/luks /mnt/var/log
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=tmp /dev/mapper/luks /mnt/var/tmp
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=swap /dev/mapper/luks /mnt/swap
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=snapshots /dev/mapper/luks /mnt/.snapshots
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=/          /dev/mapper/luks /mnt/mnt/btrfs-root
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=home       /dev/mapper/luks /mnt/home
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=pkgs       /dev/mapper/luks /mnt/var/cache/pacman
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=docker     /dev/mapper/luks /mnt/var/lib/docker
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=logs       /dev/mapper/luks /mnt/var/log
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=tmp        /dev/mapper/luks /mnt/var/tmp
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=swap       /dev/mapper/luks /mnt/swap
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=snapshots  /dev/mapper/luks /mnt/.snapshots
 
 
 echo "#####"
