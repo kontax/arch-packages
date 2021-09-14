@@ -1,33 +1,103 @@
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+zstyle    ':z4h:'                                              auto-update            no
+zstyle    ':z4h:'                                              iterm2-integration     yes
+zstyle    ':z4h:'                                              propagate-cwd          yes
+zstyle    ':z4h:*'                                             channel                stable
+zstyle    ':z4h:autosuggestions'                               forward-char           accept
+zstyle    ':z4h:fzf-complete'                                  fzf-command            my-fzf
+zstyle    ':z4h:(fzf-complete|fzf-dir-history|fzf-history)'    fzf-flags              --no-exact --color=hl:14,hl+:14
+zstyle    ':z4h:(fzf-complete|fzf-dir-history)'                fzf-bindings           'tab:repeat'
+zstyle    ':z4h:fzf-complete'                                  find-flags             -name '.git' -prune -print -o -print
+zstyle    ':z4h:ssh:*'                                         ssh-command            kitty +kitten ssh
+zstyle    ':z4h:ssh:*'                                         send-extra-files       '~/.zsh-aliases'
+zstyle    ':z4h:ssh:*'                                         enable                 no
+zstyle    ':zle:(up|down)-line-or-beginning-search'            leave-cursor           yes
+zstyle    ':z4h:term-title:ssh'                                preexec                '%* | %n@%m: ${1//\%/%%}'
+zstyle    ':z4h:term-title:local'                              preexec                '%* | ${1//\%/%%}'
+zstyle    ':completion:*:ssh:argument-1:'                      tag-order              hosts users
+zstyle    ':completion:*:scp:argument-rest:'                   tag-order              hosts files users
+zstyle    ':completion:*:(ssh|scp|rdp):*:hosts'                hosts
+
+if ! (( P9K_SSH )); then
+    zstyle ':z4h:sudo' term ''
 fi
 
-(( ! EUID )) && for f in /etc/zsh/zshrc /etc/zsh/*.zsh; do 
-    [[ ! -s $f.zwc || $f -nt $f.zwc ]] && zcompile $f; 
-done
+###
 
-# Lazy-loading
-. /etc/zsh/sandboxd.zsh
+z4h install romkatv/archive || return
+z4h tty-wait --timeout-seconds 1.0 --lines-columns-pattern '<70-> <->'
+z4h init || return
 
-# Load environment variables
-. /usr/share/LS_COLORS/dircolors.sh
-. /etc/zsh/env.zsh
+####
 
-# Load terminal configuration
-. /etc/zsh/title.zsh
-. /etc/zsh/prompt.zsh
+zstyle ':completion:*' matcher-list "m:{a-z}={A-Z}" "l:|=* r:|=*"
 
-# Load plugins
-. /etc/zsh/prezto.zsh
-. /etc/zsh/zsh-notify.zsh
-. /etc/zsh/antigen.zsh
-. /etc/zsh/prezto-patches.zsh
+####
 
-# Load custom configurations
-. /etc/zsh/opts.zsh
-. /etc/zsh/keybindings.zsh
-. /etc/zsh/aliases.zsh
-. /etc/zsh/pacman.zsh
-. /etc/zsh/git.zsh
-. /etc/zsh/fuzzy.zsh
-. /etc/zsh/ssh.zsh
+fpath+=($Z4H/romkatv/archive)
+autoload -Uz archive lsarchive unarchive edit-command-line
+
+zle -N edit-command-line
+
+my-fzf () {
+    emulate -L zsh -o extended_glob
+    local MATCH MBEGIN MEND
+    fzf "${@:/(#m)--query=?*/$MATCH }"
+}
+
+my-ctrl-z() {
+    if [[ $#BUFFER -eq 0 ]]; then
+        BUFFER="fg"
+        zle accept-line -w
+    else
+        zle push-input -w
+        zle clear-screen -w
+    fi
+}
+zle -N my-ctrl-z
+
+###
+
+z4h bindkey z4h-backward-kill-word  Ctrl+Backspace
+z4h bindkey z4h-backward-kill-zword Ctrl+Alt+Backspace
+z4h bindkey z4h-kill-zword          Ctrl+Alt+Delete
+
+z4h bindkey backward-kill-line      Ctrl+U
+z4h bindkey kill-line               Alt+U
+z4h bindkey kill-whole-line         Alt+I
+
+z4h bindkey z4h-forward-zword       Ctrl+Alt+Right
+z4h bindkey z4h-backward-zword      Ctrl+Alt+Left
+
+z4h bindkey z4h-cd-back             Alt+H
+z4h bindkey z4h-cd-forward          Alt+L
+z4h bindkey z4h-cd-up               Alt+K
+z4h bindkey z4h-fzf-dir-history     Alt+J
+
+z4h bindkey my-ctrl-z               Ctrl+Z
+z4h bindkey edit-command-line       Alt+E
+
+z4h bindkey z4h-eof                 Ctrl+D
+
+###
+
+setopt GLOB_DOTS
+setopt IGNORE_EOF
+
+###
+
+[ -z "$EDITOR" ] && export EDITOR='nvim'
+[ -z "$VISUAL" ] && export VISUAL='nvim'
+
+export DIRENV_LOG_FORMAT=
+export FZF_DEFAULT_OPTS="--reverse --multi"
+export SYSTEMD_LESS="${LESS}S"
+
+###
+
+command -v direnv &> /dev/null && eval "$(direnv hook zsh)"
+
+###
+
+z4h source -- /usr/share/LS_COLORS/dircolors.sh
+z4h source -- /etc/zsh/zsh-aliases
+z4h source -- /etc/zsh/p10k.zsh

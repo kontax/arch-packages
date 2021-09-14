@@ -15,7 +15,7 @@ post_upgrade() {
     cp /etc/lightdm/couldinho-laptop-lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
 
     # Rofi
-    cp /etc/couldinho-laptop-rofi.conf /etc/rofi.conf
+    cp /etc/couldinho-laptop-rofi.rasi /etc/rofi.rasi
 
     # Terminal
     cp /etc/xdg/kitty/couldinho-laptop-kitty.conf /etc/xdg/kitty/kitty.conf

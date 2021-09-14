@@ -1,7 +1,7 @@
 pkgbase='couldinho'
-pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-sec)
+pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=1
-pkgrel=68
+pkgrel=84
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -9,7 +9,9 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(62dc3d5c7a6560e7f2ab721353fa987be125e7452c3dc6a299f2530a0577cf28)
+sha256sums=(2c6cef289100e74b98a14e26332357329a22e19ce8313d8720bca6b015963b71)
+
+# Comment for update
 
 package_couldinho-base() {
     install=couldinho-base.install
@@ -121,6 +123,7 @@ package_couldinho-base() {
     depends+=(
         exa                 # ls replacement
         ripgrep             # Fuzzy search
+        ripgrep-all         # ripgrep wrapper for multiple file types
         rmtrash             # Delete to bin
     )
 
@@ -132,43 +135,27 @@ package_couldinho-base() {
         wget openssh                # Download and connect
         openvpn                     # Connect to PIA
         networkmanager-openvpn      # NetworkManager drivers for OpenVPN
-        private-internet-access-vpn # Scripts for managing PIA
         gnu-netcat                  # GNU netcat - contains -e for executables
         #openbsd-netcat             # OpenBSD netcat #TODO: Find a way to install both
         socat                       # Similar to netcat
+        bandwhich                   # Terminal bandwith utilization tool
+        croc                        # Send files securely to another computer
     )
-
-    install -Dm 0644 base/etc/private-internet-access/pia.conf "$pkgdir/etc/private-internet-access/pia.conf"
 
     # Shell
     depends+=(
         zsh                 # Better shell
-        antigen-git         # Package manager
-        prezto-git          # Configuration framework
+        direnv              # Shell extension managing environment
         fzy                 # Fzy text selector
         lscolors-git        # Colours for ls
-        pydf                # Colourised version of df
+        dfrs                # Colourised version of df
     )
 
-    install -Dm 0644 base/etc/zsh/antigen.zsh "$pkgdir/etc/zsh/antigen.zsh"
-    install -Dm 0644 base/etc/zsh/aliases.zsh "$pkgdir/etc/zsh/aliases.zsh"
-    install -Dm 0644 base/etc/zsh/env.zsh "$pkgdir/etc/zsh/env.zsh"
-    install -Dm 0644 base/etc/zsh/fuzzy.zsh "$pkgdir/etc/zsh/fuzzy.zsh"
-    install -Dm 0644 base/etc/zsh/git.zsh "$pkgdir/etc/zsh/git.zsh"
-    install -Dm 0644 base/etc/zsh/keybindings.zsh "$pkgdir/etc/zsh/keybindings.zsh"
-    install -Dm 0644 base/etc/zsh/opts.zsh "$pkgdir/etc/zsh/opts.zsh"
-    install -Dm 0644 base/etc/zsh/pacman.zsh "$pkgdir/etc/zsh/pacman.zsh"
-    install -Dm 0644 base/etc/zsh/prezto.zsh "$pkgdir/etc/zsh/prezto.zsh"
-    install -Dm 0644 base/etc/zsh/prezto-patches.zsh "$pkgdir/etc/zsh/prezto-patches.zsh"
-    install -Dm 0644 base/etc/zsh/prompt.zsh "$pkgdir/etc/zsh/prompt.zsh"
-    install -Dm 0644 base/etc/zsh/sandboxd.zsh "$pkgdir/etc/zsh/sandboxd.zsh"
-    install -Dm 0644 base/etc/zsh/ssh.zsh "$pkgdir/etc/zsh/ssh.zsh"
-    install -Dm 0644 base/etc/zsh/title.zsh "$pkgdir/etc/zsh/title.zsh"
-    install -Dm 0644 base/etc/zsh/zsh-notify.zsh "$pkgdir/etc/zsh/zsh-notify.zsh"
     install -Dm 0644 base/etc/zsh/zshrc "$pkgdir/etc/zsh/couldinho-zshrc"
-    install -Dm 0644 base/etc/zsh/zprezto-patches/prompt.patch "$pkgdir/etc/zsh/zprezto-patches/prompt.patch"
-    install -Dm 0644 base/etc/zsh/zprezto-patches/wordchars.patch \
-                 "$pkgdir/etc/zsh/zprezto-patches/wordchars.patch"
+    install -Dm 0644 base/etc/zsh/p10k.zsh "$pkgdir/etc/zsh/couldinho-p10k.zsh"
+    install -Dm 0644 base/etc/zsh/zprofile "$pkgdir/etc/zsh/couldinho-zprofile"
+    install -Dm 0644 base/etc/zsh/zsh-aliases "$pkgdir/etc/zsh/couldinho-zsh-aliases"
+    install -Dm 0644 base/etc/zsh/zshenv "$pkgdir/etc/zsh/couldinho-zshenv"
 
     # Filesystem
     depends+=(
@@ -208,6 +195,8 @@ package_couldinho-base() {
         aurutils-git        # AUR helper
         pacman-contrib      # Contains checkupdates plus other pacman scripts
         reflector           # Automatically sort out pacman mirrorlist
+        urlwatch            # Tool for monitoring webpage updates
+        python-chump-git    # Pushover dependency for urlwatch
     )
 
     install -Dm 0644 base/etc/systemd/system/reflector.service "$pkgdir/etc/systemd/system/reflector.service"
@@ -226,14 +215,26 @@ package_couldinho-desktop() {
 
     # sway
     depends+=(
-        xorg-server-xwayland    # Wayland X server
-        sway                    # Tiling window manager for wayland
-        swaylock                # Lockscreen for sway
-        waybar                  # Status bar for sway
+        xorg-server             # X server
+        xorg-xfontsel           # Selecting X11 fonts easily
+        xorg-xinit              # Start up X and various WM's
+        xorg-xprop              # Display X properties
+        xorg-xrandr             # Resize & Rotate
+    )
+
+    install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
+                    "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
+    install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
+
+    # i3
+    depends+=(
+        i3-gaps                 # i3 window manager with gaps between windows
+        i3status                # Status bar for i3
+        py3status               # Manage i3status through python
         python-i3ipc            # IPC for i3 via python
     )
 
-    install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/sway/couldinho-config"
+    install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-desktop-config"
     install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
     install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
     install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
@@ -242,10 +243,8 @@ package_couldinho-desktop() {
 
     # Wayland packages
     depends+=(
-        mako                    # Wayland notification daemon
-        wofi                    # Wayland dmenu replacement
-        slurp                   # Screenshot selection program for wayland
-        flashfocus-git          # Tiling window animations
+        lightdm                 # Login manager
+        lightdm-gtk-greeter     # Theme for login manager
     )
 
     install -Dm 0644 desktop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
@@ -254,9 +253,13 @@ package_couldinho-desktop() {
 
     # Further i3 packages
     depends+=(
+        rofi                    # dmenu replacement
+        rofi-calc               # Wrapper for qalculate
         libqalculate            # More powerful calculator
+        rofi-dmenu              # Wrapper for things depending on dmenu binary
         ttf-inconsolata         # Font for terminal and status etc.
         otf-font-awesome        # Font with icons
+        python-tzlocal          # Used within the clock for the status bar
         gsimplecal              # GTK calendar for the status bar
         dunst                   # Notification server
         libnotify               # Notification library
@@ -265,7 +268,7 @@ package_couldinho-desktop() {
         pinentry-dmenu          # Enter GPG pins using dmenu
     )
 
-    install -Dm 0644 desktop/etc/rofi.conf "$pkgdir/etc/rofi.conf"
+    install -Dm 0644 desktop/etc/rofi.rasi "$pkgdir/etc/rofi.rasi"
 
     # Multimedia
     depends+=(
@@ -284,6 +287,10 @@ package_couldinho-desktop() {
     # Terminal + desktop tools
     depends+=(
         kitty                   # GPU enhanced terminal emulator
+        flameshot               # Screenshot tool
+        picom                   # X compositor
+        copyq                   # Copy/Paste utility
+        unclutter               # Hide mouse in i3 when not in use
         ranger                  # File manager from terminal (vim keybindings)
         python-pillow           # Used to view pictures within ranger
         freerdp                 # Remote desktop client
@@ -391,7 +398,7 @@ package_couldinho-sec() {
     depends+=(
         radare2                 # Command line reverse engineering framework
         ida-free                # Hexrays reversen engineering framework
-        ghidra-bin              # Reverse engineering framework similar to IDA
+        ghidra                  # Reverse engineering framework similar to IDA
         voltron-git             # A more useful display for GDB
         gef-git                 # GDB Enhanced Features
         pwngdb                  # GDB for pwn
@@ -427,8 +434,29 @@ package_couldinho-laptop() {
     install -Dm 0644 laptop/etc/i3/config "$pkgdir/etc/i3/couldinho-laptop-config"
     install -Dm 0644 laptop/etc/lightdm/lightdm-gtk-greeter.conf \
         "$pkgdir/etc/lightdm/couldinho-laptop-lightdm-gtk-greeter.conf"
-    install -Dm 0644 laptop/etc/rofi.conf "$pkgdir/etc/couldinho-laptop-rofi.conf"
+    install -Dm 0644 laptop/etc/rofi.rasi "$pkgdir/etc/couldinho-laptop-rofi.rasi"
     install -Dm 0644 laptop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/couldinho-laptop-kitty.conf"
     install -Dm 0644 laptop/usr/share/X11/xorg.conf.d/40-libinput.conf \
         "$pkgdir/usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf"
+}
+
+package_couldinho-vmware() {
+    install=couldinho-vmware.install
+
+    # base + desktop
+    depends=(
+        couldinho-desktop
+    )
+
+    # VMWare specific programs
+    depends+=(
+        light                   # Program to change backlight
+        open-vm-tools           # Open source version of VMWare Tools
+        xf86-input-vmmouse      # VMWare mouse driver
+        xf86-video-vmware       # VMWare video driver
+        gtkmm3                  # C++ bindings for GTK+ 3 - used for VMWare copy/paste
+    )
+
+    install -Dm 0644 vmware/etc/i3/config "$pkgdir/etc/i3/couldinho-vmware-config"
+
 }

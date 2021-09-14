@@ -11,10 +11,12 @@ exec 2> >(tee "stderr.log")
 
 # System options to choose from
 SYSTEM_OPTIONS=(
-    base        "Base system" \
-    desktop     "Dual monitor desktop with i3wm" \
-    laptop      "HiDPI laptop with i3status options" \
-    sec         "Reversing & exploitation software" \
+    base        "Base system" off \
+    desktop     "Dual monitor desktop with i3wm" off \
+    laptop      "HiDPI laptop with i3status options" off \
+    dev         "Developer software" off \
+    sec         "Reversing & exploitation software" off \
+    vmware      "Includes VMWare virtual drivers" off \
 )
 
 REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur-dev/x86_64"
@@ -56,7 +58,23 @@ function get_password {
                $HEIGHT $WIDTH
     )
     : ${init_pass:?"password cannot be empty"}
-    
+    echo $init_pass
+}
+
+function get_new_password {
+    title="$1"
+    desc="$2"
+
+    init_pass=$(
+        dialog --clear \
+               --stdout \
+               --backtitle "$BACKTITLE" \
+               --title "$title" \
+               --passwordbox "$desc" \
+               $HEIGHT $WIDTH
+    )
+    : ${init_pass:?"password cannot be empty"}
+
     test_pass=$(
         dialog --clear \
                --stdout \
@@ -71,6 +89,21 @@ function get_password {
     fi
     echo $init_pass
 }
+
+function get_multi_choice {
+    title="$1"
+    shift
+    desc="$2"
+    shift
+    options=("$@")
+    dialog --clear \
+        --stdout \
+         --backtitle "$BACKTITLE" \
+         --title "$title" \
+         --checklist "$desc" \
+         $HEIGHT $WIDTH $CHOICE_HEIGHT \
+         "${options[@]}"
+ }
 
 function get_choice {
     title="$1"
@@ -88,6 +121,17 @@ function get_choice {
  }
 
 
+echo ""
+echo "#####"
+echo "# Downloading necessary packages"
+echo "# and set up fastest mirrors"
+echo "##"
+
+pacman -Sy --noconfirm --needed git reflector dialog
+reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
+timedatectl set-ntp true
+
+
 #####
 # Get information from the user
 ##
@@ -99,10 +143,10 @@ user=$(get_input "User" "Enter admin username") || exit 1
 clear
 : ${user:?"user cannot be empty"}
 
-password=$(get_password "User" "Enter admin password") || exit 1
+password=$(get_new_password "User" "Enter admin password") || exit 1
 clear
 
-passphrase=$(get_password "User" "Enter passphrase for encrypted volume") || exit 1
+passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
 clear
 
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac | tr '\n' ' ')
@@ -119,9 +163,15 @@ if [ ! -z $config ]; then
     clear
 fi
 
-system=$(get_choice "System" "Choose a system" "${SYSTEM_OPTIONS[@]}") || exit 1
+user_system=$(get_multi_choice "System" "Choose a system" "${SYSTEM_OPTIONS[@]}") || exit 1
 clear
-: ${system:?"system cannot be empty"}
+: ${user_system:?"system cannot be empty"}
+
+# Extracting packages to install for selected systems
+system=""
+for s in ${user_system[@]}; do
+    system+="couldinho-$s "
+done
 
 
 echo ""
@@ -137,24 +187,6 @@ if [ ! -z $config ]; then
     export CONF_FILE_LOCATION=$config
     export CONF_FILE_PASS=$conf_pass
 fi
-
-#####
-# Set up logging
-##
-
-exec 1> >(tee "stdout.log")
-exec 2> >(tee "stderr.log")
-
-
-echo ""
-echo "#####"
-echo "# Downloading necessary packages"
-echo "# and set up fastest mirrors"
-echo "##"
-
-pacman -Sy --noconfirm --needed git reflector
-reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
-timedatectl set-ntp true
 
 
 echo ""
@@ -224,7 +256,7 @@ echo "# the basic system"
 echo "##"
 
 if [[ ! -a /etc/pacman.d/couldinho-arch-aur ]]; then
-    
+
     echo ""
     echo "  [*] Configuring remote AUR details"
 
@@ -244,7 +276,7 @@ EOF
 fi
 
 echo "  [*] Installing packages"
-pacstrap /mnt couldinho-$system
+pacstrap /mnt $system
 
 
 echo "  [*] Generating base config files"
@@ -265,7 +297,7 @@ echo "  [*] Installing grub"
 arch-chroot /mnt grub-install ${device}
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
-    
+
 echo "#####"
 echo "# Setting up user account and home folder,"
 echo "# including the dotfile repo."
@@ -284,6 +316,9 @@ if [ ! -z $CONF_FILE_LOCATION ]; then
         curl -skL $CONF_FILE_LOCATION \
         | openssl aes-256-cbc -salt -d -k "$CONF_FILE_PASS")
 fi
+
+# Finish off installing zsh
+arch-chroot /mnt sudo -u "$user" zsh -ic true
 
 echo "[*] DONE - Install setup from $HOME/dotfiles"
 

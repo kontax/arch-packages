@@ -6,4 +6,7 @@ post_upgrade() {
 
     # System environment variables
     mv /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
+
+    # Enable services
+    systemctl enable docker.service
 }

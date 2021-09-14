@@ -48,6 +48,10 @@ post_upgrade() {
 
     # zsh settings
     cp /etc/zsh/couldinho-zshrc /etc/zsh/zshrc
+    cp /etc/zsh/couldinho-p10k.zsh /etc/zsh/p10k.zsh
+    cp /etc/zsh/couldinho-zprofile /etc/zsh/zprofile
+    cp /etc/zsh/couldinho-zsh-aliases /etc/zsh/zsh-aliases
+    cp /etc/zsh/couldinho-zshenv /etc/zsh/zshenv
 
     # Start services
     systemctl enable NetworkManager.service
