@@ -109,7 +109,7 @@ function get_choice {
     title="$1"
     shift
     desc="$2"
-    shift
+    shift 2
     options=("$@")
     dialog --clear \
         --stdout \
