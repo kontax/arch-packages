@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=1
-pkgrel=83
+pkgrel=84
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/dotfiles"
@@ -265,7 +265,7 @@ package_couldinho-desktop() {
         pinentry-dmenu          # Enter GPG pins using dmenu
     )
 
-    install -Dm 0644 desktop/etc/rofi.conf "$pkgdir/etc/rofi.conf"
+    install -Dm 0644 desktop/etc/rofi.rasi "$pkgdir/etc/rofi.rasi"
 
     # Multimedia
     depends+=(
@@ -436,7 +436,7 @@ package_couldinho-laptop() {
     install -Dm 0644 laptop/etc/i3/config "$pkgdir/etc/i3/couldinho-laptop-config"
     install -Dm 0644 laptop/etc/lightdm/lightdm-gtk-greeter.conf \
         "$pkgdir/etc/lightdm/couldinho-laptop-lightdm-gtk-greeter.conf"
-    install -Dm 0644 laptop/etc/rofi.conf "$pkgdir/etc/couldinho-laptop-rofi.conf"
+    install -Dm 0644 laptop/etc/rofi.rasi "$pkgdir/etc/couldinho-laptop-rofi.rasi"
     install -Dm 0644 laptop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/couldinho-laptop-kitty.conf"
     install -Dm 0644 laptop/usr/share/X11/xorg.conf.d/40-libinput.conf \
         "$pkgdir/usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf"
