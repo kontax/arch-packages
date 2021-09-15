@@ -19,7 +19,7 @@ SYSTEM_OPTIONS=(
     vmware      "Includes VMWare virtual drivers" off \
 )
 
-REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur-dev/x86_64"
+REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
 export SNAP_PAC_SKIP=y
 
 # Dialog options
