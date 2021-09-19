@@ -249,8 +249,8 @@ btrfs subvolume create /mnt/snapshots
 umount /mnt
 
 mount -o noatime,nodiratime,discard,compress=zstd,subvol=root       /dev/mapper/luks /mnt
-mkdir -p /mnt/{mnt/btrfs-root,boot/efi,home,var/{cache/pacman,log,tmp,lib/docker},swap,.snapshots}
-mount "${part_boot}" /mnt/boot/efi
+mkdir -p /mnt/{mnt/btrfs-root,efi,home,var/{cache/pacman,log,tmp,lib/docker},swap,.snapshots}
+mount "${part_boot}" /mnt/efi
 mount -o noatime,nodiratime,discard,compress=zstd,subvol=/          /dev/mapper/luks /mnt/mnt/btrfs-root
 mount -o noatime,nodiratime,discard,compress=zstd,subvol=home       /dev/mapper/luks /mnt/home
 mount -o noatime,nodiratime,discard,compress=zstd,subvol=pkgs       /dev/mapper/luks /mnt/var/cache/pacman
@@ -297,7 +297,7 @@ echo "cryptdevice=PARTLABEL=primary:luks:allow-discards cryptheader=LABEL=luks:0
 
 echo -e "\n  [*] Generating base config files"
 mkdir /mnt/var/cache/pacman/couldinho-arch-aur
-genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
+genfstab -L /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
 echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 echo "en_IE.UTF-8 UTF-8" >> /mnt/etc/locale.gen
