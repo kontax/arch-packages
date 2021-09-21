@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=1
-pkgrel=95
+pkgrel=96
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -214,7 +214,7 @@ package_couldinho-desktop() {
         couldinho-base
     )
 
-    # sway
+    # xorg
     depends+=(
         xorg-server             # X server
         xorg-xfontsel           # Selecting X11 fonts easily
@@ -251,7 +251,6 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
     install -Dm 0644 desktop/etc/lightdm/lightdm-gtk-greeter.conf \
         "$pkgdir/etc/lightdm/couldinho-lightdm-gtk-greeter.conf"
-    install -Dm 0644 desktop/etc/xdg/picom.conf "$pkgdir/etc/xdg/couldinho-picom.conf"
 
     # Further i3 packages
     depends+=(
@@ -302,6 +301,7 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/vm.py "$pkgdir/etc/xdg/kitty/vm.py"
+    install -Dm 0644 desktop/etc/xdg/picom.conf "$pkgdir/etc/xdg/couldinho-picom.conf"
 
     # Networking
     depends+=(
