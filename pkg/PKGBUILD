@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=1
-pkgrel=94
+pkgrel=95
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -242,7 +242,7 @@ package_couldinho-desktop() {
                     "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
     install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
 
-    # Wayland packages
+    # Login manager
     depends+=(
         lightdm                 # Login manager
         lightdm-gtk-greeter     # Theme for login manager
@@ -251,6 +251,7 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
     install -Dm 0644 desktop/etc/lightdm/lightdm-gtk-greeter.conf \
         "$pkgdir/etc/lightdm/couldinho-lightdm-gtk-greeter.conf"
+    install -Dm 0644 desktop/etc/xdg/picom.conf "$pkgdir/etc/xdg/couldinho-picom.conf"
 
     # Further i3 packages
     depends+=(
@@ -316,7 +317,6 @@ package_couldinho-desktop() {
         pepper-flash            # Flash player
         x265                    # Video compression
         browserpass-chromium    # Browser extenson for pass
-        qutebrowser             # Browser with vim bindings
     )
 
     # General scripts
