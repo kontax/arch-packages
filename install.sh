@@ -158,7 +158,7 @@ clear
 : ${package_stage:?"Stage cannot be empty"}
 
 # Ensure we're pointing to the correct repository
-if [ "$package_stage" == master ]; then
+if [ "$package_stage" == dev ]; then
     REPO_URL=$(echo $REPO_URL | sed 's/couldinho-arch-aur/couldinho-arch-aur-dev/g')
 fi
 
