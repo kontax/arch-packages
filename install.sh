@@ -9,6 +9,13 @@ trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 exec 1> >(tee "stdout.log")
 exec 2> >(tee "stderr.log" >&2)
 
+
+# The package group to select from
+PACKAGE_STAGE_LIST=(
+    master      "The live and tested package group"
+    dev         "The package group under development"
+)
+
 # System options to choose from
 SYSTEM_OPTIONS=(
     base        "Base system" off \
@@ -19,7 +26,9 @@ SYSTEM_OPTIONS=(
     vmware      "Includes VMWare virtual drivers" off \
 )
 
-REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur-dev/x86_64"
+# This is currently pointing at the prod URL, however a selection can be made
+# within this script by the user to point it to the dev repo
+REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
 export SNAP_PAC_SKIP=y
 
 # Dialog options
@@ -143,6 +152,16 @@ timedatectl set-ntp true
 #####
 # Get information from the user
 ##
+
+package_stage=$(get_choice "Installation" "Select whether to use the dev or master package list" "${PACKAGE_STAGE_LIST[@]}") || exit 1
+clear
+: ${package_stage:?"Stage cannot be empty"}
+
+# Ensure we're pointing to the correct repository
+if [ "$package_stage" == master ]; then
+    REPO_URL=$(echo $REPO_URL | sed 's/couldinho-arch-aur/couldinho-arch-aur-dev/g')
+fi
+
 hostname=$(get_input "Hostname" "Enter hostname") || exit 1
 clear
 : ${hostname:?"hostname cannot be empty"}
@@ -287,6 +306,15 @@ fi
 
 echo -e "\n  [*] Installing packages"
 pacstrap /mnt $system
+
+# Ensure the correct repository is being used for pacman
+cat >>/mnt/etc/profile.d/repo_setup.sh <<EOF
+#!/bin/sh
+# The repository to use for custom AUR packages
+
+export COULDINHO_REPO_URL=$REPO_URL
+EOF
+
 
 echo -e "\n  [*] Creating an encrypted key for booting"
 cryptsetup luksHeaderBackup "${luks_header_device}" --header-backup-file /tmp/header.img
