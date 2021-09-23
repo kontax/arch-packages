@@ -13,13 +13,6 @@ post_upgrade() {
     # Add encryption to kernel
     cp /etc/couldinho-mkinitcpio.conf /etc/mkinitcpio.conf
 
-    # Use encrypted root system via grub
-    part_root=$(grep cryptdevice /etc/default/grub | sed 's/.*cryptdevice=\(.*\)/\1/g' | cut -d ':' -f 1)
-    if [ ! -z $part_root ]; then
-        sed -i "s|#PART_ROOT#|${part_root}|g" /etc/default/couldinho-grub
-    fi
-    cp /etc/default/couldinho-grub /etc/default/grub
-
     # Move pacman repo details and settings
     cp /etc/couldinho-pacman.conf /etc/pacman.conf
     if [ ! -z $COULDINHO_REPO_URL ]; then
