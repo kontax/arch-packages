@@ -159,7 +159,7 @@ clear
 
 # Ensure we're pointing to the correct repository
 if [ "$package_stage" == dev ]; then
-    exoprt COULDINHO_REPO_URL=$(echo $COULDINHO_REPO_URL | sed 's/couldinho-arch-aur/couldinho-arch-aur-dev/g')
+    export COULDINHO_REPO_URL=$(echo $COULDINHO_REPO_URL | sed 's/couldinho-arch-aur/couldinho-arch-aur-dev/g')
 fi
 
 hostname=$(get_input "Hostname" "Enter hostname") || exit 1
