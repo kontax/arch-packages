@@ -16,14 +16,6 @@ post_upgrade() {
     # Move pacman repo details and settings
     cp /etc/couldinho-pacman.conf /etc/pacman.conf
 
-    # Ensure the correct repository is being used
-    if [ -f /etc/pacman.d/couldinho-repo ]; then 
-        source /etc/pacman.d/couldinho-repo
-    fi
-    if [ ! -z $COULDINHO_REPO_URL ]; then
-        sed -i "s/\$COULDINHO_REPO_URL/$COULDINHO_REPO_URL/g" /etc/pacman.d/couldinho-arch-aur
-    fi
-
     # neovim config and symlinks
     ln -s /usr/bin/nvim /usr/bin/vim
     ln -s /usr/bin/nvim /usr/bin/vi
