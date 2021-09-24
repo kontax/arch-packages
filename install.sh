@@ -28,7 +28,7 @@ SYSTEM_OPTIONS=(
 
 # This is currently pointing at the prod URL, however a selection can be made
 # within this script by the user to point it to the dev repo
-REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
+export COULDINHO_REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
 export SNAP_PAC_SKIP=y
 
 # Dialog options
@@ -159,7 +159,7 @@ clear
 
 # Ensure we're pointing to the correct repository
 if [ "$package_stage" == dev ]; then
-    REPO_URL=$(echo $REPO_URL | sed 's/couldinho-arch-aur/couldinho-arch-aur-dev/g')
+    exoprt COULDINHO_REPO_URL=$(echo $COULDINHO_REPO_URL | sed 's/couldinho-arch-aur/couldinho-arch-aur-dev/g')
 fi
 
 hostname=$(get_input "Hostname" "Enter hostname") || exit 1
@@ -295,7 +295,7 @@ CacheDir = /var/cache/pacman/pkg
 CacheDir = /var/cache/pacman/couldinho-arch-aur
 
 [couldinho-arch-aur]
-Server = $REPO_URL
+Server = $COULDINHO_REPO_URL
 SigLevel = Optional TrustAll
 EOF
 
@@ -312,7 +312,7 @@ cat >>/mnt/etc/profile.d/repo_setup.sh <<EOF
 #!/bin/sh
 # The repository to use for custom AUR packages
 
-export COULDINHO_REPO_URL=$REPO_URL
+export COULDINHO_REPO_URL=$COULDINHO_REPO_URL
 EOF
 
 
