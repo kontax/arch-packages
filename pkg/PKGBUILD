@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
-pkgver=1
-pkgrel=102
+pkgver=2
+pkgrel=2
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -84,7 +84,6 @@ package_couldinho-base() {
         systemd
     )
 
-    install -Dm 0644 base/etc/default/grub "$pkgdir/etc/default/couldinho-grub"
     install -Dm 0644 base/etc/mkinitcpio.conf "$pkgdir/etc/couldinho-mkinitcpio.conf"
     install -Dm 0644 base/etc/pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
     install -Dm 0644 base/etc/pacman.d/couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
@@ -163,7 +162,6 @@ package_couldinho-base() {
         btrfs-progs         # BTRFS filesystem tools
         snapper             # Snapshot manager
         snap-pac            # Hooks for pacman for auto-snapshotting
-        snap-pac-grub       # Add grub entries for snapshots
         zip                 # Zipping tool
         unzip               # Unzipping tool
     )
@@ -171,7 +169,6 @@ package_couldinho-base() {
     install -Dm 0644 base/etc/conf.d/snapper "$pkgdir/etc/conf.d/couldinho-snapper"
     install -Dm 0644 base/etc/snapper/configs/root "$pkgdir/etc/snapper/configs/root"
     install -Dm 0644 base/etc/snap-pac.conf "$pkgdir/etc/snap-pac.conf"
-    install -Dm 0644 base/etc/default/grub-btrfs/config "$pkgdir/etc/default/grub-btrfs/couldinho-config"
 
     # Access Control
     depends+=(
