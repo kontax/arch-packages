@@ -1,10 +1,10 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=1
-pkgrel=84
+pkgrel=101
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
-url="https://github.com/kontax/dotfiles"
+url="https://github.com/kontax/arch-packages"
 license=(MIT)
 groups=(couldinho)
 
@@ -96,8 +96,9 @@ package_couldinho-base() {
 
     # Boot and base progs
     depends+=(
-        grub efibootmgr     # For EFI systems
         cryptboot           # Encrypted partitions
+        mkinitcpio-encrypt-detached-header # Encrypt hook with detatched header
+        arch-secure-boot    # UEFI Secure Boot
         intel-ucode         # Microcode patches
         fwupd               # Firmware updater
         terminus-font       # Better font for console
@@ -237,6 +238,9 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-desktop-config"
     install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
     install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
+    install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
+                    "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
+    install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
 
     # Login manager
     depends+=(
@@ -313,11 +317,6 @@ package_couldinho-desktop() {
         pepper-flash            # Flash player
         x265                    # Video compression
         browserpass-chromium    # Browser extenson for pass
-    )
-
-    # Utils
-    depends+=(
-        #wire-desktop-beta       # Encrypted messenger
     )
 
     # General scripts

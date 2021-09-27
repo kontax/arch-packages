@@ -1,7 +1,11 @@
 # xmodmap -pke to find keybindings
 # Set font
 font pango:Taskbar, Inconsolata 10
-#font pango: Inconsolata Mono 10, Cantarell 9
+
+input type:keyboard {
+    xkb_layout jc
+    xkb_numlock on
+}
 
 # Gaps
 gaps inner 20
