@@ -341,6 +341,7 @@ package_couldinho-dev() {
     # Platforms/Languages
     depends+=(
         docker                  # Containerisation
+        docker-compose          # Docker dev management
         rust                    # The rust programming language and tools
         rustup                  # Rust toolchain installer
         nasm                    # x86 Assembler
