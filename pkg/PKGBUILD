@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=3
+pkgrel=4
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -341,6 +341,7 @@ package_couldinho-dev() {
     # Platforms/Languages
     depends+=(
         docker                  # Containerisation
+        docker-compose          # Docker dev management
         rust                    # The rust programming language and tools
         rustup                  # Rust toolchain installer
         nasm                    # x86 Assembler
