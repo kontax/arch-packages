@@ -342,6 +342,7 @@ package_couldinho-dev() {
     depends+=(
         docker                  # Containerisation
         docker-compose          # Docker dev management
+        docker-credential-pass  # Store and use docker credentials from pass
         rust                    # The rust programming language and tools
         rustup                  # Rust toolchain installer
         nasm                    # x86 Assembler
