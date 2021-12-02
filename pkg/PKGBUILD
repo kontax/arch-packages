@@ -125,6 +125,7 @@ package_couldinho-base() {
         ripgrep             # Fuzzy search
         ripgrep-all         # ripgrep wrapper for multiple file types
         rmtrash             # Delete to bin
+        bat                 # Cat replacement with syntax highlighting
     )
 
     # Networking + VPN
