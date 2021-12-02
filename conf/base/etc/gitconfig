@@ -4,3 +4,5 @@
 [credential]
 	helper = !pass-git-helper $@
 	useHttpPath = true
+[init]
+	defaultBranch = master
