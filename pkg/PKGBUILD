@@ -170,7 +170,7 @@ package_couldinho-base() {
     install -Dm 0644 base/etc/snapper/configs/root "$pkgdir/etc/snapper/configs/root"
     install -Dm 0644 base/etc/snap-pac.conf "$pkgdir/etc/snap-pac.conf"
 
-    # Access Control
+    # Access Control + Security
     depends+=(
         pass                # Text-based password manager
         pass-git-helper     # Credential helper using pass to store details
@@ -180,6 +180,7 @@ package_couldinho-base() {
         libu2f-server       # Libraries for U2F - login with yubikey
         pam-u2f             # Login to system with U2F
         git-secret          # Helper tool for storing private files in a git repo
+        arch-audit          # View security details of arch packages
     )
 
     install -Dm 0644 base/etc/profile.d/zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
