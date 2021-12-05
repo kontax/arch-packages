@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=4
+pkgrel=5
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -125,7 +125,10 @@ package_couldinho-base() {
         ripgrep             # Fuzzy search
         ripgrep-all         # ripgrep wrapper for multiple file types
         rmtrash             # Delete to bin
+        bat                 # Cat replacement with syntax highlighting
     )
+
+    install -dm 0755 base/etc/bat "$pkgdir/etc/bat"
 
     # Networking + VPN
     depends+=(
@@ -170,7 +173,7 @@ package_couldinho-base() {
     install -Dm 0644 base/etc/snapper/configs/root "$pkgdir/etc/snapper/configs/root"
     install -Dm 0644 base/etc/snap-pac.conf "$pkgdir/etc/snap-pac.conf"
 
-    # Access Control
+    # Access Control + Security
     depends+=(
         pass                # Text-based password manager
         pass-git-helper     # Credential helper using pass to store details
@@ -180,9 +183,11 @@ package_couldinho-base() {
         libu2f-server       # Libraries for U2F - login with yubikey
         pam-u2f             # Login to system with U2F
         git-secret          # Helper tool for storing private files in a git repo
+        arch-audit          # View security details of arch packages
     )
 
     install -Dm 0644 base/etc/profile.d/zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
+    install -Dm 0644 base/etc/pacman.d/hooks/arch-audit.hook "$pkgdir/etc/pacman.d/hooks/arch-audit.hook"
     install -dm 0750 base/etc/usbguard "$pkgdir/etc/usbguard"
     install -Dm 0600 base/etc/usbguard/usbguard-daemon.conf \
         "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"

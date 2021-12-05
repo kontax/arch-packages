@@ -15,3 +15,4 @@ export XSECURELOCK_WANT_FIRST_KEYPRESS=1
 export PASSWORD_STORE_CHARACTER_SET='a-zA-Z0-9~!@#$%^&*()-_=+[]{};:,.<>?'
 export PASSWORD_STORE_GENERATED_LENGTH=40
 
+export BAT_CONFIG_PATH="/etc/bat/config"
