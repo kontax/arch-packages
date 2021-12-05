@@ -7,7 +7,6 @@ configuration {
     sort: true;
     matching: "fuzzy";
     window-format: "{c} {t}";
-    theme: "/usr/share/rofi/themes/gruvbox-dark.rasi";
     kb-move-word-back: "Alt+b,Control+Left";
     kb-move-word-forward: "Alt+f,Control+Right";
     kb-remove-char-back: "BackSpace,Shift+BackSpace,Control+h";
@@ -20,3 +19,4 @@ configuration {
       sorting-method:    "name";
   }
 }
+@theme "/usr/share/rofi/themes/gruvbox-dark.rasi"
