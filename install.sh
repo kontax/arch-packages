@@ -352,7 +352,7 @@ echo "root:$password" | chpasswd --root /mnt
 
 if [ ! -z $CONF_FILE_LOCATION ]; then
     echo -e "\n  [*] Cloning dotfiles to home folder"
-    arch-chroot /mnt sudo -u $user bash < <( \
+    arch-chroot /mnt sudo -E -u $user bash < <( \
         curl -skL $CONF_FILE_LOCATION \
         | openssl aes-256-cbc -salt -d -k "$CONF_FILE_PASS")
 fi

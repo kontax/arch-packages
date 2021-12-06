@@ -5,6 +5,14 @@
 let g:python2_host_prog = "/usr/bin/python2"
 let g:python3_host_prog = "/usr/bin/python3"
 
+" Language servers
+let g:coc_global_extensions = [
+            \ 'coc-json',
+            \ 'coc-rls',
+            \ 'coc-jedi',
+            \ 'coc-sh',
+            \ ]
+
 " Tab for trigger completion
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
