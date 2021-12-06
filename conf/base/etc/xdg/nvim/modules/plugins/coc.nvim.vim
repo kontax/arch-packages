@@ -7,10 +7,10 @@ let g:python3_host_prog = "/usr/bin/python3"
 
 " Language servers
 let g:coc_global_extensions = [
-            \ 'coc-json'
-            \ 'coc-rls'
-            \ 'coc-jedi'
-            \ 'coc-sh'
+            \ 'coc-json',
+            \ 'coc-rls',
+            \ 'coc-jedi',
+            \ 'coc-sh',
             \ ]
 
 " Tab for trigger completion
