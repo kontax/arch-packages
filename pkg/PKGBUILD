@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=13
+pkgrel=14
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -417,11 +417,6 @@ package_couldinho-sec() {
     # Cracking
     depends+=(
         john                    # John the Ripper password cracker
-    )
-
-    # Forensics
-    depends+=(
-        volatility              # Memory forensics toolkit
     )
 }
 
