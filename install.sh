@@ -6,8 +6,7 @@
 set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
-exec 1> >(tee "stdout.log")
-exec 2> >(tee "stderr.log" >&2)
+exec &> >(tee "install.log")
 
 
 # The package group to select from
@@ -360,5 +359,5 @@ fi
 # Finish off installing zsh
 arch-chroot /mnt sudo -u "$user" zsh -ic true
 
-echo "\n[*] DONE - Install setup from $HOME/dotfiles"
+echo -e "\n[*] DONE - Install setup from $HOME/dotfiles"
 
