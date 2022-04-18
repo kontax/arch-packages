@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=18
+pkgrel=19
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -152,6 +152,7 @@ package_couldinho-base() {
         fzy                 # Fzy text selector
         lscolors-git        # Colours for ls
         dfrs                # Colourised version of df
+        tmux                # Terminal multiplexer
     )
 
     install -Dm 0644 base/etc/zsh/zshrc "$pkgdir/etc/zsh/couldinho-zshrc"
@@ -352,6 +353,7 @@ package_couldinho-dev() {
         rust                    # The rust programming language and tools
         rustup                  # Rust toolchain installer
         nasm                    # x86 Assembler
+        ipython                 # iPython Notebooks
     )
 
     # IDE's
@@ -401,14 +403,18 @@ package_couldinho-sec() {
         wfuzz                   # Brute force web applications
     )
 
+    # Debugging
+    depends+=(
+        pwndbg                  # Enhance GDB, similar to GEF
+        gef-git                 # GDB Enhanced Features
+        pwngdb                  # GDB for pwn
+    )
+
     # Reversing
     depends+=(
         radare2                 # Command line reverse engineering framework
         ida-free                # Hexrays reversen engineering framework
         ghidra                  # Reverse engineering framework similar to IDA
-        pwndbg                  # Enhance GDB, similar to GEF
-        gef-git                 # GDB Enhanced Features
-        pwngdb                  # GDB for pwn
         python-capstone         # GEF optional dependency
         python-unicorn          # GEF optional dependency
         python-keystone         # GEF optional dependency
