@@ -218,7 +218,7 @@ package_couldinho-desktop() {
 
     # backend
     depends+=(
-        xorg-server-xwayland    # X server
+        xorg-xwayland           # X server
         qt5-wayland             # QT API's for Wayland
         vulkan-intel            # Intel Vulkan mesa driver #TODO: Is this required?
         vulkan-headers          # Vulkan header files
