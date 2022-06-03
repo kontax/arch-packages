@@ -216,62 +216,54 @@ package_couldinho-desktop() {
         couldinho-base
     )
 
-    # xorg
+    # backend
     depends+=(
-        xorg-server             # X server
-        xorg-xfontsel           # Selecting X11 fonts easily
-        xorg-xinit              # Start up X and various WM's
-        xorg-xprop              # Display X properties
-        xorg-xrandr             # Resize & Rotate
+        xorg-server-xwayland    # X server
+        qt5-wayland             # QT API's for Wayland
+        vulkan-intel            # Intel Vulkan mesa driver #TODO: Is this required?
+        vulkan-headers          # Vulkan header files
     )
 
     install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
                     "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
     install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
 
-    # i3
+    # sway
     depends+=(
-        i3-gaps                 # i3 window manager with gaps between windows
-        i3status                # Status bar for i3
-        py3status               # Manage i3status through python
+        sway                    # Tiling wayland compositor replacing i3
+        swaylock                # Lock wayland screen
+        wl-clipboard            # Wayland command-line clipboard manager
         python-i3ipc            # IPC for i3 via python
+        waybar                  # Sway bar for wayland
+        slurp                   # Region selector for wayland
+        swayr                   # Window switcher for sway
+        swaync                  # Sway notification daemon
+        wldash                  # Wayland launcher and dashboard
     )
 
-    install -Dm 0644 desktop/etc/i3/config "$pkgdir/etc/i3/couldinho-desktop-config"
-    install -Dm 0644 desktop/etc/i3status.conf "$pkgdir/etc/couldinho-i3status.conf"
+    install -Dm 0644 desktop/etc/sway/config "$pkgdir/etc/sway/couldinho-desktop-config"
     install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
     install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
                     "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
     install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
+    install -Dm 0644 desktop/etc/xdg/waybar/config "$pkgdir/etc/xdg/waybar/coudlinho-desktop-config"
+    install -Dm 0644 desktop/etc/xdg/waybar/style.css "$pkgdir/etc/xdg/waybar/couldinho-desktop-style.css"
 
-    # Login manager
+    # Further sway packages
     depends+=(
-        lightdm                 # Login manager
-        lightdm-gtk-greeter     # Theme for login manager
-    )
-
-    install -Dm 0644 desktop/etc/lightdm/lightdm.conf "$pkgdir/etc/lightdm/couldinho-lightdm.conf"
-    install -Dm 0644 desktop/etc/lightdm/lightdm-gtk-greeter.conf \
-        "$pkgdir/etc/lightdm/couldinho-lightdm-gtk-greeter.conf"
-
-    # Further i3 packages
-    depends+=(
-        rofi                    # dmenu replacement
-        rofi-calc               # Wrapper for qalculate
-        libqalculate            # More powerful calculator
-        rofi-dmenu              # Wrapper for things depending on dmenu binary
+        flashfocus-git          # Focus animations
+        qalculate-gtk           # Calculator
         ttf-inconsolata         # Font for terminal and status etc.
         otf-font-awesome        # Font with icons
         python-tzlocal          # Used within the clock for the status bar
         gsimplecal              # GTK calendar for the status bar
-        dunst                   # Notification server
-        libnotify               # Notification library
-        python-pydbus           # Python DBus connector (used by usbguard i3status module)
+        inotify-tools           # Interface to inotify
         yubikey-touch-detector  # i3status notification for when yubikey needs attention 
-        pinentry-dmenu          # Enter GPG pins using dmenu
+        pinentry                # Enter GPG pins using dmenu
     )
 
     install -Dm 0644 desktop/etc/rofi.rasi "$pkgdir/etc/rofi.rasi"
+    install- Dm 0644 desktop/etc/xdg/flashfocus/flashfocus.yml "$pkgdir/etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml"
 
     # Multimedia
     depends+=(
@@ -465,5 +457,6 @@ package_couldinho-vmware() {
     )
 
     install -Dm 0644 vmware/etc/i3/config "$pkgdir/etc/i3/couldinho-vmware-config"
+    install -Dm 0644 vmware/etc/zsh/zprofile "$pkgdir/etc/zsh/zprofile"
 
 }

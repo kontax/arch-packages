@@ -7,18 +7,17 @@ post_upgrade() {
     # System environment variables
     mv /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
 
-    # i3 global configuration
-    cp /etc/i3/couldinho-desktop-config /etc/i3/config
-    cp /etc/couldinho-i3status.conf /etc/i3status.conf
+    # sway global configuration
+    cp /etc/sway/couldinho-desktop-config /etc/sway/config
+    cp /etc/xdg/waybar/couldinho-desktop-config /etc/xdg/waybar/config
+    cp /etc/xdg/waybar/couldinho-desktop-style.css /etc/xdg/waybar/style.css
 
-    # Compton compositor settings
-    cp /etc/xdg/couldinho-picom.conf /etc/xdg/picom.conf
+    # FlashFocus
+    cp /etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml /etc/xdg/flashfocus/flashfocus.yml
 
-    # LightDM config files
-    cp /etc/lightdm/couldinho-lightdm.conf /etc/lightdm/lightdm.conf
-    cp /etc/lightdm/couldinho-lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
-
-    # Enable services
-    systemctl enable lightdm.service
+    # Start services
+    systemctl enable flashfocus.service
+    systemctl enable swaync.service
+    systemctl enable swayr.service
 }
 
