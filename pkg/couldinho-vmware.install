@@ -4,8 +4,8 @@ post_install() {
 
 post_upgrade() {
 
-    # Ensure vmware-user gets started
-    cp /etc/i3/couldinho-vmware-config /etc/i3/config
+    # Fix sway launch issues
+    cp /etc/zsh/couldinho-zprofile /etc/zsh/zprofile
 
     # Enable services
     systemctl enable vmtoolsd
