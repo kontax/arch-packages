@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=20
+pkgrel=21
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -284,26 +284,25 @@ package_couldinho-desktop() {
     # Terminal + desktop tools
     depends+=(
         kitty                   # GPU enhanced terminal emulator
-        flameshot               # Screenshot tool
-        picom                   # X compositor
-        copyq                   # Copy/Paste utility
-        unclutter               # Hide mouse in i3 when not in use
-        ranger                  # File manager from terminal (vim keybindings)
+        #flameshot               # Screenshot tool
+        #copyq                   # Copy/Paste utility
+        #unclutter               # Hide mouse in i3 when not in use
+        #ranger                  # File manager from terminal (vim keybindings)
         python-pillow           # Used to view pictures within ranger
         freerdp                 # Remote desktop client
-        xsecurelock             # Desktop lock screen
+        #xsecurelock             # Desktop lock screen
     )
 
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/vm.py "$pkgdir/etc/xdg/kitty/vm.py"
-    install -Dm 0644 desktop/etc/xdg/picom.conf "$pkgdir/etc/xdg/couldinho-picom.conf"
+    #install -Dm 0644 desktop/etc/xdg/picom.conf "$pkgdir/etc/xdg/couldinho-picom.conf"
 
     # Networking
-    depends+=(
-        nm-connection-editor        # Gui tool for managing NetworkManager connections
-        networkmanager-dmenu-git    # dmenu for NetworkManager connections
-    )
+    #depends+=(
+    #    nm-connection-editor        # Gui tool for managing NetworkManager connections
+    #    networkmanager-dmenu-git    # dmenu for NetworkManager connections
+    #)
 
     # Web
     depends+=(
@@ -317,13 +316,13 @@ package_couldinho-desktop() {
 
     # General scripts
     install -Dm 0755 desktop/usr/local/bin/check-aur-became-official "$pkgdir/usr/local/bin/check-aur-became-official"
-    install -Dm 0755 desktop/usr/local/bin/i3-autoname-workspaces "$pkgdir/usr/local/bin/i3-autoname-workspaces"
-    install -Dm 0755 desktop/usr/local/bin/i3exit "$pkgdir/usr/local/bin/i3exit"
+    #install -Dm 0755 desktop/usr/local/bin/i3-autoname-workspaces "$pkgdir/usr/local/bin/i3-autoname-workspaces"
+    #install -Dm 0755 desktop/usr/local/bin/i3exit "$pkgdir/usr/local/bin/i3exit"
     install -Dm 0755 desktop/usr/local/bin/is_online "$pkgdir/usr/local/bin/is_online"
     install -Dm 0755 desktop/usr/local/bin/rdp "$pkgdir/usr/local/bin/rdp"
     install -Dm 0755 desktop/usr/local/bin/renumber-sessions "$pkgdir/usr/local/bin/renumber-sessions"
-    install -Dm 0755 desktop/usr/local/bin/rofi-calc "$pkgdir/usr/local/bin/rofi-calc"
-    install -Dm 0755 desktop/usr/local/bin/set-brightness "$pkgdir/usr/local/bin/set-brightness"
+    #install -Dm 0755 desktop/usr/local/bin/rofi-calc "$pkgdir/usr/local/bin/rofi-calc"
+    #install -Dm 0755 desktop/usr/local/bin/set-brightness "$pkgdir/usr/local/bin/set-brightness"
 }
 
 package_couldinho-dev() {
