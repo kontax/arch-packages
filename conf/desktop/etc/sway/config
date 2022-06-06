@@ -1,5 +1,5 @@
 # xmodmap -pke to find keybindings
-# Set font
+# Setworkspace0 font
 font pango:Taskbar, Inconsolata 10
 
 input type:keyboard {
@@ -20,7 +20,7 @@ output * {
 }
 
 # Gaps
-gaps inner 20
+gaps inner 10
 smart_gaps on
 
 # Borders
@@ -34,7 +34,7 @@ focus_follows_mouse no
 tiling_drag disable
 
 # Workspaces
-workspace_layout tabbed
+workspace_layout default
 set $workspace1 workspace number 1
 set $workspace2 workspace number 2
 set $workspace3 workspace number 3
@@ -79,8 +79,8 @@ client.urgent             $color_bright_yellow   $color_bright_yellow   $color_n
 client.placeholder        $color_unused          $color_unused          $color_unused          $color_unused        $color_unused
 
 # Use Windows and Hyper as a modifier keys
-set $win Mod3
-set $hyper Mod4
+set $win Mod4
+set $hyper Mod1
 
 # Use Mouse+$hyper to drag floating windows to their wanted position
 floating_modifier $hyper
@@ -168,16 +168,16 @@ bindsym --to-code {
     $win+q kill
 
     # Change focus
-    $hyper+h focus left
-    $hyper+j focus down
-    $hyper+k focus up
-    $hyper+l focus right
+    $win+h focus left
+    $win+j focus down
+    $win+k focus up
+    $win+l focus right
 
     # Move focused window
-    $win+h move left
-    $win+j move down
-    $win+k move up
-    $win+l move right
+    $win+Shift+h move left
+    $win+Shift+j move down
+    $win+Shift+k move up
+    $win+Shift+l move right
 
     # Enter fullscreen mode
     $hyper+f fullscreen
@@ -246,52 +246,52 @@ bindsym --to-code {
     $hyper+Tab exec swayr switch-to-urgent-or-lru-window
 
     # Switch to workspace using number row
-    $hyper+1 $workspace1
-    $hyper+2 $workspace2
-    $hyper+3 $workspace3
-    $hyper+4 $workspace4
-    $hyper+5 $workspace5
-    $hyper+6 $workspace6
-    $hyper+7 $workspace7
-    $hyper+8 $workspace8
-    $hyper+9 $workspace9
-    $hyper+0 $workspace0
+    $win+1 $workspace1
+    $win+2 $workspace2
+    $win+3 $workspace3
+    $win+4 $workspace4
+    $win+5 $workspace5
+    $win+6 $workspace6
+    $win+7 $workspace7
+    $win+8 $workspace8
+    $win+9 $workspace9
+    $win+0 $workspace0
 
     # Switch to workspace using keypad
-    $hyper+KP_1 $workspace1
-    $hyper+KP_2 $workspace2
-    $hyper+KP_3 $workspace3
-    $hyper+KP_4 $workspace4
-    $hyper+KP_5 $workspace5
-    $hyper+KP_6 $workspace6
-    $hyper+KP_7 $workspace7
-    $hyper+KP_8 $workspace8
-    $hyper+KP_9 $workspace9
-    $hyper+KP_0 $workspace0
+    $win+KP_1 $workspace1
+    $win+KP_2 $workspace2
+    $win+KP_3 $workspace3
+    $win+KP_4 $workspace4
+    $win+KP_5 $workspace5
+    $win+KP_6 $workspace6
+    $win+KP_7 $workspace7
+    $win+KP_8 $workspace8
+    $win+KP_9 $workspace9
+    $win+KP_0 $workspace0
 
     # Move window to workspace using number row
-    $win+1 move container to $workspace1
-    $win+2 move container to $workspace2
-    $win+3 move container to $workspace3
-    $win+4 move container to $workspace4
-    $win+5 move container to $workspace5
-    $win+6 move container to $workspace6
-    $win+7 move container to $workspace7
-    $win+8 move container to $workspace8
-    $win+9 move container to $workspace9
-    $win+0 move container to $workspace0
+    $win+Shift+1 move container to $workspace1
+    $win+Shift+2 move container to $workspace2
+    $win+Shift+3 move container to $workspace3
+    $win+Shift+4 move container to $workspace4
+    $win+Shift+5 move container to $workspace5
+    $win+Shift+6 move container to $workspace6
+    $win+Shift+7 move container to $workspace7
+    $win+Shift+8 move container to $workspace8
+    $win+Shift+9 move container to $workspace9
+    $win+Shift+0 move container to $workspace0
 
     # Move window to workspace using keypad
-    $win+KP_1 move container to $workspace1
-    $win+KP_2 move container to $workspace2
-    $win+KP_3 move container to $workspace3
-    $win+KP_4 move container to $workspace4
-    $win+KP_5 move container to $workspace5
-    $win+KP_6 move container to $workspace6
-    $win+KP_7 move container to $workspace7
-    $win+KP_8 move container to $workspace8
-    $win+KP_9 move container to $workspace9
-    $win+KP_0 move container to $workspace0
+    $win+Shift+KP_1 move container to $workspace1
+    $win+Shift+KP_2 move container to $workspace2
+    $win+Shift+KP_3 move container to $workspace3
+    $win+Shift+KP_4 move container to $workspace4
+    $win+Shift+KP_5 move container to $workspace5
+    $win+Shift+KP_6 move container to $workspace6
+    $win+Shift+KP_7 move container to $workspace7
+    $win+Shift+KP_8 move container to $workspace8
+    $win+Shift+KP_9 move container to $workspace9
+    $win+Shift+KP_0 move container to $workspace0
 
     # Modes
     $win+a mode $mode_audio
@@ -300,9 +300,5 @@ bindsym --to-code {
     $win+m mode $mode_workspaces_monitors
 }
 
-# Load host-specific configs
-include "~/.config/sway/$(cut -d'-' -f1 /etc/hostname).conf"
-
-# Load systemd integration
-include /etc/sway/config.d/*
-exec systemctl --user start sway-session.target
+include @sysconfdir@/sway/config.d/*
+exec "systemctl --user import-environment; systemctl --user start sway-session.target"

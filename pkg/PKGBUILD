@@ -249,6 +249,25 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
     install -Dm 0644 desktop/etc/xdg/waybar/config "$pkgdir/etc/xdg/waybar/coudlinho-desktop-config"
     install -Dm 0644 desktop/etc/xdg/waybar/style.css "$pkgdir/etc/xdg/waybar/couldinho-desktop-style.css"
+    install -Dm 0644 desktop/usr/local/bin/waybar-decrypted "$pkgdir/usr/local/bin/waybar-decrypted"
+    install -Dm 0644 desktop/usr/local/bin/waybar-dnd "$pkgdir/usr/local/bin/waybar-dnd"
+    install -Dm 0644 desktop/usr/local/bin/waybar-eyes "$pkgdir/usr/local/bin/waybar-eyes"
+    install -Dm 0644 desktop/usr/local/bin/waybar-mail "$pkgdir/usr/local/bin/waybar-mail"
+    install -Dm 0644 desktop/usr/local/bin/waybar-movie "$pkgdir/usr/local/bin/waybar-movie"
+    install -Dm 0644 desktop/usr/local/bin/waybar-progress "$pkgdir/usr/local/bin/waybar-progress"
+    install -Dm 0644 desktop/usr/local/bin/waybar-recording "$pkgdir/usr/local/bin/waybar-recording"
+    install -Dm 0644 desktop/usr/local/bin/waybar-security "$pkgdir/usr/local/bin/waybar-security"
+    install -Dm 0644 desktop/usr/local/bin/waybar-systemd "$pkgdir/usr/local/bin/waybar-systemd"
+    install -Dm 0644 desktop/usr/local/bin/waybar-updates "$pkgdir/usr/local/bin/waybar-updates"
+    install -Dm 0644 desktop/usr/local/bin/waybar-vpn "$pkgdir/usr/local/bin/waybar-vpn"
+    install -Dm 0644 desktop/usr/local/bin/waybar-yubikey "$pkgdir/usr/local/bin/waybar-yubikey"
+    install -Dm 0644 desktop/usr/local/bin/sway-audio "$pkgdir/usr/local/bin/sway-audio"
+    install -Dm 0644 desktop/usr/local/bin/sway-autoname-workspaces "$pkgdir/usr/local/bin/sway-autoname-workspaces"
+    install -Dm 0644 desktop/usr/local/bin/sway-exit "$pkgdir/usr/local/bin/sway-exit"
+    install -Dm 0644 desktop/usr/local/bin/sway-gif-area "$pkgdir/usr/local/bin/sway-gif-area"
+    install -Dm 0644 desktop/usr/local/bin/sway-inactive-window-transparency "$pkgdir/usr/local/bin/sway-inactive-window-transparency"
+    install -Dm 0644 desktop/usr/local/bin/sway-screenshare "$pkgdir/usr/local/bin/sway-screenshare"
+    install -Dm 0644 desktop/usr/local/bin/sway-screenshot-area "$pkgdir/usr/local/bin/sway-screenshot-area"
 
     # Further sway packages
     depends+=(
@@ -259,12 +278,21 @@ package_couldinho-desktop() {
         python-tzlocal          # Used within the clock for the status bar
         gsimplecal              # GTK calendar for the status bar
         inotify-tools           # Interface to inotify
+        systembus-notify        # Systembus notification demon
         yubikey-touch-detector  # i3status notification for when yubikey needs attention 
         pinentry                # Enter GPG pins using dmenu
     )
 
     #install -Dm 0644 desktop/etc/rofi.rasi "$pkgdir/etc/rofi.rasi"
     install -Dm 0644 desktop/etc/xdg/flashfocus/flashfocus.yml "$pkgdir/etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml"
+    install -Dm 0644 desktop/etc/systemd/user/sway-autoname-workspaces.service "$pkgdir/etc/systemd/usr/sway-autoname-workspaces.service"
+    install -Dm 0644 desktop/etc/systemd/user/sway-inactive-window-transparency.service "$pkgdir/etc/systemd/usr/sway-inactive-window-transparency.service"
+    install -Dm 0644 desktop/etc/systemd/user/sway-session.target "$pkgdir/etc/systemd/usr/sway-session.target"
+    install -Dm 0644 desktop/etc/systemd/user/swayr.service "$pkgdir/etc/systemd/usr/swayr.service"
+    install -Dm 0644 desktop/etc/systemd/user/systembus-notify.service "$pkgdir/etc/systemd/usr/systembus-notify.service"
+    install -Dm 0644 desktop/etc/systemd/user/waybar-updates.service "$pkgdir/etc/systemd/usr/waybar-updates.service"
+    install -Dm 0644 desktop/etc/systemd/user/waybar-updates.timer "$pkgdir/etc/systemd/usr/waybar-updates.timer"
+    install -Dm 0644 desktop/etc/systemd/user/waybar.service "$pkgdir/etc/systemd/usr/waybar.service"
 
     # Multimedia
     depends+=(
@@ -296,7 +324,6 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/vm.py "$pkgdir/etc/xdg/kitty/vm.py"
-    #install -Dm 0644 desktop/etc/xdg/picom.conf "$pkgdir/etc/xdg/couldinho-picom.conf"
 
     # Networking
     #depends+=(
@@ -316,13 +343,8 @@ package_couldinho-desktop() {
 
     # General scripts
     install -Dm 0755 desktop/usr/local/bin/check-aur-became-official "$pkgdir/usr/local/bin/check-aur-became-official"
-    #install -Dm 0755 desktop/usr/local/bin/i3-autoname-workspaces "$pkgdir/usr/local/bin/i3-autoname-workspaces"
-    #install -Dm 0755 desktop/usr/local/bin/i3exit "$pkgdir/usr/local/bin/i3exit"
     install -Dm 0755 desktop/usr/local/bin/is_online "$pkgdir/usr/local/bin/is_online"
     install -Dm 0755 desktop/usr/local/bin/rdp "$pkgdir/usr/local/bin/rdp"
-    install -Dm 0755 desktop/usr/local/bin/renumber-sessions "$pkgdir/usr/local/bin/renumber-sessions"
-    #install -Dm 0755 desktop/usr/local/bin/rofi-calc "$pkgdir/usr/local/bin/rofi-calc"
-    #install -Dm 0755 desktop/usr/local/bin/set-brightness "$pkgdir/usr/local/bin/set-brightness"
 }
 
 package_couldinho-dev() {
