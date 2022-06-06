@@ -21,11 +21,11 @@ post_upgrade() {
     systemctl enable swayr.service
 
     # User services
-    systemctl --user enable sway-autoname-workspaces.service
-    systemctl --user enable sway-inactive-window-transparency.service
-    systemctl --user enable swayr.service
-    systemctl --user enable systembus-notify.service
-    systemctl --user enable waybar.service
-    systemctl --user enable waybar-updates.timer
+    systemctl --global enable sway-autoname-workspaces.service
+    systemctl --global enable sway-inactive-window-transparency.service
+    systemctl --global enable swayr.service
+    systemctl --global enable systembus-notify.service
+    systemctl --global enable waybar.service
+    systemctl --global enable waybar-updates.timer
 }
 
