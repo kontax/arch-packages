@@ -146,14 +146,14 @@ mode $mode_workspaces_monitors {
 
 bindsym --to-code {
     # Terminal
-    $hyper+Return exec cglaunch --term
+    $win+Return exec cglaunch --term
     $hyper+XF86AudioMute exec cglaunch --term
-    $win+Return exec kitty --config NONE
-    $win+Shift+Return exec kitty --config NONE /bin/bash
+    $hyper+Return exec kitty --config NONE
+    $hyper+Shift+Return exec kitty --config NONE /bin/bash
 
     # Launcher
     $hyper+equal                 exec bash -c "pkill -x qalculate-gtk || cglaunch qalculate-gtk"
-    $hyper+d                     fullscreen disable, exec cglaunch wldash
+    $win+d                       fullscreen disable, exec cglaunch wldash
     $hyper+p                     fullscreen disable, exec "wl-clipboard-manager lock; cglaunch passmenu -p pass; wl-clipboard-manager unlock"
     $win+p                       fullscreen disable, exec cglaunch pass-gen
     $hyper+m                     fullscreen disable, exec cglaunch udiskie-dmenu
