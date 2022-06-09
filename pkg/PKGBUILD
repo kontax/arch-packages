@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=26
+pkgrel=27
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -168,6 +168,7 @@ package_couldinho-base() {
         snap-pac            # Hooks for pacman for auto-snapshotting
         zip                 # Zipping tool
         unzip               # Unzipping tool
+        ncdu                # NCurses version of du
     )
 
     install -Dm 0644 base/etc/conf.d/snapper "$pkgdir/etc/conf.d/couldinho-snapper"
@@ -185,6 +186,7 @@ package_couldinho-base() {
         pam-u2f             # Login to system with U2F
         git-secret          # Helper tool for storing private files in a git repo
         arch-audit          # View security details of arch packages
+        earlyoom            # Detect and handle OOM
     )
 
     install -Dm 0644 base/etc/profile.d/zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
@@ -192,6 +194,7 @@ package_couldinho-base() {
     install -dm 0750 base/etc/usbguard "$pkgdir/etc/usbguard"
     install -Dm 0600 base/etc/usbguard/usbguard-daemon.conf \
         "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"
+    install -Dm 0644 base/etc/default/earlyoom "$pkgdir/etc/default/couldinho-earlyoom"
 
     # Packages
     depends+=(
@@ -201,6 +204,7 @@ package_couldinho-base() {
         reflector           # Automatically sort out pacman mirrorlist
         urlwatch            # Tool for monitoring webpage updates
         python-chump-git    # Pushover dependency for urlwatch
+        rebuild-detector    # Check which packages need to be rebuilt
     )
 
     install -Dm 0644 base/etc/systemd/system/reflector.service "$pkgdir/etc/systemd/system/reflector.service"
@@ -244,43 +248,44 @@ package_couldinho-desktop() {
 
     install -Dm 0644 desktop/etc/sway/config "$pkgdir/etc/sway/couldinho-desktop-config"
     install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
-    install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
-                    "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
+    install -Dm 0644 desktop/etc/swaylock/config "$pkgdir/etc/swaylock/config"
+    install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
     install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
     install -Dm 0644 desktop/etc/xdg/waybar/config "$pkgdir/etc/xdg/waybar/coudlinho-desktop-config"
     install -Dm 0644 desktop/etc/xdg/waybar/style.css "$pkgdir/etc/xdg/waybar/couldinho-desktop-style.css"
-    install -Dm 0644 desktop/usr/local/bin/waybar-decrypted "$pkgdir/usr/local/bin/waybar-decrypted"
-    install -Dm 0644 desktop/usr/local/bin/waybar-dnd "$pkgdir/usr/local/bin/waybar-dnd"
-    install -Dm 0644 desktop/usr/local/bin/waybar-eyes "$pkgdir/usr/local/bin/waybar-eyes"
-    install -Dm 0644 desktop/usr/local/bin/waybar-mail "$pkgdir/usr/local/bin/waybar-mail"
-    install -Dm 0644 desktop/usr/local/bin/waybar-movie "$pkgdir/usr/local/bin/waybar-movie"
-    install -Dm 0644 desktop/usr/local/bin/waybar-progress "$pkgdir/usr/local/bin/waybar-progress"
-    install -Dm 0644 desktop/usr/local/bin/waybar-recording "$pkgdir/usr/local/bin/waybar-recording"
-    install -Dm 0644 desktop/usr/local/bin/waybar-security "$pkgdir/usr/local/bin/waybar-security"
-    install -Dm 0644 desktop/usr/local/bin/waybar-systemd "$pkgdir/usr/local/bin/waybar-systemd"
-    install -Dm 0644 desktop/usr/local/bin/waybar-updates "$pkgdir/usr/local/bin/waybar-updates"
-    install -Dm 0644 desktop/usr/local/bin/waybar-vpn "$pkgdir/usr/local/bin/waybar-vpn"
-    install -Dm 0644 desktop/usr/local/bin/waybar-yubikey "$pkgdir/usr/local/bin/waybar-yubikey"
-    install -Dm 0644 desktop/usr/local/bin/sway-audio "$pkgdir/usr/local/bin/sway-audio"
-    install -Dm 0644 desktop/usr/local/bin/sway-autoname-workspaces "$pkgdir/usr/local/bin/sway-autoname-workspaces"
-    install -Dm 0644 desktop/usr/local/bin/sway-exit "$pkgdir/usr/local/bin/sway-exit"
-    install -Dm 0644 desktop/usr/local/bin/sway-gif-area "$pkgdir/usr/local/bin/sway-gif-area"
-    install -Dm 0644 desktop/usr/local/bin/sway-inactive-window-transparency "$pkgdir/usr/local/bin/sway-inactive-window-transparency"
-    install -Dm 0644 desktop/usr/local/bin/sway-screenshare "$pkgdir/usr/local/bin/sway-screenshare"
-    install -Dm 0644 desktop/usr/local/bin/sway-screenshot-area "$pkgdir/usr/local/bin/sway-screenshot-area"
+    install -Dm 0755 desktop/usr/local/bin/waybar-decrypted "$pkgdir/usr/local/bin/waybar-decrypted"
+    install -Dm 0755 desktop/usr/local/bin/waybar-dnd "$pkgdir/usr/local/bin/waybar-dnd"
+    install -Dm 0755 desktop/usr/local/bin/waybar-eyes "$pkgdir/usr/local/bin/waybar-eyes"
+    install -Dm 0755 desktop/usr/local/bin/waybar-mail "$pkgdir/usr/local/bin/waybar-mail"
+    install -Dm 0755 desktop/usr/local/bin/waybar-movie "$pkgdir/usr/local/bin/waybar-movie"
+    install -Dm 0755 desktop/usr/local/bin/waybar-progress "$pkgdir/usr/local/bin/waybar-progress"
+    install -Dm 0755 desktop/usr/local/bin/waybar-recording "$pkgdir/usr/local/bin/waybar-recording"
+    install -Dm 0755 desktop/usr/local/bin/waybar-security "$pkgdir/usr/local/bin/waybar-security"
+    install -Dm 0755 desktop/usr/local/bin/waybar-systemd "$pkgdir/usr/local/bin/waybar-systemd"
+    install -Dm 0755 desktop/usr/local/bin/waybar-updates "$pkgdir/usr/local/bin/waybar-updates"
+    install -Dm 0755 desktop/usr/local/bin/waybar-vpn "$pkgdir/usr/local/bin/waybar-vpn"
+    install -Dm 0755 desktop/usr/local/bin/waybar-yubikey "$pkgdir/usr/local/bin/waybar-yubikey"
+    install -Dm 0755 desktop/usr/local/bin/sway-audio "$pkgdir/usr/local/bin/sway-audio"
+    install -Dm 0755 desktop/usr/local/bin/sway-autoname-workspaces "$pkgdir/usr/local/bin/sway-autoname-workspaces"
+    install -Dm 0755 desktop/usr/local/bin/sway-exit "$pkgdir/usr/local/bin/sway-exit"
+    install -Dm 0755 desktop/usr/local/bin/sway-gif-area "$pkgdir/usr/local/bin/sway-gif-area"
+    install -Dm 0755 desktop/usr/local/bin/sway-inactive-window-transparency "$pkgdir/usr/local/bin/sway-inactive-window-transparency"
+    install -Dm 0755 desktop/usr/local/bin/sway-screenshare "$pkgdir/usr/local/bin/sway-screenshare"
+    install -Dm 0755 desktop/usr/local/bin/sway-screenshot-area "$pkgdir/usr/local/bin/sway-screenshot-area"
 
     # Further sway packages
     depends+=(
-        flashfocus-git          # Focus animations
-        qalculate-gtk           # Calculator
-        ttf-inconsolata         # Font for terminal and status etc.
-        otf-font-awesome        # Font with icons
-        python-tzlocal          # Used within the clock for the status bar
-        gsimplecal              # GTK calendar for the status bar
-        inotify-tools           # Interface to inotify
-        systembus-notify        # Systembus notification demon
-        yubikey-touch-detector  # i3status notification for when yubikey needs attention 
-        pinentry                # Enter GPG pins using dmenu
+        flashfocus-git              # Focus animations
+        qalculate-gtk               # Calculator
+        ttf-inconsolata             # Font for terminal and status etc.
+        otf-font-awesome            # Font with icons
+        python-tzlocal              # Used within the clock for the status bar
+        gsimplecal                  # GTK calendar for the status bar
+        inotify-tools               # Interface to inotify
+        systembus-notify            # Systembus notification demon
+        yubikey-touch-detector      # i3status notification for when yubikey needs attention 
+        pinentry                    # Enter GPG pins using dmenu
+        gtk-theme-arc-gruvbox-git   # Arc grey based theme with some gruvboxd colours
     )
 
     #install -Dm 0644 desktop/etc/rofi.rasi "$pkgdir/etc/rofi.rasi"
@@ -312,6 +317,9 @@ package_couldinho-desktop() {
     # Terminal + desktop tools
     depends+=(
         kitty                   # GPU enhanced terminal emulator
+        slurp                   # Region selector tool
+        grim                    # Screenshot utility
+        swappy                  # Snapshot editing tool for wayland
         #flameshot               # Screenshot tool
         #copyq                   # Copy/Paste utility
         #unclutter               # Hide mouse in i3 when not in use
@@ -324,6 +332,7 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/kitty/diff.conf "$pkgdir/etc/xdg/kitty/diff.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
     install -Dm 0644 desktop/etc/xdg/kitty/vm.py "$pkgdir/etc/xdg/kitty/vm.py"
+    install -Dm 0644 desktop/etc/xdg/swappy/config "$pkgdir/etc/xdg/swappy/config"
 
     # Networking
     #depends+=(

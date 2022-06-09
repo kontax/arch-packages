@@ -28,6 +28,9 @@ post_upgrade() {
     # Move USBGuard config
     cp -p /etc/usbguard/couldinho-usbguard-daemon.conf /etc/usbguard/usbguard-daemon.conf
 
+    # Move earlyoom config
+    cp /etc/default/couldinho-earlyoom /etc/default/earlyoom
+
     # Move snapper config
     cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
 

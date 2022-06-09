@@ -16,16 +16,17 @@ post_upgrade() {
     cp /etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml /etc/xdg/flashfocus/flashfocus.yml
 
     # Start services
-    systemctl enable flashfocus.service
     systemctl enable swaync.service
     systemctl enable swayr.service
 
     # User services
+    systemctl --global enable flashfocus.service
     systemctl --global enable sway-autoname-workspaces.service
     systemctl --global enable sway-inactive-window-transparency.service
     systemctl --global enable swayr.service
     systemctl --global enable systembus-notify.service
     systemctl --global enable waybar.service
     systemctl --global enable waybar-updates.timer
+    systemctl --global enable yubikey-touch-detector.service
 }
 
