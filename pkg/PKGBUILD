@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=30
+pkgrel=31
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -243,6 +243,7 @@ package_couldinho-desktop() {
         slurp                   # Region selector for wayland
         swayr                   # Window switcher for sway
         swaync                  # Sway notification daemon
+        libnotify               # Desktop notification library
         wldash                  # Wayland launcher and dashboard
     )
 
@@ -251,8 +252,10 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/swaylock/config "$pkgdir/etc/swaylock/config"
     install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
     install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
-    install -Dm 0644 desktop/etc/xdg/waybar/config "$pkgdir/etc/xdg/waybar/coudlinho-desktop-config"
+    install -Dm 0644 desktop/etc/xdg/waybar/config.json "$pkgdir/etc/xdg/waybar/coudlinho-desktop-config.json"
     install -Dm 0644 desktop/etc/xdg/waybar/style.css "$pkgdir/etc/xdg/waybar/couldinho-desktop-style.css"
+    install -Dm 0644 desktop/etc/xdg/swaync/config "$pkgdir/etc/xdg/swaync/coudlinho-desktop-config"
+    install -Dm 0644 desktop/etc/xdg/swaync/style.css "$pkgdir/etc/xdg/swaync/couldinho-desktop-style.css"
     install -Dm 0755 desktop/usr/local/bin/cglaunch "$pkgdir/usr/local/bin/cglaunch"
     install -Dm 0755 desktop/usr/local/bin/waybar-decrypted "$pkgdir/usr/local/bin/waybar-decrypted"
     install -Dm 0755 desktop/usr/local/bin/waybar-dnd "$pkgdir/usr/local/bin/waybar-dnd"

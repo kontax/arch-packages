@@ -11,6 +11,8 @@ post_upgrade() {
     cp /etc/sway/couldinho-desktop-config /etc/sway/config
     cp /etc/xdg/waybar/couldinho-desktop-config /etc/xdg/waybar/config
     cp /etc/xdg/waybar/couldinho-desktop-style.css /etc/xdg/waybar/style.css
+    cp /etc/xdg/swaync/couldinho-desktop-config.json /etc/xdg/swaync/config.json
+    cp /etc/xdg/swaync/couldinho-desktop-style.css /etc/xdg/swaync/style.css
 
     # FlashFocus
     cp /etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml /etc/xdg/flashfocus/flashfocus.yml
