@@ -29,6 +29,7 @@ post_upgrade() {
     systemctl --global enable systembus-notify.service
     systemctl --global enable waybar.service
     systemctl --global enable waybar-updates.timer
+    systemctl --global enable wl-clipboard-manager.service
     systemctl --global enable yubikey-touch-detector.service
 }
 
