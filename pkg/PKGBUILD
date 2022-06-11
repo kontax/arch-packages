@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=34
+pkgrel=35
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -257,6 +257,8 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/swaync/config.json "$pkgdir/etc/xdg/swaync/couldinho-desktop-config.json"
     install -Dm 0644 desktop/etc/xdg/swaync/style.css "$pkgdir/etc/xdg/swaync/couldinho-desktop-style.css"
     install -Dm 0755 desktop/usr/local/bin/cglaunch "$pkgdir/usr/local/bin/cglaunch"
+    install -Dm 0755 desktop/usr/local/bin/dmenu "$pkgdir/usr/local/bin/dmenu"
+    install -Dm 0755 desktop/usr/local/bin/pass-gen "$pkgdir/usr/local/bin/pass-gen"
     install -Dm 0755 desktop/usr/local/bin/waybar-decrypted "$pkgdir/usr/local/bin/waybar-decrypted"
     install -Dm 0755 desktop/usr/local/bin/waybar-dnd "$pkgdir/usr/local/bin/waybar-dnd"
     install -Dm 0755 desktop/usr/local/bin/waybar-eyes "$pkgdir/usr/local/bin/waybar-eyes"
