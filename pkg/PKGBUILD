@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=44
+pkgrel=45
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -259,6 +259,9 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/waybar/style.css "$pkgdir/etc/xdg/waybar/couldinho-desktop-style.css"
     install -Dm 0644 desktop/etc/xdg/swaync/config.json "$pkgdir/etc/xdg/swaync/couldinho-desktop-config.json"
     install -Dm 0644 desktop/etc/xdg/swaync/style.css "$pkgdir/etc/xdg/swaync/couldinho-desktop-style.css"
+    install -Dm 0644 desktop/etc/systemd/user/wl-clipboard-manager.service "$pkgdir/etc/systemd/user/wl-clipboard-manager.service"
+
+    # Local binary files
     install -Dm 0755 desktop/usr/local/bin/cglaunch "$pkgdir/usr/local/bin/cglaunch"
     install -Dm 0755 desktop/usr/local/bin/dmenu "$pkgdir/usr/local/bin/dmenu"
     install -Dm 0755 desktop/usr/local/bin/emoji-bootstrap "$pkgdir/usr/local/bin/emoji-bootstrap"
@@ -273,6 +276,7 @@ package_couldinho-desktop() {
     install -Dm 0755 desktop/usr/local/bin/waybar-security "$pkgdir/usr/local/bin/waybar-security"
     install -Dm 0755 desktop/usr/local/bin/waybar-systemd "$pkgdir/usr/local/bin/waybar-systemd"
     install -Dm 0755 desktop/usr/local/bin/waybar-updates "$pkgdir/usr/local/bin/waybar-updates"
+    install -Dm 0755 desktop/usr/local/bin/waybar-usbguard "$pkgdir/usr/local/bin/waybar-usbguard"
     install -Dm 0755 desktop/usr/local/bin/waybar-vpn "$pkgdir/usr/local/bin/waybar-vpn"
     install -Dm 0755 desktop/usr/local/bin/waybar-yubikey "$pkgdir/usr/local/bin/waybar-yubikey"
     install -Dm 0755 desktop/usr/local/bin/sway-audio "$pkgdir/usr/local/bin/sway-audio"
@@ -283,7 +287,6 @@ package_couldinho-desktop() {
     install -Dm 0755 desktop/usr/local/bin/sway-screenshare "$pkgdir/usr/local/bin/sway-screenshare"
     install -Dm 0755 desktop/usr/local/bin/sway-screenshot-area "$pkgdir/usr/local/bin/sway-screenshot-area"
     install -Dm 0755 desktop/usr/local/bin/wl-clipboard-manager "$pkgdir/usr/local/bin/wl-clipboard-manager"
-    install -Dm 0644 desktop/etc/systemd/user/wl-clipboard-manager.service "$pkgdir/etc/systemd/user/wl-clipboard-manager.service"
 
     # Further sway packages
     depends+=(
