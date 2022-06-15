@@ -23,6 +23,7 @@ post_upgrade() {
 
     # User services
     systemctl --global enable flashfocus.service
+    systemctl --global enable udiskie.service
     systemctl --global enable sway-autoname-workspaces.service
     systemctl --global enable sway-inactive-window-transparency.service
     systemctl --global enable swayr.service
