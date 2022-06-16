@@ -10,7 +10,6 @@
         "custom/usbguard",
         "custom/security",
         "custom/yubikey",
-        "custom/decrypted",
         "custom/systemd",
         "custom/updates",
         "custom/mail",
@@ -48,10 +47,6 @@
     },
     "custom/yubikey": {
         "exec": "waybar-yubikey",
-        "return-type": "json"
-    },
-    "custom/decrypted": {
-        "exec": "waybar-decrypted",
         "return-type": "json"
     },
     "custom/systemd": {

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+comm -12 <(pacman -Sl | grep -v couldinho-arch-aur | cut -d' ' -f2 | sort) <(pacman -Sl | grep couldinho-arch-aur | cut -d' ' -f2 | sort)
