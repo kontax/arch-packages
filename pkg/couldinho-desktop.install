@@ -7,6 +7,9 @@ post_upgrade() {
     # System environment variables
     mv /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
 
+    # zsh sway autostart
+    cp /etc/zsh/couldinho-desktop-zprofile /etc/zsh/zprofile
+
     # sway global configuration
     cp /etc/sway/couldinho-desktop-config /etc/sway/config
     cp /etc/xdg/waybar/couldinho-desktop-config /etc/xdg/waybar/config
