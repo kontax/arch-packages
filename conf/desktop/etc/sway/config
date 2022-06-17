@@ -3,8 +3,9 @@
 font pango:Taskbar, Inconsolata 10
 
 input type:keyboard {
-    xkb_layout jc
+    xkb_layout jc-hyper,jc
     xkb_numlock on
+    xkb_options caps:hyper
 }
 
 input type:touchpad {
@@ -79,8 +80,8 @@ client.urgent             $color_bright_yellow   $color_bright_yellow   $color_n
 client.placeholder        $color_unused          $color_unused          $color_unused          $color_unused        $color_unused
 
 # Use Windows and Hyper as a modifier keys
-set $win Mod4
-set $hyper Mod1
+set $win Mod3
+set $hyper Mod4
 
 # Use Mouse+$hyper to drag floating windows to their wanted position
 floating_modifier $hyper
