@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=56
+pkgrel=57
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -239,7 +239,6 @@ package_couldinho-desktop() {
 
     install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
                     "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
-    install -Dm 0644 desktop/usr/share/X11/xkb/symbols/jc "$pkgdir/usr/share/X11/xkb/symbols/jc"
 
     # sway
     depends+=(
