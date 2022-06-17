@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=54
+pkgrel=55
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -90,8 +90,7 @@ package_couldinho-base() {
     install -Dm 0400 base/etc/sudoers "$pkgdir/etc/couldinho-sudoers"
     install -Dm 0644 base/etc/vimrc "$pkgdir/etc/couldinho-vimrc"
     install -Dm 0644 base/etc/vconsole.conf "$pkgdir/etc/vconsole.conf"
-    install -Dm 0644 base/usr/share/kbd/keymaps/i386/qwerty/jc.map.gz \
-                "$pkgdir/usr/share/kbd/keymaps/i386/qwerty/jc.map.gz"
+    install -Dm 0644 base/etc/xkb/symbols/us-hyper "$pkgdir/etc/xkb/symbols/us-hyper"
 
     # Boot and base progs
     depends+=(
