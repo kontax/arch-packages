@@ -1,0 +1,15 @@
+#!/bin/sh
+
+menu=$(echo "vivaldi\ncopy to clipboard\nplay" | dmenu -p browser)
+
+case $menu in
+    "vivaldi")
+        vivaldi-stable "$@" &
+        ;;
+    "copy to clipboard")
+        echo "$@" | wl-copy
+        ;;
+    "play")
+        mpv "$@" &
+        ;;
+esac

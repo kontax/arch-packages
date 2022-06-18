@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=62
+pkgrel=63
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -254,7 +254,6 @@ package_couldinho-desktop() {
         swaync                  # Sway notification daemon
         libnotify               # Desktop notification library
         wldash                  # Wayland launcher and dashboard
-        wf-recorder             # Wayland screen recorder
     )
 
     install -Dm 0644 desktop/etc/sway/config "$pkgdir/etc/sway/couldinho-desktop-config"
@@ -267,6 +266,16 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/swaync/style.css "$pkgdir/etc/xdg/swaync/couldinho-desktop-style.css"
     install -Dm 0644 desktop/etc/systemd/user/wl-clipboard-manager.service "$pkgdir/etc/systemd/user/wl-clipboard-manager.service"
     install -Dm 0644 desktop/etc/zsh/zprofile "$pkgdir/etc/zsh/couldinho-desktop-zprofile"
+
+    # Desktop mimetype apps
+    install -Dm 0644 desktop/etc/xdg/mimeapps.list "$pkgdir/etc/xdg/mimeapps.list"
+    install -Dm 0644 desktop/usr/local/applications/browser.desktop "$pkgdir/usr/local/applications/browser.desktop"
+    install -Dm 0644 desktop/usr/local/applications/discord.desktop "$pkgdir/usr/local/applications/discord.desktop"
+    install -Dm 0644 desktop/usr/local/applications/neomutt.desktop "$pkgdir/usr/local/applications/neomutt.desktop"
+    install -Dm 0644 desktop/usr/local/applications/nvim.desktop "$pkgdir/usr/local/applications/nvim.desktop"
+    install -Dm 0644 desktop/usr/local/applications/scli.desktop "$pkgdir/usr/local/applications/scli.desktop"
+    install -Dm 0644 desktop/usr/local/applications/signal-desktop.desktop "$pkgdir/usr/local/applications/signal-desktop.desktop"
+    install -Dm 0644 desktop/usr/local/applications/visidata.desktop "$pkgdir/usr/local/applications/visidata.desktop"
 
     # Further sway packages
     depends+=(
@@ -303,6 +312,7 @@ package_couldinho-desktop() {
         pamixer                 # Command line mixer
         vimiv                   # Image viewer with vim bindings
         imagemagick             # Image viewing/manipulation program
+        wf-recorder             # Wayland screen recorder
     )
 
     # Documents
@@ -347,6 +357,7 @@ package_couldinho-desktop() {
     )
 
     # General scripts
+    install -Dm 0755 desktop/usr/local/bin/browser "$pkgdir/usr/local/bin/browser"
     install -Dm 0755 desktop/usr/local/bin/cglaunch "$pkgdir/usr/local/bin/cglaunch"
     install -Dm 0755 desktop/usr/local/bin/checkofficial "$pkgdir/usr/local/bin/checkofficial"
     install -Dm 0755 desktop/usr/local/bin/dmenu "$pkgdir/usr/local/bin/dmenu"

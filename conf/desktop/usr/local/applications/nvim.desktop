@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=neovim
+Comment=Text editor
+Exec=nvim
+Terminal=true
+MimeType=text/plain
+Categories=Editor
