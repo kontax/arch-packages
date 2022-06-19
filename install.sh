@@ -300,6 +300,7 @@ EOF
 
     cat >>/etc/pacman.conf <<EOF
 Include = /etc/pacman.d/couldinho-arch-aur
+ParallelDownloads = 32
 EOF
 fi
 
