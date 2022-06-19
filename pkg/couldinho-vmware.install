@@ -4,9 +4,6 @@ post_install() {
 
 post_upgrade() {
 
-    # Fix sway launch issues
-    cp /etc/zsh/couldinho-vmware-zprofile /etc/zsh/zprofile
-
     # Enable services
     systemctl enable vmtoolsd
     systemctl enable vmware-vmblock-fuse
