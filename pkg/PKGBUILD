@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=65
+pkgrel=66
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -313,7 +313,16 @@ package_couldinho-desktop() {
         vimiv                   # Image viewer with vim bindings
         imagemagick             # Image viewing/manipulation program
         wf-recorder             # Wayland screen recorder
+        mpv                     # Media player
+        mpv-mpris               # MPRIS plugin for mpv (remote interface)
+        yt-dlp                  # Download/play youtube videos
     )
+
+    install -Dm 0644 desktop/etc/mpv/script-opts/osc.conf "$pkgdir/etc/mpv/script-opts/osc.conf"
+    install -Dm 0644 desktop/etc/mpv/script-opts/uosc.conf "$pkgdir/etc/mpv/script-opts/uosc.conf"
+    install -Dm 0644 desktop/etc/mpv/scripts/uosc.lua "$pkgdir/etc/mpv/scripts/uosc.lua"
+    install -Dm 0644 desktop/etc/mpv/input.conf "$pkgdir/etc/mpv/input.conf"
+    install -Dm 0644 desktop/etc/mpv/mpv.conf "$pkgdir/etc/mpv/mpv.conf"
 
     # Documents
     depends+=(
