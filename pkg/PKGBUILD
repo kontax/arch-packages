@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=67
+pkgrel=68
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -155,6 +155,7 @@ package_couldinho-base() {
         dfrs                # Colourised version of df
         tmux                # Terminal multiplexer
         fzf                 # Command line fuzzy finder
+        bash-completion     # Auto-complete for bash
     )
 
     install -Dm 0644 base/etc/zsh/zshrc "$pkgdir/etc/zsh/couldinho-zshrc"
