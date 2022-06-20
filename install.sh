@@ -146,11 +146,22 @@ echo "##"
 pacman -Sy --noconfirm --needed git reflector dialog
 reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
 timedatectl set-ntp true
+hwclock --systohc --utc
 
 
 #####
 # Get information from the user
 ##
+
+echo ""
+echo "#####"
+echo "# HiDPI screens"
+echo "##"
+noyes=("Yes" "The font is too small" "No" "The font size is just fine")
+hidpi=$(get_choice "Font size" "Is your screen HiDPI?" "${noyes[@]}") || exit 1
+clear
+[[ "$hidpi" == "Yes" ]] && font="ter-132n" || font="ter-716n"
+setfont "$font"
 
 package_stage=$(get_choice "Installation" "Select whether to use the dev or master package list" "${PACKAGE_STAGE_LIST[@]}") || exit 1
 clear
@@ -316,6 +327,8 @@ echo "cryptdevice=PARTLABEL=primary:luks:allow-discards cryptheader=LABEL=luks:0
 
 
 echo -e "\n  [*] Generating base config files"
+ln -sfT dash /mnt/usr/bin/sh
+echo "FONT=$font" > /mnt/etc/vconsole.conf
 mkdir /mnt/var/cache/pacman/couldinho-arch-aur
 genfstab -L /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
