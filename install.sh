@@ -338,6 +338,14 @@ echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 echo "LC_MONETARY=en_IE.UTF-8" >> /mnt/etc/locale.conf
 ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 arch-chroot /mnt locale-gen
+
+cat << EOF > /mnt/etc/mkinitcpio.conf
+MODULES=()
+BINARIES=()
+FILES=()
+HOOKS=(base consolefont udev autodetect modconf block encrypt-dh filesystems keyboard)
+EOF
+arch-chroot /mnt mkinitcpio -p linux
 arch-chroot /mnt arch-secure-boot initial-setup
 
 echo -e "\n  [*] Configuring swap file"
