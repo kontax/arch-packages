@@ -63,6 +63,8 @@ for_window    [app_id="dmenu-emoji"]                     resize set height 20ppt
 for_window    [app_id="qalculate-gtk"]                   floating enable
 for_window    [app_id="mpv"]                             floating enable, resize set width 531 height 300, move position 1345 125
 for_window    [app_id="iriunwebcam"]                     floating disable
+for_window    [class="ghidra-Ghidra"]                    move container to $workspace3, layout tabbed
+for_window    [class="IDA"]                              move container to $workspace3
 
 # Color scheme (Gruvbox dark)
 set $color_normal_white  #a89984
