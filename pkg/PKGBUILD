@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
-pkgver=2
-pkgrel=85
+pkgver=3
+pkgrel=1
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -376,6 +376,7 @@ package_couldinho-desktop() {
     install -Dm 0755 desktop/usr/local/bin/cglaunch "$pkgdir/usr/local/bin/cglaunch"
     install -Dm 0755 desktop/usr/local/bin/checkofficial "$pkgdir/usr/local/bin/checkofficial"
     install -Dm 0755 desktop/usr/local/bin/dmenu "$pkgdir/usr/local/bin/dmenu"
+    install -Dm 0755 desktop/usr/local/bin/dmenu-wl "$pkgdir/usr/local/bin/dmenu-wl"
     install -Dm 0755 desktop/usr/local/bin/emoji-bootstrap "$pkgdir/usr/local/bin/emoji-bootstrap"
     install -Dm 0755 desktop/usr/local/bin/emoji-dmenu "$pkgdir/usr/local/bin/emoji-dmenu"
     install -Dm 0755 desktop/usr/local/bin/pass-gen "$pkgdir/usr/local/bin/pass-gen"
