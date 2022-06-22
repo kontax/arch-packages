@@ -1,0 +1,5 @@
+[Unit]
+Description=Refresh list of outdated packages in waybar
+
+[Service]
+ExecStart=/usr/local/bin/waybar-updates refresh

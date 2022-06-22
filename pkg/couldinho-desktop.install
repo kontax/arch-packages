@@ -7,18 +7,33 @@ post_upgrade() {
     # System environment variables
     mv /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
 
-    # i3 global configuration
-    cp /etc/i3/couldinho-desktop-config /etc/i3/config
-    cp /etc/couldinho-i3status.conf /etc/i3status.conf
+    # zsh sway autostart
+    cp /etc/zsh/couldinho-desktop-zprofile /etc/zsh/zprofile
 
-    # Compton compositor settings
-    cp /etc/xdg/couldinho-picom.conf /etc/xdg/picom.conf
+    # sway global configuration
+    cp /etc/sway/couldinho-desktop-config /etc/sway/config
+    cp /etc/xdg/waybar/couldinho-desktop-config /etc/xdg/waybar/config
+    cp /etc/xdg/waybar/couldinho-desktop-style.css /etc/xdg/waybar/style.css
+    cp /etc/xdg/swaync/couldinho-desktop-config.json /etc/xdg/swaync/config.json
+    cp /etc/xdg/swaync/couldinho-desktop-style.css /etc/xdg/swaync/style.css
 
-    # LightDM config files
-    cp /etc/lightdm/couldinho-lightdm.conf /etc/lightdm/lightdm.conf
-    cp /etc/lightdm/couldinho-lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
+    # FlashFocus
+    cp /etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml /etc/xdg/flashfocus/flashfocus.yml
 
-    # Enable services
-    systemctl enable lightdm.service
+    # Start services
+    systemctl enable swaync.service
+    systemctl enable swayr.service
+
+    # User services
+    systemctl --global enable flashfocus.service
+    systemctl --global enable udiskie.service
+    systemctl --global enable sway-autoname-workspaces.service
+    systemctl --global enable sway-inactive-window-transparency.service
+    systemctl --global enable swayr.service
+    systemctl --global enable systembus-notify.service
+    systemctl --global enable waybar.service
+    systemctl --global enable waybar-updates.timer
+    systemctl --global enable wl-clipboard-manager.service
+    systemctl --global enable yubikey-touch-detector.service
 }
 

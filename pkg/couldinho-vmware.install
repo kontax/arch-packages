@@ -4,9 +4,6 @@ post_install() {
 
 post_upgrade() {
 
-    # Ensure vmware-user gets started
-    cp /etc/i3/couldinho-vmware-config /etc/i3/config
-
     # Enable services
     systemctl enable vmtoolsd
     systemctl enable vmware-vmblock-fuse
