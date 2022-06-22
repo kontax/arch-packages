@@ -7,15 +7,15 @@ post_upgrade() {
     # System environment variables
     mv /etc/profile.d/couldinho-laptop.sh /etc/profile.d/couldinho.sh
 
-    # Terminal
-    cp /etc/xdg/kitty/couldinho-laptop-kitty.conf /etc/xdg/kitty/kitty.conf
-
     # Input
     cp /usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf \
         /usr/share/X11/xorg.conf.d/40-libinput.conf
 
     # Bluetooth
     cp /etc/bluetooth/couldinho-laptop-main.conf /etc/bluetooth/main.conf
+
+    # Sway config
+    patch -u /etc/sway/config -i /etc/sway/config.patch
 
     # Enable services
     systemctl enable iwd.service
