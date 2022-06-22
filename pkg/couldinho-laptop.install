@@ -14,7 +14,12 @@ post_upgrade() {
     cp /usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf \
         /usr/share/X11/xorg.conf.d/40-libinput.conf
 
+    # Bluetooth
+    cp /etc/bluetooth/couldinho-laptop-main.conf /etc/bluetooth/main.conf
+
     # Enable services
     systemctl enable iwd.service
+    systemctl enable dhcpcd.service
+    systemctl enable bluetooth.service
 }
 
