@@ -8,7 +8,6 @@
     "modules-right": [
         "custom/progress",
         "custom/usbguard",
-        "custom/security",
         "custom/yubikey",
         "custom/systemd",
         "custom/updates",
@@ -29,11 +28,6 @@
         "tray"
     ],
 
-    "custom/security": {
-        "exec": "waybar-security",
-        "return-type": "json",
-        "interval": "once"
-    },
     "custom/progress": {
         "exec": "waybar-progress",
         "return-type": "json",
