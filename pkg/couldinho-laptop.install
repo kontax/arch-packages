@@ -17,6 +17,9 @@ post_upgrade() {
     # Bluetooth
     cp /etc/bluetooth/couldinho-laptop-main.conf /etc/bluetooth/main.conf
 
+    # Sway config
+    patch -u /etc/sway/config -i /etc/sway/config.patch
+
     # Enable services
     systemctl enable iwd.service
     systemctl enable dhcpcd.service

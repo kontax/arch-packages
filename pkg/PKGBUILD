@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=2
-pkgrel=83
+pkgrel=84
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -527,6 +527,7 @@ package_couldinho-laptop() {
     install -Dm 0644 laptop/usr/share/X11/xorg.conf.d/40-libinput.conf "$pkgdir/usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf"
     install -Dm 0644 laptop/etc/pulse/system.pa.d/auto-connect.pa "$pkgdir/etc/pulse/system.pa.d/auto-connect.pa"
     install -Dm 0644 laptop/etc/bluetooth/main.conf "$pkgdir/etc/bluetooth/couldinho-laptop-main.conf"
+    install -Dm 0644 laptop/etc/sway/config.patch "$pkgdir/etc/sway/config.patch"
 }
 
 package_couldinho-vmware() {
