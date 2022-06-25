@@ -17,6 +17,9 @@ post_upgrade() {
     # Sway config
     patch -u /etc/sway/config -i /etc/sway/config.patch
 
+    # Waybar config
+    patch -u /etc/xdg/waybar/config -i /etc/xdg/waybar/config.patch
+
     # Enable services
     systemctl enable iwd.service
     systemctl enable dhcpcd.service
