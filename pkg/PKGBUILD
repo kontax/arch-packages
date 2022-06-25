@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=3
-pkgrel=1
+pkgrel=2
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -77,6 +77,7 @@ package_couldinho-base() {
         gcc
         groff
         libtool
+        linux-headers
         m4
         make
         patch
@@ -513,16 +514,27 @@ package_couldinho-laptop() {
         couldinho-desktop
     )
 
-    # Laptop specific programs
+    # Lighting
     depends+=(
-        iwd                     # Internet wireless daemon
         light                   # Program to change backlight
         wlsunset                # Day/night gamma adjustments
         wluma                   # Automatic gamma adjustments based on screen content
+    )
+
+    # Network + Bluetooth
+    depends+=(
+        iwd                     # Internet wireless daemon
         bluez                   # Bluetooth daemons
         bluez-utils             # Utils for bluez
         pulseaudio-bluetooth    # Bluetooth module for pulseaudio
     )
+
+    # Display
+    #depends+=(
+    #    evdi                    # Kernel module for DisplayLink
+    #    displaylink             # Driver for DisplayLink
+    #    displaylink-connect     # Auto-set monitor for DisplayLink
+    #)
 
     # Overwrite desktop files
     install -Dm 0644 laptop/usr/share/X11/xorg.conf.d/40-libinput.conf "$pkgdir/usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf"
