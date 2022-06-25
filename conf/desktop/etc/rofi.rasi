@@ -1,0 +1,22 @@
+configuration {
+    modi: "drun,window";
+    font: "Inconsolata Mono 10";
+    show-icons: true;
+    window-match-fields: "name,title";
+    drun-match-fields: "name";
+    sort: true;
+    matching: "fuzzy";
+    window-format: "{c} {t}";
+    kb-move-word-back: "Alt+b,Control+Left";
+    kb-move-word-forward: "Alt+f,Control+Right";
+    kb-remove-char-back: "BackSpace,Shift+BackSpace,Control+h";
+  timeout {
+      action: "kb-cancel";
+      delay:  0;
+  }
+  filebrowser {
+      directories-first: true;
+      sorting-method:    "name";
+  }
+}
+@theme "/usr/share/rofi/themes/gruvbox-dark.rasi"

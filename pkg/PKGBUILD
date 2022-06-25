@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=3
-pkgrel=2
+pkgrel=3
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -257,7 +257,7 @@ package_couldinho-desktop() {
         swayr                   # Window switcher for sway
         swaync                  # Sway notification daemon
         libnotify               # Desktop notification library
-        wldash                  # Wayland launcher and dashboard
+        rofi                    # Launcher
     )
 
     install -Dm 0644 desktop/etc/sway/config "$pkgdir/etc/sway/couldinho-desktop-config"
@@ -270,6 +270,7 @@ package_couldinho-desktop() {
     install -Dm 0644 desktop/etc/xdg/swaync/style.css "$pkgdir/etc/xdg/swaync/couldinho-desktop-style.css"
     install -Dm 0644 desktop/etc/systemd/user/wl-clipboard-manager.service "$pkgdir/etc/systemd/user/wl-clipboard-manager.service"
     install -Dm 0644 desktop/etc/zsh/zprofile "$pkgdir/etc/zsh/couldinho-desktop-zprofile"
+    install -Dm 0644 desktop/etc/rofi.rasi "$pkgdir/etc/rofi.rasi"
 
     # Desktop mimetype apps
     install -Dm 0644 desktop/etc/xdg/mimeapps.list "$pkgdir/etc/xdg/mimeapps.list"
@@ -295,6 +296,7 @@ package_couldinho-desktop() {
         yubikey-touch-detector      # i3status notification for when yubikey needs attention 
         pinentry                    # Enter GPG pins using dmenu
         gtk-theme-arc-gruvbox-git   # Arc grey based theme with some gruvboxd colours
+        rofi-pass                   # Rofi-based pass handler
     )
 
     install -Dm 0644 desktop/etc/gtk-3.0/settings.ini "$pkgdir/etc/gtk-3.0/settings.ini"
