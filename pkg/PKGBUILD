@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=3
-pkgrel=5
+pkgrel=6
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -427,11 +427,6 @@ package_couldinho-dev() {
         rustup                  # Rust toolchain installer
         nasm                    # x86 Assembler
         ipython                 # iPython Notebooks
-    )
-
-    # IDE's
-    depends+=(
-        pycharm-professional    # Python IDE by JetBrains
     )
 
     # Debugging
