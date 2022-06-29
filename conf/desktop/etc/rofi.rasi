@@ -6,17 +6,19 @@ configuration {
     drun-match-fields: "name";
     sort: true;
     matching: "fuzzy";
+    run-command: "cglaunch {cmd}";
+    run-shell-command: "cglaunch --term {cmd}";
     window-format: "{c} {t}";
     kb-move-word-back: "Alt+b,Control+Left";
     kb-move-word-forward: "Alt+f,Control+Right";
     kb-remove-char-back: "BackSpace,Shift+BackSpace,Control+h";
-  timeout {
-      action: "kb-cancel";
-      delay:  0;
-  }
-  filebrowser {
-      directories-first: true;
-      sorting-method:    "name";
-  }
+    timeout {
+        action: "kb-cancel";
+        delay:  0;
+    }
+    filebrowser {
+        directories-first: true;
+        sorting-method:    "name";
+    }
 }
 @theme "/usr/share/rofi/themes/gruvbox-dark.rasi"
