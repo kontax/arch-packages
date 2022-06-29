@@ -429,11 +429,6 @@ package_couldinho-dev() {
         ipython                 # iPython Notebooks
     )
 
-    # IDE's
-    depends+=(
-        pycharm-professional    # Python IDE by JetBrains
-    )
-
     # Debugging
     depends+=(
         gdb                     # GNU debugger
