@@ -1,0 +1,332 @@
+#!/usr/bin/env bash
+#
+# Name: rofi-nmcli
+# Author: James Coulson
+#
+# A script that generates a rofi menu using nmcli to list and 
+# connect to network devices.
+#
+# Inspired by rofi-bluetooth (https://github.com/nickclyde/rofi-bluetooth)
+# and rofi-wifi-menu (https://github.com/zbaylin/rofi-wifi-menu)
+#
+# Depends on:
+#   Arch repositories: rofi, nmcli, libnotify
+
+# Logging
+set -uo pipefail
+trap 's=$?; notify-send -i "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
+
+
+# Globals
+OUT=""
+SSID=""
+DIVIDER="---------"
+MANUAL="Manual Connection"
+FIELDS="IN-USE,SSID,BARS,BSSID,SECURITY"
+APS=$(nmcli --fields $FIELDS dev wifi list --rescan yes \
+            | tail -n +2 \
+            | sed 's#^\(.\)\s*#\1#' \
+            | sed '/^ --/d'
+)
+WIDTHS=$(echo "$APS" \
+    | grep -v -e "^*" \
+    | head -n 1 | grep -Po '\S+\s*' \
+    | awk '{printf "%d ", length($0)}'
+)
+
+
+# Use libnotify to send any errors that occur and show the menu again
+notify_error() {
+
+    # Check if the output contains the word Error
+    if [[ "$OUT" =~ "Error" ]]; then
+
+        # Send the message
+        echo "$OUT" 1>&2
+        notify-send "NetworkManager" "$OUT"
+
+        # Delete any SSID that may have been created with errors
+        nmcli con delete "$SSID"
+
+        # Reset the global variables
+        OUT=""
+        SSID=""
+
+        # Go back to the main menu
+        show_menu
+    fi
+}
+
+# Gets the field number of the specified column for matching
+# This ignores the IN-USE column as that's prepended to the SSID
+get_column_location() {
+    match=$1
+    field_num=$(echo -e "$FIELDS" | \
+        awk 'BEGIN{FS=","}{for(i=1;i<=NF;++i)
+            {if($i == "'$match'") print i-1}}')
+    return $field_num
+}
+
+# Pull out the SSID from the selected BSSID
+get_ssid() {
+    bssid=$1
+
+    get_column_location "SSID"
+    ssid_loc=$?
+    SSID=$(echo "$APS" \
+        | grep "$bssid" \
+        | awk -v FIELDWIDTHS="$WIDTHS" "{print \$$ssid_loc}" \
+        | sed 's/^*//' \
+    )
+    echo $SSID
+}
+
+# Pull out the BSSID from the AP's in range
+get_bssid() {
+    chosen=$1
+
+    get_column_location "BSSID"
+    bssid_loc=$?
+    bssid=$(echo "$chosen" | awk -v FIELDWIDTHS="$WIDTHS" "{print \$$bssid_loc}" )
+    echo $bssid
+}
+
+
+get_security() {
+    get_column_location "SECURITY"
+    security_loc=$?
+    selected_security=$(echo "$APS" \
+        | grep "$bssid" \
+        | sed 's/^[ \*]\s*//g' \
+        | awk -v FIELDWIDTHS="$WIDTHS" "{print \$$security_loc}" \
+        | sed 's/^*//' \
+    )
+    echo $selected_security
+}
+
+
+# Checks if WiFi is enabled
+power_on() {
+    if nmcli --fields WIFI g | grep -q "enabled"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Toggles power state
+toggle_power() {
+    if power_on; then
+        nmcli radio wifi off
+        show_menu
+    else
+        if rfkill list wifi | grep -q 'blocked: yes'; then
+            rfkill unblock wifi && sleep 3
+        fi
+        nmcli radio wifi on
+        show_menu
+    fi
+}
+
+
+# Create manual connection
+create_manual_connection() {
+
+    SSID=$(echo "" | $rofi_command "Enter the SSID" )
+    if [ -z "$SSID" ];then
+        exit 1
+    fi
+
+    # Pull a list of already created connections
+    connections=$(nmcli con show)
+
+    # Check if the connection already exists
+    matches=$(echo "$connections" \
+        | tail -n +2 \
+        | awk '{print $1}' \
+        | grep -x "$SSID"
+    )
+
+    # If so, connect to that connection
+    if [[ -n "$matches" ]]; then
+        echo "Connection matches $matches"
+        OUT=$(nmcli con up "$SSID" 2>&1)
+
+    # Otherwise get the password and create the connection
+    else
+        password=$(echo "" | $rofi_command "Password")
+        if [ "$password" = "" ];then
+            OUT=$(nmcli dev wifi con "$SSID" 2>&1)
+        else
+            OUT=$(nmcli dev wifi con "$SSID" password "$password" 2>&1)
+        fi
+    fi
+}
+
+
+# Create an 802.1X connection containing username/password
+create_8021x_connection() {
+
+    # Get the wifi device
+    wlan=$(nmcli dev \
+        | grep wifi \
+        | awk '{print $1}'
+    )
+
+    # Check if there's more than one WLAN device
+    n_matches=$(echo -e "$wlan" | wc -l)
+
+    # if so, let the user pick
+    if [[ "$n_matches" -gt "1" ]]; then
+        wlan_sel=$(echo -e "$wlan" | $rofi_command "ifname")
+        [[ -z "$wlan_sel" ]] && exit 1
+        does_match=$(echo -e "$wlan_sel" | grep "$wlan")
+        [[ -n "$wlan_sel" ]] && [[ -z "$does_match" ]] && exit 1
+        wlan="$wlan_sel"
+    fi
+
+    # Get the username and password
+    username=$(echo "" | $rofi_command "Identity")
+
+    # Go back if the username or password is blank
+    if [[ "$username" == "" ]]; then
+        show_menu
+        return
+    fi
+
+    password=$(echo "" | $rofi_command "Password")
+
+    # Go back if the username or password is blank
+    if [[ "$password" == "" ]]; then
+        show_menu
+        return
+    fi
+
+    # Create the connection
+    nmcli con add type wifi \
+        con-name "$SSID" \
+        ifname "$wlan" \
+        ssid "$SSID" \
+        wifi-sec.key-mgmt wpa-eap 802-1x.eap ttls \
+        802-1x.phase2-auth mschapv2 \
+        802-1x.identity "$username" \
+        802-1x.password "$password"
+
+    # Connect
+    OUT=$(nmcli con up "$SSID" 2>&1)
+}
+
+
+# Create a new connection based on a selected SSID
+create_connection() {
+
+    bssid="$1"
+
+    selected_security=$(get_security "$bssid")
+    echo "Security: $selected_security"
+
+    # 802.1x Security
+    if [[ "$selected_security" == *"802.1X"* ]]; then
+        echo "802.1X"
+        create_8021x_connection
+
+    # WEP or WPA
+    elif [[ -n $(echo "$selected_security" | awk '/(WPA|WEP)/') ]]; then
+        echo "WPA/WEP"
+
+        # Go back if the password is blank
+        password=$(echo "" | $rofi_command "Password")
+        if [[ "$password" == "" ]]; then
+            show_menu
+            return
+        fi
+        echo "WEP/WPA Connection: $SSID"
+        OUT=$(nmcli dev wifi con "$SSID" password "$password")
+
+    # No security
+    else
+        echo "No security"
+        OUT=$(nmcli dev wifi con "$SSID")
+    fi
+}
+
+
+handle_connection() {
+    bssid="$1"
+    echo "BSSID: $bssid"
+    selected_security=$(get_security "$bssid")
+
+    # Pull out the SSID of the AP selected
+    SSID=$(get_ssid "$bssid")
+    echo "Chosen SSID: $SSID"
+
+    # Get the active AP
+    active_ap=$(echo "$APS" | grep "^*")
+
+    # Pull a list of already created connections
+    connections=$(nmcli con show \
+        | tail -n +2 \
+        | awk '{print $1}'
+    )
+
+    # If the currently active AP is selected, turn it off
+    if echo "$active_ap" | grep "$bssid"; then
+        echo "Chosen active AP"
+        nmcli con down "$SSID"
+
+    # If we already have the connection details of the selected
+    # AP, then bring up the connection
+    elif echo "$connections" | grep -x "$SSID"; then
+        nmcli con up "$SSID"
+
+    # Otherwise create a new connection
+    else
+        echo "Creating a new connection"
+        create_connection "$bssid"
+    fi
+}
+
+
+# Opens a rofi menu with current network options and where to connect
+show_menu() {
+    # Get menu options
+    if power_on; then
+        power="Power: on"
+
+        # Options passed to rofi
+        options="$power\n$DIVIDER\n$APS\n$DIVIDER\n$MANUAL\nExit"
+    else
+        power="Power: off"
+        options="$power\nExit"
+    fi
+
+    # Open rofi menu, read chosen option
+    chosen="$(echo -e "$options" | $rofi_command "WiFi")"
+
+    # Match chosen option to command
+    case $chosen in
+        "" | $DIVIDER)
+            echo "No option chosen."
+            ;;
+        $power)
+            toggle_power
+            ;;
+        $MANUAL)
+            create_manual_connection
+            ;;
+        *)
+
+            # Handle the connection if one is selected
+            bssid=$(get_bssid "$chosen")
+            selected_ap=$(nmcli --fields $FIELDS dev wifi list | grep "$bssid")
+            if [[ $selected_ap ]]; then handle_connection "$bssid"; fi
+            ;;
+    esac
+    notify_error
+}
+
+# Rofi command to pipe into, can add any options here
+rofi_command="dmenu -p"
+
+show_menu
+

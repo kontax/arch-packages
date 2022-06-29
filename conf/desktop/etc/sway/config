@@ -162,6 +162,7 @@ bindsym --to-code {
     $win+p                       fullscreen disable, exec cglaunch pass-gen
     $hyper+m                     fullscreen disable, exec cglaunch udiskie-dmenu
     $win+grave                   fullscreen disable, exec cglaunch wl-clipboard-manager dmenu
+    $win+n                       fullscreen disable, exec cglaunch rofi-nmcli
     $hyper+Backspace             fullscreen disable, exec cglaunch emoji-dmenu
     $hyper+XF86AudioLowerVolume  fullscreen disable, exec cglaunch emoji-dmenu
     Print                        exec cglaunch sway-screenshot-area
