@@ -16,9 +16,11 @@ post_upgrade() {
     cp /etc/xdg/waybar/couldinho-desktop-style.css /etc/xdg/waybar/style.css
     cp /etc/xdg/swaync/couldinho-desktop-config.json /etc/xdg/swaync/config.json
     cp /etc/xdg/swaync/couldinho-desktop-style.css /etc/xdg/swaync/style.css
+    cp /etc/couldinho-desktop-rofi-pass.conf /etc/rofi-pass.conf
 
     # FlashFocus
-    cp /etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml /etc/xdg/flashfocus/flashfocus.yml
+    cp /etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml \
+        /etc/xdg/flashfocus/flashfocus.yml
 
     # Start services
     systemctl enable swaync.service
