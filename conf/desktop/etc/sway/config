@@ -65,6 +65,7 @@ for_window    [app_id="mpv"]                             floating enable, resize
 for_window    [app_id="iriunwebcam"]                     floating disable
 for_window    [class="ghidra-Ghidra"]                    move container to $workspace3, layout tabbed
 for_window    [class="IDA"]                              move container to $workspace3
+for_window    [class="feh"]                              floating enable
 
 # Color scheme (Gruvbox dark)
 set $color_normal_white  #a89984
@@ -161,8 +162,8 @@ bindsym --to-code {
     $hyper+p                     fullscreen disable, exec "wl-clipboard-manager lock; cglaunch passmenu -p pass; wl-clipboard-manager unlock"
     $win+p                       fullscreen disable, exec cglaunch pass-gen
     $hyper+m                     fullscreen disable, exec cglaunch udiskie-dmenu
-    $win+grave                   fullscreen disable, exec cglaunch wl-clipboard-manager dmenu
     $win+n                       fullscreen disable, exec cglaunch rofi-nmcli
+    $win+grave                   fullscreen disable, exec cglaunch wl-clipboard-manager dmenu
     $hyper+Backspace             fullscreen disable, exec cglaunch emoji-dmenu
     $hyper+XF86AudioLowerVolume  fullscreen disable, exec cglaunch emoji-dmenu
     Print                        exec cglaunch sway-screenshot-area

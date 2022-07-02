@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=3
-pkgrel=7
+pkgrel=8
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -260,27 +260,45 @@ package_couldinho-desktop() {
         rofi                    # Launcher
     )
 
-    install -Dm 0644 desktop/etc/sway/config "$pkgdir/etc/sway/couldinho-desktop-config"
-    install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf "$pkgdir/usr/share/fonts/taskbar.ttf"
-    install -Dm 0644 desktop/etc/swaylock/config "$pkgdir/etc/swaylock/config"
-    install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
-    install -Dm 0644 desktop/etc/xdg/waybar/config "$pkgdir/etc/xdg/waybar/couldinho-desktop-config"
-    install -Dm 0644 desktop/etc/xdg/waybar/style.css "$pkgdir/etc/xdg/waybar/couldinho-desktop-style.css"
-    install -Dm 0644 desktop/etc/xdg/swaync/config.json "$pkgdir/etc/xdg/swaync/couldinho-desktop-config.json"
-    install -Dm 0644 desktop/etc/xdg/swaync/style.css "$pkgdir/etc/xdg/swaync/couldinho-desktop-style.css"
-    install -Dm 0644 desktop/etc/systemd/user/wl-clipboard-manager.service "$pkgdir/etc/systemd/user/wl-clipboard-manager.service"
-    install -Dm 0644 desktop/etc/zsh/zprofile "$pkgdir/etc/zsh/couldinho-desktop-zprofile"
+    install -Dm 0644 desktop/etc/sway/config \
+        "$pkgdir/etc/sway/couldinho-desktop-config"
+    install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf \
+        "$pkgdir/usr/share/fonts/taskbar.ttf"
+    install -Dm 0644 desktop/etc/swaylock/config \
+        "$pkgdir/etc/swaylock/config"
+    install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
+        "$pkgdir/etc/X11/xorg.conf.d/00-keyboard.conf"
+    install -Dm 0644 desktop/etc/xdg/waybar/config \
+        "$pkgdir/etc/xdg/waybar/couldinho-desktop-config"
+    install -Dm 0644 desktop/etc/xdg/waybar/style.css \
+        "$pkgdir/etc/xdg/waybar/couldinho-desktop-style.css"
+    install -Dm 0644 desktop/etc/xdg/swaync/config.json \
+        "$pkgdir/etc/xdg/swaync/couldinho-desktop-config.json"
+    install -Dm 0644 desktop/etc/xdg/swaync/style.css \
+        "$pkgdir/etc/xdg/swaync/couldinho-desktop-style.css"
+    install -Dm 0644 desktop/etc/systemd/user/wl-clipboard-manager.service \
+        "$pkgdir/etc/systemd/user/wl-clipboard-manager.service"
+    install -Dm 0644 desktop/etc/zsh/zprofile \
+        "$pkgdir/etc/zsh/couldinho-desktop-zprofile"
     install -Dm 0644 desktop/etc/rofi.rasi "$pkgdir/etc/rofi.rasi"
 
     # Desktop mimetype apps
-    install -Dm 0644 desktop/etc/xdg/mimeapps.list "$pkgdir/etc/xdg/mimeapps.list"
-    install -Dm 0644 desktop/usr/local/share/applications/browser.desktop "$pkgdir/usr/local/share/applications/browser.desktop"
-    install -Dm 0644 desktop/usr/local/share/applications/discord.desktop "$pkgdir/usr/local/share/applications/discord.desktop"
-    install -Dm 0644 desktop/usr/local/share/applications/neomutt.desktop "$pkgdir/usr/local/share/applications/neomutt.desktop"
-    install -Dm 0644 desktop/usr/local/share/applications/nvim.desktop "$pkgdir/usr/local/share/applications/nvim.desktop"
-    install -Dm 0644 desktop/usr/local/share/applications/scli.desktop "$pkgdir/usr/local/share/applications/scli.desktop"
-    install -Dm 0644 desktop/usr/local/share/applications/signal-desktop.desktop "$pkgdir/usr/local/share/applications/signal-desktop.desktop"
-    install -Dm 0644 desktop/usr/local/share/applications/visidata.desktop "$pkgdir/usr/local/share/applications/visidata.desktop"
+    install -Dm 0644 desktop/etc/xdg/mimeapps.list \
+        "$pkgdir/etc/xdg/mimeapps.list"
+    install -Dm 0644 desktop/usr/local/share/applications/browser.desktop \
+        "$pkgdir/usr/local/share/applications/browser.desktop"
+    install -Dm 0644 desktop/usr/local/share/applications/discord.desktop \
+        "$pkgdir/usr/local/share/applications/discord.desktop"
+    install -Dm 0644 desktop/usr/local/share/applications/neomutt.desktop \
+        "$pkgdir/usr/local/share/applications/neomutt.desktop"
+    install -Dm 0644 desktop/usr/local/share/applications/nvim.desktop \
+        "$pkgdir/usr/local/share/applications/nvim.desktop"
+    install -Dm 0644 desktop/usr/local/share/applications/scli.desktop \
+        "$pkgdir/usr/local/share/applications/scli.desktop"
+    install -Dm 0644 desktop/usr/local/share/applications/signal-desktop.desktop \
+        "$pkgdir/usr/local/share/applications/signal-desktop.desktop"
+    install -Dm 0644 desktop/usr/local/share/applications/visidata.desktop \
+        "$pkgdir/usr/local/share/applications/visidata.desktop"
 
     # Further sway packages
     depends+=(
@@ -293,22 +311,35 @@ package_couldinho-desktop() {
         gsimplecal                  # GTK calendar for the status bar
         inotify-tools               # Interface to inotify
         systembus-notify            # Systembus notification demon
-        yubikey-touch-detector      # i3status notification for when yubikey needs attention 
+        yubikey-touch-detector      # waybar notification for when yubikey needs attention 
         pinentry                    # Enter GPG pins using dmenu
         gtk-theme-arc-gruvbox-git   # Arc grey based theme with some gruvboxd colours
-        rofi-pass                   # Rofi-based pass handler
+        rofi-pass-git               # Rofi-based pass handler
+        qrencode                    # Encode passwords into QR codes
     )
 
-    install -Dm 0644 desktop/etc/gtk-3.0/settings.ini "$pkgdir/etc/gtk-3.0/settings.ini"
-    install -Dm 0644 desktop/etc/xdg/flashfocus/flashfocus.yml "$pkgdir/etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml"
-    install -Dm 0644 desktop/etc/systemd/user/sway-autoname-workspaces.service "$pkgdir/etc/systemd/user/sway-autoname-workspaces.service"
-    install -Dm 0644 desktop/etc/systemd/user/sway-inactive-window-transparency.service "$pkgdir/etc/systemd/user/sway-inactive-window-transparency.service"
-    install -Dm 0644 desktop/etc/systemd/user/sway-session.target "$pkgdir/etc/systemd/user/sway-session.target"
-    install -Dm 0644 desktop/etc/systemd/user/swayr.service "$pkgdir/etc/systemd/user/swayr.service"
-    install -Dm 0644 desktop/etc/systemd/user/systembus-notify.service "$pkgdir/etc/systemd/user/systembus-notify.service"
-    install -Dm 0644 desktop/etc/systemd/user/waybar-updates.service "$pkgdir/etc/systemd/user/waybar-updates.service"
-    install -Dm 0644 desktop/etc/systemd/user/waybar-updates.timer "$pkgdir/etc/systemd/user/waybar-updates.timer"
-    install -Dm 0644 desktop/etc/systemd/user/waybar.service "$pkgdir/etc/systemd/user/waybar.service"
+    install -Dm 0644 desktop/etc/gtk-3.0/settings.ini \
+        "$pkgdir/etc/gtk-3.0/settings.ini"
+    install -Dm 0644 desktop/etc/xdg/flashfocus/flashfocus.yml \
+        "$pkgdir/etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml"
+    install -Dm 0644 desktop/etc/systemd/user/sway-autoname-workspaces.service \
+        "$pkgdir/etc/systemd/user/sway-autoname-workspaces.service"
+    install -Dm 0644 desktop/etc/systemd/user/sway-inactive-window-transparency.service \
+        "$pkgdir/etc/systemd/user/sway-inactive-window-transparency.service"
+    install -Dm 0644 desktop/etc/systemd/user/sway-session.target \
+        "$pkgdir/etc/systemd/user/sway-session.target"
+    install -Dm 0644 desktop/etc/systemd/user/swayr.service \
+        "$pkgdir/etc/systemd/user/swayr.service"
+    install -Dm 0644 desktop/etc/systemd/user/systembus-notify.service \
+        "$pkgdir/etc/systemd/user/systembus-notify.service"
+    install -Dm 0644 desktop/etc/systemd/user/waybar-updates.service \
+        "$pkgdir/etc/systemd/user/waybar-updates.service"
+    install -Dm 0644 desktop/etc/systemd/user/waybar-updates.timer \
+        "$pkgdir/etc/systemd/user/waybar-updates.timer"
+    install -Dm 0644 desktop/etc/systemd/user/waybar.service \
+        "$pkgdir/etc/systemd/user/waybar.service"
+    install -Dm 0644 desktop/etc/rofi-pass.conf \
+        "$pkgdir/etc/couldinho-desktop-rofi-pass.conf"
 
     # Multimedia
     depends+=(
@@ -318,6 +349,7 @@ package_couldinho-desktop() {
         pavucontrol             # PulseAudio volume control/
         pamixer                 # Command line mixer
         vimiv                   # Image viewer with vim bindings
+        feh                     # Lightweight image viewer which handles stdin
         imagemagick             # Image viewing/manipulation program
         wf-recorder             # Wayland screen recorder
         mpv                     # Media player
