@@ -159,7 +159,7 @@ bindsym --to-code {
     # Launcher
     $hyper+equal                 exec bash -c "pkill -x qalculate-gtk || cglaunch qalculate-gtk"
     $win+d                       fullscreen disable, exec cglaunch rofi -modi drun -show drun
-    $hyper+p                     fullscreen disable, exec "wl-clipboard-manager lock; cglaunch passmenu -p pass; wl-clipboard-manager unlock"
+    $hyper+p                     fullscreen disable, exec cglaunch rofi-pass
     $win+p                       fullscreen disable, exec cglaunch pass-gen
     $hyper+m                     fullscreen disable, exec cglaunch udiskie-dmenu
     $win+n                       fullscreen disable, exec cglaunch rofi-nmcli
