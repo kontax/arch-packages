@@ -103,7 +103,7 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
-" If coc has yet to be installed, just set it to blank
+" If coc has yet to be installed, just set it to blank.
 try
     set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 catch
