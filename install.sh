@@ -30,6 +30,9 @@ SYSTEM_OPTIONS=(
 export REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
 export SNAP_PAC_SKIP=y
 
+# This repository is cloned into the user home folder
+export PKG_REPO_URL="https://github.com/kontax/arch-packages.git"
+
 # Dialog options
 HEIGHT=0
 WIDTH=0
@@ -377,6 +380,15 @@ if [ ! -z $CONF_FILE_LOCATION ]; then
         curl -skL $CONF_FILE_LOCATION \
         | openssl aes-256-cbc -salt -d -k "$CONF_FILE_PASS")
 fi
+
+# Set up the repostiory
+repo_path="/home/$user/dev/arch-packages"
+arch-chroot /mnt sudo -u "$user" \
+    mkdir "/home/$user/dev"
+arch-chroot /mnt sudo -u "$user" \
+    git clone "$PKG_REPO_URL" "$repo_path"
+arch-chroot /mnt sudo -u "$user" \
+    cp "$repo_path/pre-commit" "$repo_path/.git/hooks"
 
 # Finish off installing zsh
 arch-chroot /mnt sudo -u "$user" zsh -ic true

@@ -20,6 +20,7 @@ set hidden                          " Handle multiple buffers better
 """ Input
 
 set backspace=indent,eol,start      " Intuitive backspacing
+set mouse=a                         " Enable mouse scrolling
 
 
 """ Search options
