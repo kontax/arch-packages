@@ -382,9 +382,9 @@ if [ ! -z $CONF_FILE_LOCATION ]; then
 fi
 
 # Set up the repostiory
-repo_path="$HOME/dev/arch-packages"
+repo_path="$/home/$user/dev/arch-packages"
 arch-chroot /mnt sudo -u "$user" \
-    mkdir $HOME/dev; \
+    mkdir "/home/$user/dev"; \
     git clone "$PKG_REPO_URL" "$repo_path"; \
     cp "$repo_path/pre-commit" "$repo_path/.git/hooks"
 
