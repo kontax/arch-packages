@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=3
-pkgrel=18
+pkgrel=19
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -15,8 +15,6 @@ sha256sums=(2c6cef289100e74b98a14e26332357329a22e19ce8313d8720bca6b015963b71)
 
 package_couldinho-base() {
     install=couldinho-base.install
-
-    install -Dm 0644 base/etc/profile.d/couldinho-base.sh "$pkgdir/etc/profile.d/couldinho-base.sh"
 
     # base
     depends=(
@@ -196,7 +194,6 @@ package_couldinho-base() {
         earlyoom            # Detect and handle OOM
     )
 
-    install -Dm 0644 base/etc/profile.d/zz_custom.sh "$pkgdir/etc/profile.d/zz_custom.sh"
     install -Dm 0644 base/etc/pacman.d/hooks/arch-audit.hook "$pkgdir/etc/pacman.d/hooks/arch-audit.hook"
     install -dm 0750 base/etc/usbguard "$pkgdir/etc/usbguard"
     install -Dm 0600 base/etc/usbguard/usbguard-daemon.conf \
@@ -227,8 +224,6 @@ package_couldinho-base() {
 
 package_couldinho-desktop() {
     install=couldinho-desktop.install
-
-    install -Dm 0644 desktop/etc/profile.d/couldinho-desktop.sh "$pkgdir/etc/profile.d/couldinho-desktop.sh"
 
     # base
     depends=(
@@ -443,9 +438,6 @@ package_couldinho-desktop() {
 package_couldinho-dev() {
     install=couldinho-dev.install
 
-    # No dotfile scripts are installed here - use the next dependency
-    #install -Dm 0644 dev/etc/profile.d/couldinho-dev.sh "$pkgdir/etc/profile.d/couldinho-dev.sh"
-
     depends=(
         couldinho-base
         couldinho-desktop
@@ -478,9 +470,6 @@ package_couldinho-dev() {
 
 package_couldinho-sec() {
     install=couldinho-sec.install
-
-    # No dotfile scripts are installed here - use the next dependency
-    #install -Dm 0644 sec/etc/profile.d/couldinho-sec.sh "$pkgdir/etc/profile.d/couldinho-sec.sh"
 
     depends=(
         couldinho-desktop
@@ -535,8 +524,6 @@ package_couldinho-sec() {
 
 package_couldinho-laptop() {
     install=couldinho-laptop.install
-
-    install -Dm 0644 laptop/etc/profile.d/couldinho-laptop.sh "$pkgdir/etc/profile.d/couldinho-laptop.sh"
 
     # base + desktop
     depends=(

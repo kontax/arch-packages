@@ -6,8 +6,8 @@ post_upgrade() {
 
     # System environment variables
     system=laptop
-    if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
-        export "COULDINHO_SYSTEM=${system},${COULDINHO_SYSTEM}" \
+    if [[ "${COULDINHO_SYSTEM}" != "${system}" ]]; then
+        export "COULDINHO_SYSTEM=${system}" \
             > /etc/environment.d/80-couldinho-system
     fi
 
