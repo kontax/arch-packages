@@ -5,7 +5,11 @@ post_install() {
 post_upgrade() {
 
     # System environment variables
-    mv /etc/profile.d/couldinho-base.sh /etc/profile.d/couldinho.sh
+    system=base
+    if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
+        export "COULDINHO_SYSTEM=${system},${COULDINHO_SYSTEM}" \
+            > /etc/environment.d/80-couldinho-system
+    fi
 
     # Sudoers file
     cp /etc/couldinho-sudoers /etc/sudoers

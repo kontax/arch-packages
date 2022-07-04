@@ -5,7 +5,11 @@ post_install() {
 post_upgrade() {
 
     # System environment variables
-    mv /etc/profile.d/couldinho-laptop.sh /etc/profile.d/couldinho.sh
+    system=laptop
+    if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
+        export "COULDINHO_SYSTEM=${system},${COULDINHO_SYSTEM}" \
+            > /etc/environment.d/80-couldinho-system
+    fi
 
     # Input
     cp /usr/share/X11/xorg.conf.d/couldinho-laptop-40-libinput.conf \
