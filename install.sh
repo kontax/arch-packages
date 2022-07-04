@@ -382,7 +382,7 @@ if [ ! -z $CONF_FILE_LOCATION ]; then
 fi
 
 # Set up the repostiory
-repo_path="$/home/$user/dev/arch-packages"
+repo_path="/home/$user/dev/arch-packages"
 arch-chroot /mnt sudo -u "$user" \
     mkdir "/home/$user/dev"
 arch-chroot /mnt sudo -u "$user" \
