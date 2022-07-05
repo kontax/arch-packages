@@ -161,7 +161,7 @@ echo "#####"
 echo "# HiDPI screens"
 echo "##"
 
-if [[ -z $hidpi ]]; then
+if [[ -z ${hidpi:-} ]]; then
     noyes=("Yes" "The font is too small" "No" "The font size is just fine")
     hidpi=$(get_choice "Font size" "Is your screen HiDPI?" "${noyes[@]}") || exit 1
     clear
