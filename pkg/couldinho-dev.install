@@ -6,16 +6,14 @@ post_upgrade() {
 
     # System environment variables
     system=dev
-    source /etc/environment.d/80-couldinho-system 2>/dev/null
+    source /etc/environment.d/80-couldinho-system.conf 2>/dev/null
     if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
-        echo "Adding ${system} to /etc/environment.d/80-couldinho-system"
-        echo "Current system = ${COUDLINHO_SYSTEM}"
         if [[ -z ${COULDINHO_SYSTEM} ]]; then
             echo "COULDINHO_SYSTEM=${system}" \
-            > /etc/environment.d/80-couldinho-system
+            > /etc/environment.d/80-couldinho-system.conf
         else
             echo "COULDINHO_SYSTEM=${COULDINHO_SYSTEM},${system}" \
-                > /etc/environment.d/80-couldinho-system
+                > /etc/environment.d/80-couldinho-system.conf
         fi
     fi
 
