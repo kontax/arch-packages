@@ -14,7 +14,7 @@ post_upgrade() {
             echo "COULDINHO_SYSTEM=${system}" \
             > /etc/environment.d/80-couldinho-system
         else
-            echo "COULDINHO_SYSTEM=${system},${COULDINHO_SYSTEM}" \
+            echo "COULDINHO_SYSTEM=${COULDINHO_SYSTEM},${system}" \
                 > /etc/environment.d/80-couldinho-system
         fi
     fi
