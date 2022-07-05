@@ -5,7 +5,19 @@ post_install() {
 post_upgrade() {
 
     # System environment variables
-    mv /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
+    system=desktop
+    source /etc/environment.d/80-couldinho-system 2>/dev/null
+    if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
+        echo "Adding ${system} to /etc/environment.d/80-couldinho-system"
+        echo "Current system = ${COUDLINHO_SYSTEM}"
+        if [[ -z ${COULDINHO_SYSTEM} ]]; then
+            echo "COULDINHO_SYSTEM=${system}" \
+            > /etc/environment.d/80-couldinho-system
+        else
+            echo "COULDINHO_SYSTEM=${COULDINHO_SYSTEM},${system}" \
+                > /etc/environment.d/80-couldinho-system
+        fi
+    fi
 
     # zsh sway autostart
     cp /etc/zsh/couldinho-desktop-zprofile /etc/zsh/zprofile
@@ -23,8 +35,6 @@ post_upgrade() {
         /etc/xdg/flashfocus/flashfocus.yml
 
     # Start services
-    systemctl enable swaync.service
-    systemctl enable swayr.service
 
     # User services
     systemctl --global enable flashfocus.service
@@ -32,6 +42,7 @@ post_upgrade() {
     systemctl --global enable sway-autoname-workspaces.service
     systemctl --global enable sway-inactive-window-transparency.service
     systemctl --global enable swayr.service
+    systemctl --global enable swaync.service
     systemctl --global enable systembus-notify.service
     systemctl --global enable waybar.service
     systemctl --global enable waybar-updates.timer

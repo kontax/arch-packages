@@ -378,7 +378,7 @@ if [ ! -z $CONF_FILE_LOCATION ]; then
     echo -e "\n  [*] Cloning dotfiles to home folder"
     arch-chroot /mnt sudo SUDO_PASSWORD="$password" -u $user bash < <( \
         curl -skL $CONF_FILE_LOCATION \
-        | openssl aes-256-cbc -salt -d -k "$CONF_FILE_PASS")
+        | openssl aes-256-cbc -pbkdf2 -salt -d -k "$CONF_FILE_PASS")
 fi
 
 # Set up the repostiory

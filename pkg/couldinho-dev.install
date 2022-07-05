@@ -5,7 +5,19 @@ post_install() {
 post_upgrade() {
 
     # System environment variables
-    mv /etc/profile.d/couldinho-desktop.sh /etc/profile.d/couldinho.sh
+    system=dev
+    source /etc/environment.d/80-couldinho-system 2>/dev/null
+    if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
+        echo "Adding ${system} to /etc/environment.d/80-couldinho-system"
+        echo "Current system = ${COUDLINHO_SYSTEM}"
+        if [[ -z ${COULDINHO_SYSTEM} ]]; then
+            echo "COULDINHO_SYSTEM=${system}" \
+            > /etc/environment.d/80-couldinho-system
+        else
+            echo "COULDINHO_SYSTEM=${COULDINHO_SYSTEM},${system}" \
+                > /etc/environment.d/80-couldinho-system
+        fi
+    fi
 
     # Enable services
     systemctl enable docker.service
