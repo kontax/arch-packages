@@ -8,8 +8,6 @@ post_upgrade() {
     system=vmware
     source /etc/environment.d/80-couldinho-system.conf 2>/dev/null
     if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
-        echo "Adding ${system} to /etc/environment.d/80-couldinho-system.conf"
-        echo "Current system = ${COUDLINHO_SYSTEM}"
         if [[ -z ${COULDINHO_SYSTEM} ]]; then
             echo "COULDINHO_SYSTEM=${system}" \
             > /etc/environment.d/80-couldinho-system.conf
