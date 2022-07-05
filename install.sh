@@ -160,66 +160,71 @@ echo ""
 echo "#####"
 echo "# HiDPI screens"
 echo "##"
-noyes=("Yes" "The font is too small" "No" "The font size is just fine")
-hidpi=$(get_choice "Font size" "Is your screen HiDPI?" "${noyes[@]}") || exit 1
-clear
+
+if [[ -z $hidpi ]]; then
+    noyes=("Yes" "The font is too small" "No" "The font size is just fine")
+    hidpi=$(get_choice "Font size" "Is your screen HiDPI?" "${noyes[@]}") || exit 1
+    clear
+fi
 [[ "$hidpi" == "Yes" ]] && font="ter-132n" || font="ter-716n"
 setfont "$font"
 
-package_stage=$(get_choice "Installation" "Select whether to use the dev or master package list" "${PACKAGE_STAGE_LIST[@]}") || exit 1
-clear
-: ${package_stage:?"Stage cannot be empty"}
+if [[ -z ${package_stage:-} ]]; then
+    package_stage=$(get_choice "Installation" "Select whether to use the dev or master package list" "${PACKAGE_STAGE_LIST[@]}") || exit 1
+    clear
+    : ${package_stage:?"Stage cannot be empty"}
+fi
 
 # Ensure we're pointing to the correct repository
 if [ "$package_stage" == dev ]; then
     export REPO_URL=$(echo $REPO_URL | sed 's/couldinho-arch-aur/couldinho-arch-aur-dev/g')
 fi
 
-if [[ -z $hostname ]]; then
+if [[ -z ${hostname:-} ]]; then
     hostname=$(get_input "Hostname" "Enter hostname") || exit 1
     clear
     : ${hostname:?"hostname cannot be empty"}
 fi
 
-if [[ -z $user ]]; then
+if [[ -z ${user:-} ]]; then
     user=$(get_input "User" "Enter admin username") || exit 1
     clear
     : ${user:?"user cannot be empty"}
 fi
 
-if [[ -z $password ]]; then
+if [[ -z ${password:-} ]]; then
     password=$(get_new_password "User" "Enter admin password") || exit 1
     clear
 fi
 
-if [[ -z $passphrase ]]; then
+if [[ -z ${passphrase:-} ]]; then
     passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
     clear
 fi
 
-if [[ -z $device ]]; then
+if [[ -z ${device:-} ]]; then
     devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac | tr '\n' ' ')
     read -r -a devicelist <<< $devicelist
     device=$(get_choice "Installation" "Select installation disk" "${devicelist[@]}") || exit 1
     clear
 fi
 
-if [[ -z $luks_header_device ]]; then
+if [[ -z ${luks_header_device:-} ]]; then
     luks_header_device=$(get_choice "Installation" "Select disk for LUKS header" "${devicelist[@]}") || exit 1
 fi
 
 
-if [[ -z $config ]]; then
+if [[ -z ${config:-} ]]; then
     config=$(get_input "Config" "Enter location of config files (leave blank if required)") || exit 1
     clear
 fi
 
-if [[ ! -z $config && -z $conf_pass ]]; then
+if [[ ! -z $config && -z ${conf_pass:-} ]]; then
     conf_pass=$(get_password "Config" "Enter passphrase to decrypt config files") || exit 1
     clear
 fi
 
-if [[ -z $user_system ]]; then
+if [[ -z ${user_system:-} ]]; then
     user_system=$(get_multi_choice "System" "Choose a system" "${SYSTEM_OPTIONS[@]}") || exit 1
     clear
     : ${user_system:?"system cannot be empty"}
