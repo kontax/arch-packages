@@ -44,6 +44,10 @@ post_upgrade() {
     # Move snapper config
     cp /etc/conf.d/couldinho-snapper /etc/conf.d/snapper
 
+    # Move pam.d files
+    cp /etc/pam.d/couldinho-polkit-1 /etc/pam.d/polkit-1
+    cp /etc/pam.d/couldinho-sudo /etc/pam.d/sudo
+
     # zsh settings
     cp /etc/zsh/couldinho-zshrc /etc/zsh/zshrc
     cp /etc/zsh/couldinho-p10k.zsh /etc/zsh/p10k.zsh
