@@ -28,7 +28,6 @@ SYSTEM_OPTIONS=(
 # This is currently pointing at the prod URL, however a selection can be made
 # within this script by the user to point it to the dev repo
 export REPO_URL="https://s3-eu-west-1.amazonaws.com/couldinho-arch-aur/x86_64"
-export SNAP_PAC_SKIP=y
 
 # This repository is cloned into the user home folder
 export PKG_REPO_URL="https://github.com/kontax/arch-packages.git"
