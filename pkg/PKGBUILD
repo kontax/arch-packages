@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=3
-pkgrel=32
+pkgrel=33
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -500,7 +500,18 @@ package_couldinho-sec() {
         pwndbg                  # Enhance GDB, similar to GEF
         gef-git                 # GDB Enhanced Features
         pwngdb                  # GDB for pwn
+        peda                    # Exploit development assistence for GDB
     )
+
+    # gef/pwndbg/peda swapping config
+    install -Dm 0755 sec/usr/local/bin/gdb-gef \
+        "$pkgdir/usr/local/bin/gdb-gef"
+    install -Dm 0755 sec/usr/local/bin/gdb-peda \
+        "$pkgdir/usr/local/bin/gdb-gef"
+    install -Dm 0755 sec/usr/local/bin/gdb-pwndbg \
+        "$pkgdir/usr/local/bin/gdb-gef"
+    install -Dm 0644 sec/etc/gdbinit \
+        "$pkgdir/etc/gdbinit"
 
     # Reversing
     depends+=(
@@ -519,9 +530,12 @@ package_couldinho-sec() {
     )
 
     # Desktop mimetype apps
-    install -Dm 0644 sec/usr/local/share/applications/ida-free.desktop "$pkgdir/usr/local/share/applications/ida-free.desktop"
-    install -Dm 0644 sec/usr/local/share/applications/010editor.desktop "$pkgdir/usr/local/share/applications/010editor.desktop"
-    install -Dm 0644 sec/usr/local/share/applications/ghidra.desktop "$pkgdir/usr/local/share/applications/ghidra.desktop"
+    install -Dm 0644 sec/usr/local/share/applications/ida-free.desktop \
+        "$pkgdir/usr/local/share/applications/ida-free.desktop"
+    install -Dm 0644 sec/usr/local/share/applications/010editor.desktop \
+        "$pkgdir/usr/local/share/applications/010editor.desktop"
+    install -Dm 0644 sec/usr/local/share/applications/ghidra.desktop \
+        "$pkgdir/usr/local/share/applications/ghidra.desktop"
 }
 
 package_couldinho-laptop() {
