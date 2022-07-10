@@ -16,4 +16,8 @@ post_upgrade() {
                 > /etc/environment.d/80-couldinho-system.conf
         fi
     fi
+
+    # GDB Configuration
+    cp /etc/gdb/couldinho-sec-gdbinit /etc/gdb/gdbinit
+
 }

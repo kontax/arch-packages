@@ -8,7 +8,7 @@ let g:python3_host_prog = "/usr/bin/python3"
 " Language servers
 let g:coc_global_extensions = [
             \ 'coc-json',
-            \ 'coc-rls',
+            \ 'coc-rust-analyzer',
             \ 'coc-jedi',
             \ 'coc-sh',
             \ ]
