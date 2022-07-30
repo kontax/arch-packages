@@ -326,7 +326,7 @@ show_menu() {
 }
 
 # Rofi command to pipe into, can add any options here
-rofi_command="dmenu -p"
+rofi_command="rofi -no-auto-select -i -dmenu"
 
 show_menu
 

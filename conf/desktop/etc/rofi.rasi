@@ -1,6 +1,6 @@
 configuration {
     modi: "drun,window";
-    font: "Inconsolata Mono 10";
+    font: "Inconsolata 10";
     show-icons: true;
     window-match-fields: "name,title";
     drun-match-fields: "name";
