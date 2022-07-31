@@ -132,7 +132,7 @@ toggle_power() {
 # Create manual connection
 create_manual_connection() {
 
-    SSID=$(echo "" | $rofi_command "Enter the SSID" )
+    SSID=$($rofi_command "Enter the SSID" )
     if [ -z "$SSID" ];then
         exit 1
     fi
@@ -154,7 +154,7 @@ create_manual_connection() {
 
     # Otherwise get the password and create the connection
     else
-        password=$(echo "" | $rofi_command "Password")
+        password=$($rofi_command "Password" -password)
         if [ "$password" = "" ];then
             OUT=$(nmcli dev wifi con "$SSID" 2>&1)
         else
@@ -186,7 +186,7 @@ create_8021x_connection() {
     fi
 
     # Get the username and password
-    username=$(echo "" | $rofi_command "Identity")
+    username=$($rofi_command "Identity")
 
     # Go back if the username or password is blank
     if [[ "$username" == "" ]]; then
@@ -194,7 +194,7 @@ create_8021x_connection() {
         return
     fi
 
-    password=$(echo "" | $rofi_command "Password")
+    password=$($rofi_command "Password" -password)
 
     # Go back if the username or password is blank
     if [[ "$password" == "" ]]; then
@@ -235,7 +235,7 @@ create_connection() {
         echo "WPA/WEP"
 
         # Go back if the password is blank
-        password=$(echo "" | $rofi_command "Password")
+        password=$($rofi_command "Password" -password)
         if [[ "$password" == "" ]]; then
             show_menu
             return
@@ -326,7 +326,7 @@ show_menu() {
 }
 
 # Rofi command to pipe into, can add any options here
-rofi_command="rofi -no-auto-select -i -dmenu"
+rofi_command="rofi -no-auto-select -i -dmenu -p"
 
 show_menu
 
