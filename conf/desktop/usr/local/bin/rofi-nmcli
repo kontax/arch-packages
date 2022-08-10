@@ -60,6 +60,9 @@ notify_error() {
 # Gets the field number of the specified column for matching
 # This ignores the IN-USE column as that's prepended to the SSID
 get_column_location() {
+    local match
+    local field_num
+
     match=$1
     field_num=$(echo -e "$FIELDS" | \
         awk 'BEGIN{FS=","}{for(i=1;i<=NF;++i)
@@ -69,6 +72,9 @@ get_column_location() {
 
 # Pull out the SSID from the selected BSSID
 get_ssid() {
+    local bssid
+    local ssid_loc
+
     bssid=$1
 
     get_column_location "SSID"
@@ -83,6 +89,10 @@ get_ssid() {
 
 # Pull out the BSSID from the AP's in range
 get_bssid() {
+    local chosen
+    local bssid_loc
+    local bssid
+
     chosen=$1
 
     get_column_location "BSSID"
@@ -93,6 +103,9 @@ get_bssid() {
 
 
 get_security() {
+    local security_loc
+    local selected_security
+
     get_column_location "SECURITY"
     security_loc=$?
     selected_security=$(echo "$APS" \
@@ -131,8 +144,11 @@ toggle_power() {
 
 # Create manual connection
 create_manual_connection() {
+    local connections
+    local matches
+    local password
 
-    SSID=$(echo "" | $rofi_command "Enter the SSID" )
+    SSID=$($rofi_command "Enter the SSID" )
     if [ -z "$SSID" ];then
         exit 1
     fi
@@ -154,7 +170,7 @@ create_manual_connection() {
 
     # Otherwise get the password and create the connection
     else
-        password=$(echo "" | $rofi_command "Password")
+        password=$($rofi_command "Password" -password)
         if [ "$password" = "" ];then
             OUT=$(nmcli dev wifi con "$SSID" 2>&1)
         else
@@ -166,6 +182,13 @@ create_manual_connection() {
 
 # Create an 802.1X connection containing username/password
 create_8021x_connection() {
+    local wlan
+    local n_matches
+    local wlan_sel
+    local does_match
+    local wlan
+    local username
+    local password
 
     # Get the wifi device
     wlan=$(nmcli dev \
@@ -186,7 +209,7 @@ create_8021x_connection() {
     fi
 
     # Get the username and password
-    username=$(echo "" | $rofi_command "Identity")
+    username=$($rofi_command "Identity")
 
     # Go back if the username or password is blank
     if [[ "$username" == "" ]]; then
@@ -194,7 +217,7 @@ create_8021x_connection() {
         return
     fi
 
-    password=$(echo "" | $rofi_command "Password")
+    password=$($rofi_command "Password" -password)
 
     # Go back if the username or password is blank
     if [[ "$password" == "" ]]; then
@@ -219,6 +242,9 @@ create_8021x_connection() {
 
 # Create a new connection based on a selected SSID
 create_connection() {
+    local bssid
+    local selected_security
+    local password
 
     bssid="$1"
 
@@ -235,7 +261,7 @@ create_connection() {
         echo "WPA/WEP"
 
         # Go back if the password is blank
-        password=$(echo "" | $rofi_command "Password")
+        password=$($rofi_command "Password" -password)
         if [[ "$password" == "" ]]; then
             show_menu
             return
@@ -252,6 +278,11 @@ create_connection() {
 
 
 handle_connection() {
+    local bssid
+    local selected_security
+    local active_ap
+    local connections
+
     bssid="$1"
     echo "BSSID: $bssid"
     selected_security=$(get_security "$bssid")
@@ -289,6 +320,12 @@ handle_connection() {
 
 # Opens a rofi menu with current network options and where to connect
 show_menu() {
+    local power
+    local options
+    local chosen
+    local bssid
+    local selected_ap
+
     # Get menu options
     if power_on; then
         power="Power: on"
@@ -326,7 +363,7 @@ show_menu() {
 }
 
 # Rofi command to pipe into, can add any options here
-rofi_command="rofi -no-auto-select -i -dmenu"
+rofi_command="rofi -no-auto-select -i -dmenu -p"
 
 show_menu
 

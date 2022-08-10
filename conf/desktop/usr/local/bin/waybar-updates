@@ -12,7 +12,7 @@ case "$1" in
         ;;
     refresh)
         pac="$(checkupdates)"
-        aur="$(aur repo -Su -d couldinhno-arch-aur)"
+        aur="$(aur repo -Su -d couldinho-arch-aur)"
         off="$(checkofficial)"
         dif="$(pacdiff -o)"
         reb="$(checkrebuild)"
