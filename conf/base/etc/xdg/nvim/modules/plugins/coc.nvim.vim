@@ -11,7 +11,12 @@ let g:coc_global_extensions = [
             \ 'coc-rust-analyzer',
             \ 'coc-jedi',
             \ 'coc-sh',
+            \ 'coc-docker',
+            \ 'coc-swagger',
             \ ]
+
+" coc-settings.json global directory
+let g:coc_config_home = g:nvim_config_root . '/config'
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
