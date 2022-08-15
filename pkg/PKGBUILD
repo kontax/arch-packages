@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=3
-pkgrel=51
+pkgrel=52
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -225,7 +225,7 @@ package_couldinho-base() {
     install -Dm 0644 base/etc/environment.d/90-pass.conf "$pkgdir/etc/environment.d/90-pass.conf"
 
     # Binaries
-    install -Dm 0755 desktop/usr/local/bin/vimdiff "$pkgdir/usr/local/bin/vimdiff"
+    install -Dm 0755 base/usr/local/bin/vimdiff "$pkgdir/usr/local/bin/vimdiff"
 }
 
 package_couldinho-desktop() {
