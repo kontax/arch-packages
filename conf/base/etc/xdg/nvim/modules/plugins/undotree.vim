@@ -183,4 +183,15 @@ command! -n=0 -bar UndotreeHide     :call undotree#UndotreeHide()
 command! -n=0 -bar UndotreeShow     :call undotree#UndotreeShow()
 command! -n=0 -bar UndotreeFocus    :call undotree#UndotreeFocus()
 
+function! Undotree_CustomMap()
+    nunmap <buffer> u
+    nmap <buffer> J <Plug>UndotreePreviousState
+    nmap <buffer> K <Plug>UndotreeNextState
+    nmap <buffer> D <Plug>UndotreeDiffToggle
+    nmap <buffer> u <Plug>UndotreeUndo
+    nmap <buffer> U <Plug>UndotreeRedo
+endfunc
+
+noremap <leader>ut :UndotreeToggle<CR>
+
 " vim: set et fdm=marker sts=4 sw=4:
