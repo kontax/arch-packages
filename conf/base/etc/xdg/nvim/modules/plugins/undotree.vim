@@ -76,7 +76,7 @@ let g:loaded_undotree = 1   " Signal plugin availability with a value of 1.
 " |                                   |
 " +-----------------------------------+
 if !exists('g:undotree_WindowLayout')
-    let g:undotree_WindowLayout = 1
+    let g:undotree_WindowLayout = 2
 endif
 
 " e.g. using 'd' instead of 'days' to save some space.
@@ -87,15 +87,15 @@ endif
 " undotree window width
 if !exists('g:undotree_SplitWidth')
     if g:undotree_ShortIndicators == 1
-        let g:undotree_SplitWidth = 24
+        let g:undotree_SplitWidth = 40
     else
-        let g:undotree_SplitWidth = 30
+        let g:undotree_SplitWidth = 50
     endif
 endif
 
 " diff window height
 if !exists('g:undotree_DiffpanelHeight')
-    let g:undotree_DiffpanelHeight = 10
+    let g:undotree_DiffpanelHeight = 20
 endif
 
 " auto open diff window
@@ -106,7 +106,7 @@ endif
 " if set, let undotree window get focus after being opened, otherwise
 " focus will stay in current window.
 if !exists('g:undotree_SetFocusWhenToggle')
-    let g:undotree_SetFocusWhenToggle = 0
+    let g:undotree_SetFocusWhenToggle = 1
 endif
 
 " tree node shape.
