@@ -129,6 +129,18 @@ function get_choice {
          "${options[@]}"
  }
 
+function display_message {
+    title="$1"
+    desc="$2"
+
+    dialog --clear \
+           --stdout \
+           --backtitle "$BACKTITLE" \
+           --title "$title" \
+           --msgbox "$desc" \
+           $HEIGHT $WIDTH
+}
+
 echo ""
 echo "#####"
 echo "# Checking UEFI boot mode"
@@ -194,16 +206,18 @@ fi
 if [[ -z ${yubikey:-} ]]; then
     noyes=("Yes" "Use a YubiKey for LUKS (must be v5+)" "No" "Use a password for LUKS")
     yubikey=$(get_choice "YubiKey Encryption" "Use a YubiKey for LUKS encryption/decryption?" "${noyes[@]}") || exit 1
+    passphrase=${password}
+    clear
+    display_message "YubiKey Encryption" \
+        "Ensure the YubiKey is inserted now. When prompted use the admin
+         password for LUKS decryption, enter the YubiKey pin, and press the
+         YubiKey button twice"
     clear
 fi
 
-if [[ "$yubikey" == "Yes" ]]; then
-    passphrase=${password}
-else
-    if [[ -z ${passphrase:-} ]]; then
-        passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
-        clear
-    fi
+if [[ -z ${passphrase:-} && ${yubikey} == "No" ]]; then
+    passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
+    clear
 fi
 
 if [[ -z ${device:-} ]]; then
@@ -300,7 +314,7 @@ echo -n ${passphrase} | cryptsetup luksOpen $cryptargs "${part_root}" luks
 [[ "$yubikey" == "Yes" ]] && \
     systemd-cryptenroll \
     --fido2-device=auto ${part_root} \
-    --fido2-with-client-pin=false
+    --fido2-with-client-pin=false \
     --wipe-slot=password
 # END YUBIKEY CHANGES
 mkfs.btrfs -L btrfs /dev/mapper/luks
