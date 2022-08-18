@@ -209,9 +209,9 @@ if [[ -z ${yubikey:-} ]]; then
     passphrase=${password}
     clear
     display_message "YubiKey Encryption" \
-        "Ensure the YubiKey is inserted now. When prompted use the admin
-         password for LUKS decryption, enter the YubiKey pin, and press the
-         YubiKey button twice"
+        "Ensure the YubiKey is inserted now. When prompted use the admin \
+         password for LUKS decryption. When the YubiKey starts to flash, press \
+         the hardware button, and press it again when prompted."
     clear
 fi
 
