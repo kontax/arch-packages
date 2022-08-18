@@ -443,7 +443,7 @@ arch-chroot /mnt chsh -s /usr/bin/zsh
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
 
-if [ ! -z $CONF_FILE_LOCATION ]; then
+if [ ! -z ${CONF_FILE_LOCATION:-} ]; then
     echo -e "\n  [*] Cloning dotfiles to home folder"
     arch-chroot /mnt sudo SUDO_PASSWORD="$password" -u $user bash < <( \
         curl -skL $CONF_FILE_LOCATION \
