@@ -155,11 +155,6 @@ hwclock --systohc --utc
 # Get information from the user
 ##
 
-echo ""
-echo "#####"
-echo "# HiDPI screens"
-echo "##"
-
 if [[ -z ${hidpi:-} ]]; then
     noyes=("Yes" "The font is too small" "No" "The font size is just fine")
     hidpi=$(get_choice "Font size" "Is your screen HiDPI?" "${noyes[@]}") || exit 1
@@ -196,9 +191,19 @@ if [[ -z ${password:-} ]]; then
     clear
 fi
 
-if [[ -z ${passphrase:-} ]]; then
-    passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
+if [[ -z ${yubikey:-} ]]; then
+    noyes=("Yes" "Use a YubiKey for LUKS (must be v5+)" "No" "Use a password for LUKS")
+    yubikey=$(get_choice "YubiKey Encryption" "Use a YubiKey for LUKS encryption/decryption?" "${noyes[@]}") || exit 1
     clear
+fi
+
+if [[ "$yubikey" == "Yes" ]]; then
+    passphrase=${password}
+else
+    if [[ -z ${passphrase:-} ]]; then
+        passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
+        clear
+    fi
 fi
 
 if [[ -z ${device:-} ]]; then
@@ -286,6 +291,18 @@ echo -n ${passphrase} | cryptsetup luksFormat \
     --label luks \
     $cryptargs "${part_root}"
 echo -n ${passphrase} | cryptsetup luksOpen $cryptargs "${part_root}" luks
+
+# YUBIKEY CHANGES
+#TODO: Can we echo password in here
+#TODO: Need to ask about whether a yubikey is present
+#TODO: Can the passphrase from above be removed
+#TODO: Can multiple yubikeys be used?
+[[ "$yubikey" == "Yes" ]] && \
+    systemd-cryptenroll \
+    --fido2-device=auto ${part_root} \
+    --fido2-with-client-pin=false
+    --wipe-slot=password
+# END YUBIKEY CHANGES
 mkfs.btrfs -L btrfs /dev/mapper/luks
 
 echo -e "\n  [*] Setting up BTRFS subvolumes"
@@ -346,7 +363,18 @@ echo -e "\n  [*] Creating an encrypted key for booting"
 cryptsetup luksHeaderBackup "${luks_header_device}" --header-backup-file /tmp/header.img
 luks_header_size="$(stat -c '%s' /tmp/header.img)"
 rm -f /tmp/header.img
-echo "cryptdevice=PARTLABEL=primary:luks:allow-discards cryptheader=LABEL=luks:0:$luks_header_size root=LABEL=btrfs rw rootflags=subvol=root quiet mem_sleep_default=deep" > /mnt/etc/kernel/cmdline
+
+# YUBIKEY CHANGES
+if [[ "$yubikey" == "Yes" ]]; then
+    yk_kernel_options="rd.luks.options=fido2-device=auto"
+    yk_modules="systemd sd-encrypt"
+else
+    yk_kernel_options=""
+    yk_modules=""
+fi
+
+echo "cryptdevice=PARTLABEL=primary:luks:allow-discards cryptheader=LABEL=luks:0:$luks_header_size $yk_kernel_options root=LABEL=btrfs rw rootflags=subvol=root quiet mem_sleep_default=deep" > /mnt/etc/kernel/cmdline
+# END YUBIKEY CHANGES
 
 
 echo -e "\n  [*] Generating base config files"
@@ -362,12 +390,19 @@ echo "LC_MONETARY=en_IE.UTF-8" >> /mnt/etc/locale.conf
 ln -sf /usr/share/zoneinfo/Europe/Dublin /mnt/etc/localtime
 arch-chroot /mnt locale-gen
 
+# YUBIKEY CHANGES
+if [[ "$yubikey" == "Yes" ]]; then
+    echo "root ${part_root} - fido2-device=auto" > /mnt/etc/crypttab.initramfs
+fi
+modules="base consolefont udev autodetect modconf block $yk_modules encrypt-dh filesystems keyboard"
 cat << EOF > /mnt/etc/mkinitcpio.conf
 MODULES=()
 BINARIES=()
 FILES=()
-HOOKS=(base consolefont udev autodetect modconf block encrypt-dh filesystems keyboard)
+HOOKS=(${modules})
 EOF
+
+# END YUBIKEY CHANGES
 arch-chroot /mnt mkinitcpio -p linux
 arch-chroot /mnt arch-secure-boot initial-setup
 
