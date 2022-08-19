@@ -124,7 +124,6 @@
         "min-length": 2,
     },
     "battery": {
-        "bat": "BAT0",
         "design-capacity": true,
         "states": {
             "warning": 30,
