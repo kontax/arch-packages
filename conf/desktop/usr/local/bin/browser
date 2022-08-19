@@ -1,6 +1,6 @@
 #!/bin/sh
 
-menu=$(echo "vivaldi\ncopy to clipboard\nplay" | dmenu -p browser)
+menu=$(echo -e "vivaldi\ncopy to clipboard\nplay" | dmenu -p browser)
 
 case $menu in
     "vivaldi")
