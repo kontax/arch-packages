@@ -159,6 +159,7 @@ package_couldinho-base() {
         tmux                # Terminal multiplexer
         fzf                 # Command line fuzzy finder
         bash-completion     # Auto-complete for bash
+        git-delta           # Diff tool
     )
 
     install -Dm 0644 base/etc/zsh/zshrc "$pkgdir/etc/zsh/couldinho-zshrc"
