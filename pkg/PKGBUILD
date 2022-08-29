@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware)
 pkgver=3
-pkgrel=65
+pkgrel=66
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -485,7 +485,6 @@ package_couldinho-sec() {
     # Binary
     depends+=(
         010editor               # Binary editor with templates
-        imhex                   # Hex editor for reverse engineers
         ltrace                  # Trace library calls
         strace                  # Trace system calls and signals
         binwalk                 # Find and extract file types within a file
