@@ -160,7 +160,7 @@ echo "##"
 # Fix persistent certificate issues
 pacman-key --init
 pacman-key --populate
-pacman -Sy --noconfirm pacman-key
+pacman -Sy --noconfirm archlinux-keyring
 
 # Install required packages
 pacman -Sy --noconfirm --needed git reflector dialog
