@@ -157,6 +157,12 @@ echo "# Downloading necessary packages"
 echo "# and set up fastest mirrors"
 echo "##"
 
+# Fix persistent certificate issues
+pacman-key --init
+pacman-key --populate
+pacman -Sy --noconfirm pacman-key
+
+# Install required packages
 pacman -Sy --noconfirm --needed git reflector dialog
 reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
 timedatectl set-ntp true
