@@ -212,17 +212,18 @@ fi
 if [[ -z ${yubikey:-} ]]; then
     noyes=("Yes" "Use a YubiKey for LUKS (must be v5+)" "No" "Use a password for LUKS")
     yubikey=$(get_choice "YubiKey Encryption" "Use a YubiKey for LUKS encryption/decryption?" "${noyes[@]}") || exit 1
-    passphrase=${password}
-    clear
-    display_message "YubiKey Encryption" \
-        "Ensure the YubiKey is inserted now. When prompted use the admin \
-         password for LUKS decryption. When the YubiKey starts to flash, press \
-         the hardware button, and press it again when prompted."
     clear
 fi
 
 if [[ -z ${passphrase:-} && ${yubikey} == "No" ]]; then
     passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
+    clear
+else
+    passphrase=${password}
+    display_message "YubiKey Encryption" \
+        "Ensure the YubiKey is inserted now. When prompted use the admin \
+         password for LUKS decryption. When the YubiKey starts to flash, press \
+         the hardware button, and press it again when prompted."
     clear
 fi
 
