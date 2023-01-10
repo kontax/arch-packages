@@ -4,7 +4,7 @@
 # repository is about to be commited.
 
 # Get the number of files within the relevant directory (conf or pkg) being commited
-update_pkgbuild=$(git diff --cached --name-only | egrep 'conf/|pkg/' | wc -l)
+update_pkgbuild=$(git diff --cached --name-only | grep -E 'conf/|pkg/' | wc -l)
 if [ ! $update_pkgbuild -gt 0 ]; then
     echo "No PKGBUILD version update"
     exit 0

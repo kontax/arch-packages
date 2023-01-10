@@ -157,6 +157,12 @@ echo "# Downloading necessary packages"
 echo "# and set up fastest mirrors"
 echo "##"
 
+# Fix persistent certificate issues
+pacman-key --init
+pacman-key --populate
+pacman -Sy --noconfirm archlinux-keyring
+
+# Install required packages
 pacman -Sy --noconfirm --needed git reflector dialog
 reflector -f 5 -c GB -c IE --sort rate --age 12 --save /etc/pacman.d/mirrorlist
 timedatectl set-ntp true
@@ -206,17 +212,18 @@ fi
 if [[ -z ${yubikey:-} ]]; then
     noyes=("Yes" "Use a YubiKey for LUKS (must be v5+)" "No" "Use a password for LUKS")
     yubikey=$(get_choice "YubiKey Encryption" "Use a YubiKey for LUKS encryption/decryption?" "${noyes[@]}") || exit 1
-    passphrase=${password}
-    clear
-    display_message "YubiKey Encryption" \
-        "Ensure the YubiKey is inserted now. When prompted use the admin \
-         password for LUKS decryption. When the YubiKey starts to flash, press \
-         the hardware button, and press it again when prompted."
     clear
 fi
 
 if [[ -z ${passphrase:-} && ${yubikey} == "No" ]]; then
     passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
+    clear
+else
+    passphrase=${password}
+    display_message "YubiKey Encryption" \
+        "Ensure the YubiKey is inserted now. When prompted use the admin \
+         password for LUKS decryption. When the YubiKey starts to flash, press \
+         the hardware button, and press it again when prompted."
     clear
 fi
 
