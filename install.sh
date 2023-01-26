@@ -23,6 +23,7 @@ SYSTEM_OPTIONS=(
     dev         "Developer software" off \
     sec         "Reversing & exploitation software" off \
     vmware      "Includes VMWare virtual drivers" off \
+    media       "Media player software ie. Kodi" off \
 )
 
 # This is currently pointing at the prod URL, however a selection can be made
@@ -85,17 +86,18 @@ function get_new_password {
     )
     : ${init_pass:?"password cannot be empty"}
 
+
     test_pass=$(
-        dialog --clear \
-               --stdout \
-               --backtitle "$BACKTITLE" \
-               --title "$title" \
-               --passwordbox "$desc again" \
-               $HEIGHT $WIDTH
+    dialog --clear \
+           --stdout \
+           --backtitle "$BACKTITLE" \
+           --title "$title" \
+           --passwordbox "$desc again" \
+           $HEIGHT $WIDTH
     )
     if [[ "$init_pass" != "$test_pass" ]]; then
-        echo "Passwords did not match" >&2
-        exit 1
+    echo "Passwords did not match" >&2
+    exit 1
     fi
     echo $init_pass
 }
@@ -209,16 +211,24 @@ if [[ -z ${password:-} ]]; then
     clear
 fi
 
-if [[ -z ${yubikey:-} ]]; then
-    noyes=("Yes" "Use a YubiKey for LUKS (must be v5+)" "No" "Use a password for LUKS")
-    yubikey=$(get_choice "YubiKey Encryption" "Use a YubiKey for LUKS encryption/decryption?" "${noyes[@]}") || exit 1
+if [[ -z ${encrypt:-} ]]; then
+    noyes=("Yes" "Encrypt the root drive" "No" "Do not encrypt the root drive")
+    encrypt=$(get_choice "Encrypt Drive" "Encrypt the root drive?" "${noyes[@]}") || exit 1
     clear
 fi
 
-if [[ -z ${passphrase:-} && ${yubikey} == "No" ]]; then
-    passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume") || exit 1
+if [[ -z ${yubikey:-} && ${encrypt} == "Yes" ]]; then
+    noyes=("Yes" "Use a YubiKey for LUKS (must be v5+)" "No" "Use a password for LUKS")
+    yubikey=$(get_choice "YubiKey Encryption" "Use a YubiKey for LUKS encryption/decryption?" "${noyes[@]}") || exit 1
     clear
 else
+    yubikey="No"
+fi
+
+if [[ -z ${passphrase:-} && ${encrypt} == "Yes" && ${yubikey} == "No" ]]; then
+    passphrase=$(get_new_password "User" "Enter passphrase for encrypted volume")
+    clear
+elif [[ -z ${passphrase:-} && ${encrypt} == "Yes" && ${yubikey} == "Yes" ]]; then
     passphrase=${password}
     display_message "YubiKey Encryption" \
         "Ensure the YubiKey is inserted now. When prompted use the admin \
@@ -234,7 +244,7 @@ if [[ -z ${device:-} ]]; then
     clear
 fi
 
-if [[ -z ${luks_header_device:-} ]]; then
+if [[ -z ${luks_header_device:-} && ${encrypt} == "Yes" ]]; then
     luks_header_device=$(get_choice "Installation" "Select disk for LUKS header" "${devicelist[@]}") || exit 1
 fi
 
@@ -295,23 +305,30 @@ sgdisk --change-name=1:primary --change-name=2:ESP "${device}"
 part_root="$(ls ${device}* | grep -E "^${device}p?1$")"
 part_boot="$(ls ${device}* | grep -E "^${device}p?2$")"
 
-if [ "$device" != "$luks_header_device" ]; then
-    cryptargs="--header $luks_header_device"
+if [[ ${encrypt} == "Yes" ]]; then
+    part_install="/dev/mapper/luks"
+    if [ "$device" != "$luks_header_device" ]; then
+        cryptargs="--header $luks_header_device"
+    else
+        cryptargs=""
+        luks_header_device="$part_root"
+    fi
 else
-    cryptargs=""
-    luks_header_device="$part_root"
+    part_install="${part_root}"
 fi
 
 
 echo -e "\n  [*] Formatting partitions"
 
 mkfs.vfat -n "EFI" -F 32 "${part_boot}"
-echo -n ${passphrase} | cryptsetup luksFormat \
-    --type luks2 \
-    --pbkdf argon2id \
-    --label luks \
-    $cryptargs "${part_root}"
-echo -n ${passphrase} | cryptsetup luksOpen $cryptargs "${part_root}" luks
+if [[ ${encrypt} == "Yes" ]]; then
+    echo -n ${passphrase} | cryptsetup luksFormat \
+        --type luks2 \
+        --pbkdf argon2id \
+        --label luks \
+        $cryptargs "${part_root}"
+    echo -n ${passphrase} | cryptsetup luksOpen $cryptargs "${part_root}" luks
+fi
 
 # YUBIKEY CHANGES
 #TODO: Can we echo password in here
@@ -324,10 +341,10 @@ echo -n ${passphrase} | cryptsetup luksOpen $cryptargs "${part_root}" luks
     --fido2-with-client-pin=false \
     --wipe-slot=password
 # END YUBIKEY CHANGES
-mkfs.btrfs -L btrfs /dev/mapper/luks
+mkfs.btrfs -L btrfs ${part_install}
 
 echo -e "\n  [*] Setting up BTRFS subvolumes"
-mount /dev/mapper/luks /mnt
+mount ${part_install} /mnt
 btrfs subvolume create /mnt/root
 btrfs subvolume create /mnt/home
 btrfs subvolume create /mnt/pkgs
@@ -338,17 +355,17 @@ btrfs subvolume create /mnt/swap
 btrfs subvolume create /mnt/snapshots
 umount /mnt
 
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=root       /dev/mapper/luks /mnt
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=root       ${part_install} /mnt
 mkdir -p /mnt/{mnt/btrfs-root,efi,home,var/{cache/pacman,log,tmp,lib/docker},swap,.snapshots}
 mount "${part_boot}" /mnt/efi
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=/          /dev/mapper/luks /mnt/mnt/btrfs-root
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=home       /dev/mapper/luks /mnt/home
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=pkgs       /dev/mapper/luks /mnt/var/cache/pacman
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=docker     /dev/mapper/luks /mnt/var/lib/docker
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=logs       /dev/mapper/luks /mnt/var/log
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=tmp        /dev/mapper/luks /mnt/var/tmp
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=swap       /dev/mapper/luks /mnt/swap
-mount -o noatime,nodiratime,discard,compress=zstd,subvol=snapshots  /dev/mapper/luks /mnt/.snapshots
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=/          ${part_install} /mnt/mnt/btrfs-root
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=home       ${part_install} /mnt/home
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=pkgs       ${part_install} /mnt/var/cache/pacman
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=docker     ${part_install} /mnt/var/lib/docker
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=logs       ${part_install} /mnt/var/log
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=tmp        ${part_install} /mnt/var/tmp
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=swap       ${part_install} /mnt/swap
+mount -o noatime,nodiratime,discard,compress=zstd,subvol=snapshots  ${part_install} /mnt/.snapshots
 
 
 echo "#####"
@@ -380,21 +397,30 @@ echo -e "\n  [*] Installing packages"
 pacstrap /mnt $system
 
 
-echo -e "\n  [*] Creating an encrypted key for booting"
-cryptsetup luksHeaderBackup "${luks_header_device}" --header-backup-file /tmp/header.img
-luks_header_size="$(stat -c '%s' /tmp/header.img)"
-rm -f /tmp/header.img
-
-# YUBIKEY CHANGES
-if [[ "$yubikey" == "Yes" ]]; then
-    yk_kernel_options="rd.luks.options=fido2-device=auto"
-    yk_modules="systemd sd-encrypt"
-else
-    yk_kernel_options=""
-    yk_modules=""
+if [[ ${encrypt} == "Yes" ]]; then
+    echo -e "\n  [*] Creating an encrypted key for booting"
+    cryptsetup luksHeaderBackup "${luks_header_device}" --header-backup-file /tmp/header.img
+    luks_header_size="$(stat -c '%s' /tmp/header.img)"
+    rm -f /tmp/header.img
 fi
 
-echo "cryptdevice=PARTLABEL=primary:luks:allow-discards cryptheader=LABEL=luks:0:$luks_header_size $yk_kernel_options root=LABEL=btrfs rw rootflags=subvol=root quiet mem_sleep_default=deep" > /mnt/etc/kernel/cmdline
+if [[ ${encrypt} == "Yes" ]]; then
+    if [[ ${yubikey:-} == "Yes" ]]; then
+        yk_kernel_options="rd.luks.options=fido2-device=auto"
+        yk_modules="systemd sd-encrypt"
+    else
+        yk_kernel_options=""
+        yk_modules=""
+    fi
+
+    encrypt_modules="${yk_modules} encrypt-dh"
+    boot_args="cryptdevice=PARTLABEL=primary:luks:allow-discards cryptheader=LABEL=luks:0:$luks_header_size $yk_kernel_options"
+else
+    encrypt_modules=""
+    boot_args=""
+fi
+
+echo "$boot_args root=LABEL=btrfs rw rootflags=subvol=root quiet mem_sleep_default=deep" > /mnt/etc/kernel/cmdline
 # END YUBIKEY CHANGES
 
 
@@ -415,7 +441,7 @@ arch-chroot /mnt locale-gen
 if [[ "$yubikey" == "Yes" ]]; then
     echo "root ${part_root} - fido2-device=auto" > /mnt/etc/crypttab.initramfs
 fi
-modules="base consolefont udev autodetect modconf block $yk_modules encrypt-dh filesystems keyboard"
+modules="base consolefont udev autodetect modconf block $encrypt_modules filesystems keyboard"
 cat << EOF > /mnt/etc/mkinitcpio.conf
 MODULES=()
 BINARIES=()
