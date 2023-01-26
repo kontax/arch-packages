@@ -20,9 +20,6 @@ post_upgrade() {
     # Sudoers file
     cp /etc/couldinho-sudoers /etc/sudoers
 
-    # Add encryption to kernel
-    cp /etc/couldinho-mkinitcpio.conf /etc/mkinitcpio.conf
-
     # Move pacman repo details and settings
     cp /etc/couldinho-pacman.conf /etc/pacman.conf
 
