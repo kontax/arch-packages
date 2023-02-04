@@ -17,13 +17,14 @@ PACKAGE_STAGE_LIST=(
 
 # System options to choose from
 SYSTEM_OPTIONS=(
-    base        "Base system" off \
-    desktop     "Dual monitor desktop with i3wm" off \
-    laptop      "HiDPI laptop with i3status options" off \
-    dev         "Developer software" off \
-    sec         "Reversing & exploitation software" off \
-    vmware      "Includes VMWare virtual drivers" off \
-    media       "Media player software ie. Kodi" off \
+    base            "Base system" off \
+    desktop         "Dual monitor desktop with i3wm" off \
+    laptop          "HiDPI laptop with i3status options" off \
+    dev             "Developer software" off \
+    sec             "Reversing & exploitation software" off \
+    vmware          "Includes VMWare virtual drivers" off \
+    media-client    "Media player software ie. Kodi" off \
+    media-server    "Media server and downloading software" off \
 )
 
 # This is currently pointing at the prod URL, however a selection can be made
