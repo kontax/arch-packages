@@ -5,7 +5,7 @@ post_install() {
 post_upgrade() {
 
     # System environment variables
-    system=media
+    system=media-server
     source /etc/environment.d/80-couldinho-system.conf 2>/dev/null
     if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
         if [[ -z ${COULDINHO_SYSTEM} ]]; then

@@ -1,7 +1,7 @@
 pkgbase='couldinho'
-pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-media)
+pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-media-server couldinho-media-client)
 pkgver=3
-pkgrel=73
+pkgrel=78
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(2c6cef289100e74b98a14e26332357329a22e19ce8313d8720bca6b015963b71)
+sha256sums=(c48c1f45fb45407b4629de5e76a5ddb595673f86a09b85d9611cf3da823149d8)
 
 # Comment for update
 
@@ -614,21 +614,30 @@ package_couldinho-vmware() {
     install -Dm 0644 vmware/etc/environment.d/70-vmware.conf "$pkgdir/etc/environment.d/70-vmware.conf"
 }
 
-package_couldinho-media() {
-    install=couldinho-media.install
+package_couldinho-media-server() {
+    install=couldinho-media-server.install
 
     # base
     depends=(
         couldinho-base
     )
 
-    # Media managing software
+    # Server software
+    depends+=(
+        jellyfin
+    )
+
+    # Media downloading software
     depends+=(
         sabnzbd
         sonarr
         radarr
         transmission-cli
     )
+}
+
+package_couldinho-media-client() {
+    install=couldinho-media-client.install
 
     # Home theatre
     depends+=(
