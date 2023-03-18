@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-media-server couldinho-media-client)
 pkgver=3
-pkgrel=80
+pkgrel=81
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -635,8 +635,8 @@ package_couldinho-media-server() {
         sonarr
         radarr
         transmission-cli
-        organizr
-        overseerr
+        organizr-git
+        overseerr-git
     )
 }
 
