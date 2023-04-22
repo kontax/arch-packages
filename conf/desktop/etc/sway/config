@@ -306,5 +306,15 @@ bindsym --to-code {
     $win+m mode $mode_workspaces_monitors
 }
 
+# Auto lock / sleep
+# Lock after 15 minutes, screens off after 20 minus
+# logind.conf handles suspend after 30 mins
+set $lock swaylock -c 550000
+exec swayidle -w \
+    timeout 900 $lock \
+    timeout 1200 'swaymsg "output * dpms off"' \
+    resume 'swaymsg "output * dpms on"' \
+    before-sleep $lock
+
 include @sysconfdir@/sway/config.d/*
 exec "systemctl --user import-environment; systemctl --user start sway-session.target"
