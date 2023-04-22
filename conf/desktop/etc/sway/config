@@ -309,7 +309,10 @@ bindsym --to-code {
 # Auto lock / sleep
 # Lock after 15 minutes, screens off after 20 minus
 # logind.conf handles suspend after 30 mins
-set $lock swaylock -c 550000
+set $lock swaylock \
+    --clock --indicator --screenshots --effect-scale 0.4 \
+    --effect-vignette 0.2:0.5 --effect-blur 4x2 \
+    --datestr "%a %Y-%m-%d" --timestr "%k:%M"
 exec swayidle -w \
     timeout 900 $lock \
     timeout 1200 'swaymsg "output * dpms off"' \
