@@ -20,3 +20,11 @@ text-caps-lock-color=00000000
 text-clear-color=222222
 text-ver-color=00000000
 text-wrong-color=00000000
+clock
+indicator
+screenshots
+effect-scale=0.4
+effect-vignette=0.2:0.5
+effect-blur=4x2
+datestr="%a %Y-%m-%d"
+timestr="%H:%M"

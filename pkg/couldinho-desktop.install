@@ -28,6 +28,9 @@ post_upgrade() {
     cp /etc/xdg/swaync/couldinho-desktop-style.css /etc/xdg/swaync/style.css
     cp /etc/couldinho-desktop-rofi-pass.conf /etc/rofi-pass.conf
 
+    # logind.conf
+    cp /etc/systemd/couldinho-logind.conf /etc/systemd/logind.conf
+
     # FlashFocus
     cp /etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml \
         /etc/xdg/flashfocus/flashfocus.yml
