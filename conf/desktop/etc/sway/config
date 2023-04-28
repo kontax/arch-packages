@@ -14,6 +14,11 @@ input type:touchpad {
     tap enabled
 }
 
+input type:mouse {
+    accel_profile "flat"
+    pointer_accel "-0.5"
+}
+
 seat * hide_cursor 10000
 
 output * {
@@ -53,6 +58,7 @@ for_window    [window_role="pop-up"]                     floating enable
 for_window    [app_id="udiskie"]                         floating enable
 for_window    [app_id="pavucontrol"]                     floating enable
 for_window    [class="Vivaldi-stable"]                   move container to $workspace2
+for_window    [class="Vivaldi-stable"]                   inhibit_idle fullscreen
 for_window    [app_id="scli"]                            move container to $workspace3
 for_window    [app_id="Signal"]                          move container to $workspace3
 for_window    [app_id="discord"]                         move container to $workspace3
@@ -307,11 +313,11 @@ bindsym --to-code {
 }
 
 # Auto lock / sleep
-# Lock after 15 minutes, screens off after 20 minus
-# logind.conf handles suspend after 30 mins
+# Lock after 15 minutes, screens off after 20 minutes
 exec swayidle -w \
     timeout 900 swaylock \
     timeout 1200 'swaymsg "output * dpms off"' \
+    timeout 1800 'swaymsg "output * dpms on"; sleep 1; systemctl suspend' \
     resume 'swaymsg "output * dpms on"' \
     before-sleep swaylock
 
