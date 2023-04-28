@@ -14,6 +14,11 @@ input type:touchpad {
     tap enabled
 }
 
+input type:mouse {
+    accel_profile = "flat"
+    pointer_acces = "-0.5"
+}
+
 seat * hide_cursor 10000
 
 output * {
@@ -312,6 +317,7 @@ bindsym --to-code {
 exec swayidle -w \
     timeout 900 swaylock \
     timeout 1200 'swaymsg "output * dpms off"' \
+    timeout 1800 'swaymsg "output * dpms on"; sleep 1; systemctl suspend' \
     resume 'swaymsg "output * dpms on"' \
     before-sleep swaylock
 
