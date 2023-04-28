@@ -15,8 +15,8 @@ input type:touchpad {
 }
 
 input type:mouse {
-    accel_profile = "flat"
-    pointer_acces = "-0.5"
+    accel_profile "flat"
+    pointer_accel "-0.5"
 }
 
 seat * hide_cursor 10000
