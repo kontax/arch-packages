@@ -58,6 +58,7 @@ for_window    [window_role="pop-up"]                     floating enable
 for_window    [app_id="udiskie"]                         floating enable
 for_window    [app_id="pavucontrol"]                     floating enable
 for_window    [class="Vivaldi-stable"]                   move container to $workspace2
+for_window    [class="Vivaldi-stable"]                   inhibit_idle fullscreen
 for_window    [app_id="scli"]                            move container to $workspace3
 for_window    [app_id="Signal"]                          move container to $workspace3
 for_window    [app_id="discord"]                         move container to $workspace3
