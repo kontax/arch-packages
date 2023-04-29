@@ -14,7 +14,7 @@ input type:touchpad {
     tap enabled
 }
 
-input type:mouse {
+input type:pointer {
     accel_profile "flat"
     pointer_accel "-0.5"
 }
