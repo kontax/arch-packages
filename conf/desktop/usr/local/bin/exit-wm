@@ -15,14 +15,12 @@ case "$1" in
     lock)
         before_lock
         swaylock
-        waybar-eyes done
         ;;
     suspend)
         before_lock
         systemctl -i suspend
         swaylock
         systemctl --user restart wlsunset
-        waybar-eyes done
         ;;
     reboot)
         systemctl -i reboot
