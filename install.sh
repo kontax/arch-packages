@@ -456,12 +456,7 @@ arch-chroot /mnt arch-secure-boot initial-setup
 
 echo -e "\n  [*] Configuring swap file"
 swap_size=$(free --mebi | awk '/Mem:/ {print $2}')
-truncate -s 0 /mnt/swap/swapfile
-chattr +C /mnt/swap/swapfile
-btrfs property set /mnt/swap/swapfile compression ""
-dd if=/dev/zero of=/mnt/swap/swapfile bs=1M count=${swap_size}
-chmod 600 /mnt/swap/swapfile
-mkswap /mnt/swap/swapfile
+btrfs filesystem mkswapfile --size ${swap_size}M /mnt/swap/swapfile
 echo "/swap/swapfile none swap defaults 0 0" >> /mnt/etc/fstab
 
 
