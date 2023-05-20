@@ -31,6 +31,7 @@ post_upgrade() {
     # Start services
 
     # User services
+    systemctl --global enable hyprland-session.target
     systemctl --global enable udiskie.service
     systemctl --global enable swaync.service
     systemctl --global enable systembus-notify.service
