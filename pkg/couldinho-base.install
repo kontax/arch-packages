@@ -59,4 +59,5 @@ post_upgrade() {
     systemctl enable usbguard.service
     systemctl enable usbguard-dbus.service
     systemctl enable reflector.timer
+    systemctl enable systemd-timesyncd.service
 }
