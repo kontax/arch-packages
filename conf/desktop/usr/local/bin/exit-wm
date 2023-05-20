@@ -20,7 +20,6 @@ case "$1" in
         before_lock
         systemctl -i suspend
         swaylock
-        systemctl --user restart wlsunset
         ;;
     reboot)
         systemctl -i reboot
