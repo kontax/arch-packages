@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-media-server couldinho-media-client)
 pkgver=3
-pkgrel=111
+pkgrel=112
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -266,6 +266,8 @@ package_couldinho-desktop() {
 
     install -Dm 0644 desktop/etc/hypr/hyprland.conf \
         "$pkgdir/etc/hypr/hyprland.conf"
+    install -Dm 0644 desktop/etc/swaylock \
+        "$pkgdir/etc/swaylock"
     install -Dm 0644 desktop/etc/systemd/user/hyprland-session.target \
         "$pkgdir/etc/systemd/user/hyprland-session.target"
     install -Dm 0644 desktop/etc/hypr/extra.conf \
