@@ -1,5 +1,0 @@
---- config.desktop	2022-07-02 05:15:38.883372284 +0100
-+++ config.laptop	2022-07-02 05:15:01.016704243 +0100
-@@ -64 +64 @@
--for_window    [app_id="mpv"]                             floating enable, resize set width 531 height 300, move position 1345 125
-+for_window    [app_id="mpv"]                             floating enable, resize set width 531 height 300, move position 600 125
