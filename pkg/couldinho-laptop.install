@@ -25,7 +25,7 @@ post_upgrade() {
     cp /etc/bluetooth/couldinho-laptop-main.conf /etc/bluetooth/main.conf
 
     # Sway config
-    patch -u /etc/sway/config -i /etc/sway/config.patch
+    cp /etc/hypr/couldinho-laptop-extra.conf /etc/hypr/extra.conf
 
     # Waybar config
     patch -u /etc/xdg/waybar/config -i /etc/xdg/waybar/config.patch

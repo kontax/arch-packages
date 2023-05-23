@@ -21,6 +21,7 @@ post_upgrade() {
     cp /etc/zsh/couldinho-desktop-zprofile /etc/zsh/zprofile
 
     # sway global configuration
+    cp /etc/hypr/couldinho-desktop-extra.conf /etc/hypr/extra.conf
     cp /etc/xdg/waybar/couldinho-desktop-config /etc/xdg/waybar/config
     cp /etc/xdg/waybar/couldinho-desktop-style.css /etc/xdg/waybar/style.css
     cp /etc/xdg/swaync/couldinho-desktop-config.json /etc/xdg/swaync/config.json
@@ -30,8 +31,10 @@ post_upgrade() {
     # Start services
 
     # User services
+    systemctl --global enable hyprland-session.target
     systemctl --global enable udiskie.service
     systemctl --global enable swaync.service
+    systemctl --global enable swayidle.service
     systemctl --global enable systembus-notify.service
     systemctl --global enable waybar.service
     systemctl --global enable waybar-updates.timer

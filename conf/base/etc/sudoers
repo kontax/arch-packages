@@ -1,2 +1,4 @@
 root ALL=(ALL) ALL
 %wheel ALL=(ALL) ALL
+%wheel ALL=(ALL) NOPASSWD:SETENV: \
+    /usr/bin/systemctl stop pcscd.service
