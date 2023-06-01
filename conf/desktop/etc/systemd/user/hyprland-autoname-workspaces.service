@@ -4,7 +4,7 @@ PartOf=graphical-session.target
 After=graphical-session.target
 
 [Service]
-ExecStart=/usr/bin/hyprland-autoname-workspaces
+ExecStart=/usr/bin/hyprland-autoname-workspaces -c /etc/hypr/autoname-workspaces.conf
 Restart=always
 RestartSec=10s
 
