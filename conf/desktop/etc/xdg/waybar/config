@@ -2,7 +2,7 @@
     "layer": "top",
     "height": 25,
     "modules-left": [
-        "wlr/workspaces",
+        "hyprland/workspaces",
         "hyprland/submap"
     ],
     "modules-right": [
@@ -27,7 +27,7 @@
         "clock"
     ],
 
-    "wlr/workspaces": {
+    "hyprland/workspaces": {
         "sort-by-number": true,
         "format": "{icon}",
         "on-click": "activate"
