@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-media-server couldinho-media-client)
 pkgver=4
-pkgrel=9
+pkgrel=16
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -120,7 +120,7 @@ package_couldinho-base() {
 
     # Base replacements
     depends+=(
-        exa                 # ls replacement
+        eza                 # ls replacement
         ripgrep             # Fuzzy search
         ripgrep-all         # ripgrep wrapper for multiple file types
         rmtrash             # Delete to bin
@@ -313,6 +313,8 @@ package_couldinho-desktop() {
         "$pkgdir/usr/local/share/applications/signal-desktop.desktop"
     install -Dm 0644 desktop/usr/local/share/applications/visidata.desktop \
         "$pkgdir/usr/local/share/applications/visidata.desktop"
+    install -Dm 0644 desktop/usr/local/share/applications/vivaldi-stable.desktop \
+        "$pkgdir/usr/local/share/applications/vivaldi-stable.desktop"
 
     # Further desktop packages
     depends+=(
