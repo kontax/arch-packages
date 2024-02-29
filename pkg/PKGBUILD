@@ -1,7 +1,7 @@
 pkgbase='couldinho'
-pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-media-server couldinho-media-client)
+pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=4
-pkgrel=18
+pkgrel=22
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -482,6 +482,8 @@ package_couldinho-dev() {
     # Android
     depends+=(
         android-studio          # Android development platform
+        libvirt                 # API for controlling virtualization engines
+        virt-install            # Command line tool for using libvirt
     )
 }
 
@@ -618,46 +620,15 @@ package_couldinho-vmware() {
     install -Dm 0644 vmware/etc/environment.d/70-vmware.conf "$pkgdir/etc/environment.d/70-vmware.conf"
 }
 
-package_couldinho-media-server() {
-    install=couldinho-media-server.install
+package_couldinho-xcp-ng() {
+    install=couldinho-xcp-ng.install
 
     # base
     depends=(
         couldinho-base
     )
 
-    # Server software
     depends+=(
-        jellyfin
-        plex-media-server
-        nginx
-    )
-
-    # Media downloading software
-    depends+=(
-        sabnzbd
-        sonarr
-        radarr
-        readarr-develop
-        calibre
-        calibre-web
-        transmission-cli
-        organizr-git
-        prowlarr
-    )
-
-    # Dependencies
-    depends+=(
-        python-orjson           # Faster python json library
-    )
-}
-
-package_couldinho-media-client() {
-    install=couldinho-media-client.install
-
-    # Home theatre
-    depends+=(
-        kodi
-        kodi-standalone-service
+        xe-guest-utilities-xcp-ng   # XenServer guest tools for XCP-NG
     )
 }

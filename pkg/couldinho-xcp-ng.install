@@ -5,7 +5,7 @@ post_install() {
 post_upgrade() {
 
     # System environment variables
-    system=media-server
+    system=xcp-ng
     source /etc/environment.d/80-couldinho-system.conf 2>/dev/null
     if [[ "${COULDINHO_SYSTEM}" != *"${system}"* ]]; then
         if [[ -z ${COULDINHO_SYSTEM} ]]; then
@@ -16,5 +16,8 @@ post_upgrade() {
                 > /etc/environment.d/80-couldinho-system.conf
         fi
     fi
+
+    # Enable services
+    systemctl enable xe-linux-distribution.service
 }
 

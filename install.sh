@@ -23,8 +23,7 @@ SYSTEM_OPTIONS=(
     dev             "Developer software" off \
     sec             "Reversing & exploitation software" off \
     vmware          "Includes VMWare virtual drivers" off \
-    media-client    "Media player software ie. Kodi" off \
-    media-server    "Media server and downloading software" off \
+    xcp-ng          "Guest tools for XCP-NG" off \
 )
 
 # This is currently pointing at the prod URL, however a selection can be made
