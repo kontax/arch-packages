@@ -474,8 +474,7 @@ package_couldinho-dev() {
 
     # Cloud
     depends+=(
-        aws-cli-v2              # Command line interface to AWS
-        aws-sam-cli             # Client for AWS SAM serverless
+        aws-cli                 # Command line interface to AWS
         npm                     # Node package manager (used for serverless)
     )
 
