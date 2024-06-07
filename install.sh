@@ -441,7 +441,7 @@ arch-chroot /mnt locale-gen
 if [[ "$yubikey" == "Yes" ]]; then
     echo "root ${part_root} - fido2-device=auto" > /mnt/etc/crypttab.initramfs
 fi
-modules="base consolefont udev autodetect modconf block $encrypt_modules filesystems keyboard"
+modules="base consolefont udev autodetect microcode modconf block $encrypt_modules filesystems keyboard"
 cat << EOF > /mnt/etc/mkinitcpio.conf
 MODULES=()
 BINARIES=()
