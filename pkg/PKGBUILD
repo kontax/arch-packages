@@ -112,6 +112,9 @@ package_couldinho-base() {
         htop                # Improved top - process viewer
     )
 
+    install -dm 0755 base/etc/bat "$pkgdir/etc/bat"
+    install -Dm 0644 base/etc/htoprc "$pkgdir/etc/htoprc"
+
     # Networking + VPN
     depends+=(
         networkmanager              # Networking
@@ -141,6 +144,12 @@ package_couldinho-base() {
         bash-completion     # Auto-complete for bash
         git-delta           # Diff tool
     )
+
+    install -Dm 0644 base/etc/zsh/zshrc "$pkgdir/etc/zsh/couldinho-zshrc"
+    install -Dm 0644 base/etc/zsh/p10k.zsh "$pkgdir/etc/zsh/couldinho-p10k.zsh"
+    install -Dm 0644 base/etc/zsh/zprofile "$pkgdir/etc/zsh/couldinho-zprofile"
+    install -Dm 0644 base/etc/zsh/zsh-aliases "$pkgdir/etc/zsh/couldinho-zsh-aliases"
+    install -Dm 0644 base/etc/zsh/zshenv "$pkgdir/etc/zsh/couldinho-zshenv"
 
     # Filesystem
     depends+=(
