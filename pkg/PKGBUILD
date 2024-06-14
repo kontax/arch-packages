@@ -177,6 +177,10 @@ package_couldinho-base() {
         ncdu                # NCurses version of du
     )
 
+    install -Dm 0644 base/etc/conf.d/snapper "$pkgdir/etc/conf.d/couldinho-snapper"
+    install -Dm 0644 base/etc/snapper/configs/root "$pkgdir/etc/snapper/configs/root"
+    install -Dm 0644 base/etc/snap-pac.conf "$pkgdir/etc/snap-pac.conf"
+
     # Access Control + Security
     depends+=(
         pass                # Text-based password manager
@@ -193,6 +197,14 @@ package_couldinho-base() {
         earlyoom            # Detect and handle OOM
     )
 
+    install -Dm 0644 base/etc/pacman.d/hooks/arch-audit.hook "$pkgdir/etc/pacman.d/hooks/arch-audit.hook"
+    install -dm 0750 base/etc/usbguard "$pkgdir/etc/usbguard"
+    install -Dm 0600 base/etc/usbguard/usbguard-daemon.conf \
+        "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"
+    install -Dm 0644 base/etc/default/earlyoom "$pkgdir/etc/default/couldinho-earlyoom"
+    install -Dm 0644 base/etc/pam.d/polkit-1 "$pkgdir/etc/pam.d/couldinho-polkit-1"
+    install -Dm 0644 base/etc/pam.d/sudo "$pkgdir/etc/pam.d/couldinho-sudo"
+
     # Packages
     depends+=(
         devtools            # Package building helpers
@@ -204,18 +216,6 @@ package_couldinho-base() {
         rebuild-detector    # Check which packages need to be rebuilt
     )
 
-    install -Dm 0644 base/etc/systemd/system/reflector.service "$pkgdir/etc/systemd/system/reflector.service"
-    install -Dm 0644 base/etc/systemd/system/reflector.timer "$pkgdir/etc/systemd/system/reflector.timer"
-
-    # Environment
-    install -Dm 0644 base/etc/environment.d/10-locale.conf "$pkgdir/etc/environment.d/10-locale.conf"
-    install -Dm 0644 base/etc/environment.d/30-path.conf "$pkgdir/etc/environment.d/30-path.conf"
-    install -Dm 0644 base/etc/environment.d/40-clean-home.conf "$pkgdir/etc/environment.d/40-clean-home.conf"
-    install -Dm 0644 base/etc/environment.d/50-progs.conf "$pkgdir/etc/environment.d/50-progs.conf"
-    install -Dm 0644 base/etc/environment.d/90-pass.conf "$pkgdir/etc/environment.d/90-pass.conf"
-
-    # Binaries
-    install -Dm 0755 base/usr/local/bin/vimdiff "$pkgdir/usr/local/bin/vimdiff"
 }
 
 package_couldinho-desktop() {
