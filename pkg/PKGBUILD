@@ -84,12 +84,6 @@ package_couldinho-base() {
         systemd
     )
 
-    install -Dm 0644 base/etc/pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
-    install -Dm 0644 base/etc/pacman.d/couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
-    install -Dm 0400 base/etc/sudoers "$pkgdir/etc/couldinho-sudoers"
-    install -Dm 0644 base/etc/vimrc "$pkgdir/etc/couldinho-vimrc"
-    install -Dm 0644 base/etc/xkb/symbols/us-hyper "$pkgdir/etc/xkb/symbols/us-hyper"
-
     # Boot and base progs
     depends+=(
         cryptboot           # Encrypted partitions
@@ -108,16 +102,6 @@ package_couldinho-base() {
         npm                 # Node package manager
     )
 
-    install -Dm 0644 base/etc/gitconfig "$pkgdir/etc/gitconfig"
-    install -Dm 0644 base/etc/xdg/nvim/init.vim "$pkgdir/etc/xdg/nvim/init.vim"
-    install -Dm 0644 base/etc/xdg/nvim/bootstrap.vim \
-        "$pkgdir/etc/xdg/nvim/bootstrap.vim"
-    install -Dm 0644 base/etc/xdg/nvim/plugins.vim \
-        "$pkgdir/etc/xdg/nvim/plugins.vim"
-    install -dm 0775 "$pkgdir/etc/xdg/nvim/autoload"
-    cp -r base/etc/xdg/nvim/modules "$pkgdir/etc/xdg/nvim/modules"
-    cp -r base/etc/xdg/nvim/config "$pkgdir/etc/xdg/nvim/config"
-
     # Base replacements
     depends+=(
         eza                 # ls replacement
@@ -127,9 +111,6 @@ package_couldinho-base() {
         bat                 # Cat replacement with syntax highlighting
         htop                # Improved top - process viewer
     )
-
-    install -dm 0755 base/etc/bat "$pkgdir/etc/bat"
-    install -Dm 0644 base/etc/htoprc "$pkgdir/etc/htoprc"
 
     # Networking + VPN
     depends+=(
@@ -161,12 +142,6 @@ package_couldinho-base() {
         git-delta           # Diff tool
     )
 
-    install -Dm 0644 base/etc/zsh/zshrc "$pkgdir/etc/zsh/couldinho-zshrc"
-    install -Dm 0644 base/etc/zsh/p10k.zsh "$pkgdir/etc/zsh/couldinho-p10k.zsh"
-    install -Dm 0644 base/etc/zsh/zprofile "$pkgdir/etc/zsh/couldinho-zprofile"
-    install -Dm 0644 base/etc/zsh/zsh-aliases "$pkgdir/etc/zsh/couldinho-zsh-aliases"
-    install -Dm 0644 base/etc/zsh/zshenv "$pkgdir/etc/zsh/couldinho-zshenv"
-
     # Filesystem
     depends+=(
         btrfs-progs         # BTRFS filesystem tools
@@ -176,10 +151,6 @@ package_couldinho-base() {
         unzip               # Unzipping tool
         ncdu                # NCurses version of du
     )
-
-    install -Dm 0644 base/etc/conf.d/snapper "$pkgdir/etc/conf.d/couldinho-snapper"
-    install -Dm 0644 base/etc/snapper/configs/root "$pkgdir/etc/snapper/configs/root"
-    install -Dm 0644 base/etc/snap-pac.conf "$pkgdir/etc/snap-pac.conf"
 
     # Access Control + Security
     depends+=(
@@ -197,14 +168,6 @@ package_couldinho-base() {
         earlyoom            # Detect and handle OOM
     )
 
-    install -Dm 0644 base/etc/pacman.d/hooks/arch-audit.hook "$pkgdir/etc/pacman.d/hooks/arch-audit.hook"
-    install -dm 0750 base/etc/usbguard "$pkgdir/etc/usbguard"
-    install -Dm 0600 base/etc/usbguard/usbguard-daemon.conf \
-        "$pkgdir/etc/usbguard/couldinho-usbguard-daemon.conf"
-    install -Dm 0644 base/etc/default/earlyoom "$pkgdir/etc/default/couldinho-earlyoom"
-    install -Dm 0644 base/etc/pam.d/polkit-1 "$pkgdir/etc/pam.d/couldinho-polkit-1"
-    install -Dm 0644 base/etc/pam.d/sudo "$pkgdir/etc/pam.d/couldinho-sudo"
-
     # Packages
     depends+=(
         devtools            # Package building helpers
@@ -215,19 +178,6 @@ package_couldinho-base() {
         python-chump-git    # Pushover dependency for urlwatch
         rebuild-detector    # Check which packages need to be rebuilt
     )
-
-    install -Dm 0644 base/etc/systemd/system/reflector.service "$pkgdir/etc/systemd/system/reflector.service"
-    install -Dm 0644 base/etc/systemd/system/reflector.timer "$pkgdir/etc/systemd/system/reflector.timer"
-
-    # Environment
-    install -Dm 0644 base/etc/environment.d/10-locale.conf "$pkgdir/etc/environment.d/10-locale.conf"
-    install -Dm 0644 base/etc/environment.d/30-path.conf "$pkgdir/etc/environment.d/30-path.conf"
-    install -Dm 0644 base/etc/environment.d/40-clean-home.conf "$pkgdir/etc/environment.d/40-clean-home.conf"
-    install -Dm 0644 base/etc/environment.d/50-progs.conf "$pkgdir/etc/environment.d/50-progs.conf"
-    install -Dm 0644 base/etc/environment.d/90-pass.conf "$pkgdir/etc/environment.d/90-pass.conf"
-
-    # Binaries
-    install -Dm 0755 base/usr/local/bin/vimdiff "$pkgdir/usr/local/bin/vimdiff"
 }
 
 package_couldinho-desktop() {
