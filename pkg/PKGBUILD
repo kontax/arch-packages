@@ -102,6 +102,16 @@ package_couldinho-base() {
         npm                 # Node package manager
     )
 
+    install -Dm 0644 base/etc/gitconfig "$pkgdir/etc/gitconfig"
+    install -Dm 0644 base/etc/xdg/nvim/init.vim "$pkgdir/etc/xdg/nvim/init.vim"
+    install -Dm 0644 base/etc/xdg/nvim/bootstrap.vim \
+        "$pkgdir/etc/xdg/nvim/bootstrap.vim"
+    install -Dm 0644 base/etc/xdg/nvim/plugins.vim \
+        "$pkgdir/etc/xdg/nvim/plugins.vim"
+    install -dm 0775 "$pkgdir/etc/xdg/nvim/autoload"
+    cp -r base/etc/xdg/nvim/modules "$pkgdir/etc/xdg/nvim/modules"
+    cp -r base/etc/xdg/nvim/config "$pkgdir/etc/xdg/nvim/config"
+
     # Base replacements
     depends+=(
         eza                 # ls replacement
