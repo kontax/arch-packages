@@ -84,6 +84,9 @@ package_couldinho-base() {
         systemd
     )
 
+    install -Dm 0644 base/etc/pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
+    install -Dm 0644 base/etc/pacman.d/couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
+
     # Boot and base progs
     depends+=(
         cryptboot           # Encrypted partitions
