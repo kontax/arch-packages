@@ -28,14 +28,9 @@ post_upgrade() {
     cp /etc/xdg/swaync/couldinho-desktop-style.css /etc/xdg/swaync/style.css
     cp /etc/couldinho-desktop-rofi-pass.conf /etc/rofi-pass.conf
 
-    # FlashFocus
-    cp /etc/xdg/flashfocus/couldinho-desktop-flashfocus.yml \
-        /etc/xdg/flashfocus/flashfocus.yml
-
     # Start services
 
     # User services
-    systemctl --global enable flashfocus.service
     systemctl --global enable udiskie.service
     systemctl --global enable sway-autoname-workspaces.service
     systemctl --global enable sway-inactive-window-transparency.service
