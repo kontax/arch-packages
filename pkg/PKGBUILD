@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(14e11fd553033ed8758c75c0c5e5e56638d384dc884c482145414c64a7ade206)
+sha256sums=(149598d6362d732634ae2be62add9f22b2e0402947b8a51cf6d6bebf7c793814)
 
 # Comment for update
 
