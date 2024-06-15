@@ -269,10 +269,6 @@ package_couldinho-desktop() {
         "$pkgdir/etc/swaylock/config"
     install -Dm 0644 desktop/etc/systemd/user/swayidle.service \
         "$pkgdir/etc/systemd/user/swayidle.service"
-    install -Dm 0644 desktop/etc/hypr/autoname-workspaces.conf \
-        "$pkgdir/etc/hypr/autoname-workspaces.conf"
-    install -Dm 0644 desktop/etc/hypr/extra.conf \
-        "$pkgdir/etc/hypr/couldinho-desktop-extra.conf"
     install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf \
         "$pkgdir/usr/share/fonts/taskbar.ttf"
     install -Dm 0644 desktop/etc/X11/xorg.conf.d/00-keyboard.conf \
