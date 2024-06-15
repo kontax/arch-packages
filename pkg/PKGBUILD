@@ -85,7 +85,6 @@ package_couldinho-base() {
     )
 
     install -Dm 0644 base/etc/pacman.conf "$pkgdir/etc/couldinho-pacman.conf"
-    install -Dm 0644 base/etc/pacman.d/couldinho-arch-aur "$pkgdir/etc/pacman.d/couldinho-arch-aur"
     install -Dm 0400 base/etc/sudoers "$pkgdir/etc/couldinho-sudoers"
     install -Dm 0644 base/etc/vimrc "$pkgdir/etc/couldinho-vimrc"
     install -Dm 0644 base/etc/xkb/symbols/us-hyper "$pkgdir/etc/xkb/symbols/us-hyper"

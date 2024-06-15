@@ -396,6 +396,8 @@ fi
 echo -e "\n  [*] Installing packages"
 pacstrap /mnt $system
 
+echo -e "\n [*] Copying relevant pacman config to new system"
+cp /etc/pacman.d/couldinho-arch-aur /mnt/etc/pacman.d/
 
 if [[ ${encrypt} == "Yes" ]]; then
     echo -e "\n  [*] Creating an encrypted key for booting"
