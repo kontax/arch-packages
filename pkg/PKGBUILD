@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=2
+pkgrel=3
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -440,10 +440,6 @@ package_couldinho-desktop() {
     install -Dm 0755 desktop/usr/local/bin/sway-inactive-window-transparency "$pkgdir/usr/local/bin/sway-inactive-window-transparency"
     install -Dm 0755 desktop/usr/local/bin/sway-screenshare "$pkgdir/usr/local/bin/sway-screenshare"
     install -Dm 0755 desktop/usr/local/bin/sway-screenshot-area "$pkgdir/usr/local/bin/sway-screenshot-area"
-    install -Dm 0755 desktop/usr/local/bin/audio "$pkgdir/usr/local/bin/audio"
-    install -Dm 0755 desktop/usr/local/bin/exit-wm "$pkgdir/usr/local/bin/exit-wm"
-    install -Dm 0755 desktop/usr/local/bin/record-area "$pkgdir/usr/local/bin/record-area"
-    install -Dm 0755 desktop/usr/local/bin/screenshot-area "$pkgdir/usr/local/bin/screenshot-area"
     install -Dm 0755 desktop/usr/local/bin/wl-clipboard-manager "$pkgdir/usr/local/bin/wl-clipboard-manager"
 
     # Environment
