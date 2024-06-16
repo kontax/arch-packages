@@ -21,3 +21,4 @@ fi
 mkdir build
 cp *.install PKGBUILD conf-files.tar.xz -t build
 cd build
+aur chroot --build .
