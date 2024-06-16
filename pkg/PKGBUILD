@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=6
+pkgrel=11
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(f3b899518c8d990ee1a7ae0161b1bf694cd1333acf70be17eccafda2eb4535fc)
+sha256sums=(b129ae685d1a8308b44e540f9cc510369f7939a95f8d04f3532c8eee2912bed1)
 
 # Comment for update
 

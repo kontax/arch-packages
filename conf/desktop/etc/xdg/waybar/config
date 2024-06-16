@@ -27,7 +27,7 @@
         "clock"
     ],
 
-    "include": "extra.conf",
+    "include": "/etc/xdg/waybar/extra.conf",
 
     "custom/progress": {
         "exec": "waybar-progress",
