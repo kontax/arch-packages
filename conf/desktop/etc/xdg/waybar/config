@@ -27,6 +27,8 @@
         "clock"
     ],
 
+    "include": "extra.conf",
+
     "custom/progress": {
         "exec": "waybar-progress",
         "return-type": "json",
@@ -121,16 +123,6 @@
     "sway/language": {
         "format": "{flag}",
         "min-length": 2,
-    },
-    "battery": {
-        "design-capacity": true,
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "<span foreground='#928374'>{icon}</span> {capacity}%",
-        "format-charging": "<span foreground='#928374'></span> {capacity}%",
-        "format-icons": ["", "", "", "", ""]
     },
     "network": {
         "interval": 2,

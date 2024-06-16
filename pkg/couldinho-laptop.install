@@ -28,7 +28,7 @@ post_upgrade() {
     #cp /etc/sway/couldinho-laptop-extra.conf /etc/sway/extra.conf
 
     # Waybar config
-    patch -u /etc/xdg/waybar/config -i /etc/xdg/waybar/config.patch
+    cp /etc/xdg/waybar/{couldinho-laptop-extra.conf,extra.conf}
 
     # Enable services
     systemctl enable iwd.service
