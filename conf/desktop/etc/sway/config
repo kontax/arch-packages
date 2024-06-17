@@ -308,7 +308,7 @@ bindsym --to-code {
     # Modes
     $win+a mode $mode_audio
     $hyper+r mode $mode_resize
-    $hyper+e mode $mode_system
+    $win+e mode $mode_system
     $win+m mode $mode_workspaces_monitors
 }
 
