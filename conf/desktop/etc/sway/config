@@ -157,21 +157,21 @@ mode $mode_workspaces_monitors {
 
 bindsym --to-code {
     # Terminal
-    $win+Return exec cglaunch --term
+    $hyper+Return exec cglaunch --term
     $hyper+XF86AudioMute exec cglaunch --term
-    $hyper+Return exec kitty --config NONE
+    $win+Return exec kitty --config NONE
     $hyper+Shift+Return exec kitty --config NONE /bin/bash
 
     # Launcher
-    $hyper+equal                 exec bash -c "pkill -x qalculate-gtk || cglaunch qalculate-gtk"
-    $win+d                       fullscreen disable, exec cglaunch rofi -modi drun -show drun
-    $hyper+p                     fullscreen disable, exec cglaunch rofi-pass
-    $win+p                       fullscreen disable, exec cglaunch pass-gen
-    $hyper+m                     fullscreen disable, exec cglaunch udiskie-dmenu
-    $win+n                       fullscreen disable, exec cglaunch rofi-nmcli
-    $win+grave                   fullscreen disable, exec cglaunch wl-clipboard-manager dmenu
-    $hyper+Backspace             fullscreen disable, exec cglaunch emoji-dmenu
-    $hyper+XF86AudioLowerVolume  fullscreen disable, exec cglaunch emoji-dmenu
+    $hyper+equal                 exec cgtoggle qalculate-gtk
+    $hyper+d                     exec cgtoggle rofi -modi drun -show drun
+    $hyper+p                     exec "wl-clipboard-manager lock; cglaunch rofi-pass; wl-clipboard-manager unlock"
+    $win+p                       exec cgtoggle pass-gen
+    $hyper+m                     exec cgtoggle udiskie-dmenu
+    $win+n                       exec cgtoggle rofi-nmcli
+    $win+grave                   exec cgtoggle wl-clipboard-manager dmenu
+    $hyper+Backspace             exec cgtoggle emoji-dmenu
+    $hyper+XF86AudioLowerVolume  exec cgtoggle emoji-dmenu
     Print                        exec cglaunch sway-screenshot-area
     $hyper+Print                 exec cglaunch sway-gif-area
     $win+Print                   exec cglaunch sway-screenshare
