@@ -34,5 +34,6 @@ post_upgrade() {
     systemctl enable iwd.service
     systemctl enable dhcpcd.service
     systemctl enable bluetooth.service
+    systemctl enable tlp.service
 }
 

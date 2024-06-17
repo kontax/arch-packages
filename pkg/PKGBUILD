@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=18
+pkgrel=19
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(b129ae685d1a8308b44e540f9cc510369f7939a95f8d04f3532c8eee2912bed1)
+sha256sums=(13f8edf456687b332223714cc162c40ab7537493f23637ba4483841ba051b520)
 
 # Comment for update
 
@@ -571,11 +571,12 @@ package_couldinho-laptop() {
         couldinho-desktop
     )
 
-    # Lighting
+    # Lighting + Power
     depends+=(
         light                   # Program to change backlight
         wlsunset                # Day/night gamma adjustments
         wluma                   # Automatic gamma adjustments based on screen content
+        tlp                     # Power management
     )
 
     # Network + Bluetooth
