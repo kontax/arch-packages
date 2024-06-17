@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=21
+pkgrel=22
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -551,7 +551,8 @@ package_couldinho-sec() {
 
     # Fuzzing
     depends+=(
-        aflplusplus             # Fuzzer
+        afl++                   # Fuzzer
+        afl-utils               # Utilities for managing fuzzing
     )
 
     # Desktop mimetype apps
