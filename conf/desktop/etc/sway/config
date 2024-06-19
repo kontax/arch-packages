@@ -164,7 +164,7 @@ bindsym --to-code {
 
     # Launcher
     $hyper+equal                 exec cgtoggle qalculate-gtk
-    $hyper+d                     exec cgtoggle rofi -modi drun -show drun
+    $hyper+d                     exec cgtoggle fuzzel
     $hyper+p                     exec "wl-clipboard-manager lock; cglaunch passmenu -p pass; wl-clipboard-manager unlock"
     $win+p                       exec cgtoggle pass-gen
     $hyper+m                     exec cgtoggle udiskie-dmenu
