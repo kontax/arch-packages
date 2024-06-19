@@ -28,7 +28,6 @@ post_upgrade() {
     cp /etc/xdg/swaync/couldinho-desktop-config.json /etc/xdg/swaync/config.json
     cp /etc/xdg/swaync/couldinho-desktop-style.css /etc/xdg/swaync/style.css
     cp /etc/xdg/fuzzel/couldinho-desktop-fuzzel.ini /etc/xdg/fuzzel/fuzzel.ini
-    cp /etc/couldinho-desktop-rofi-pass.conf /etc/rofi-pass.conf
 
     # Start services
 
