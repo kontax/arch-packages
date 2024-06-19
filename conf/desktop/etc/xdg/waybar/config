@@ -2,8 +2,8 @@
     "layer": "top",
     "height": 25,
     "modules-left": [
-        "hyprland/workspaces",
-        "hyprland/submap"
+        "sway/workspaces",
+        "sway/mode"
     ],
     "modules-right": [
         "custom/progress",
@@ -22,16 +22,12 @@
         "disk",
         "custom/movie",
         "backlight",
-        "hyprland/language",
+        "sway/language",
         "battery",
         "clock"
     ],
 
-    "hyprland/workspaces": {
-        "sort-by-number": true,
-        "format": "{icon}",
-        "on-click": "activate"
-    },
+    "include": "/etc/xdg/waybar/extra.conf",
 
     "custom/progress": {
         "exec": "waybar-progress",
@@ -124,19 +120,9 @@
         "format": "<span foreground='#928374'>{icon}</span> {percent}%",
         "format-icons": [""]
     },
-    "hyprland/language": {
-        //"format": "{flag}",
-        "min-length": 3,
-    },
-    "battery": {
-        "design-capacity": true,
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "<span foreground='#928374'>{icon}</span> {capacity}%",
-        "format-charging": "<span foreground='#928374'></span> {capacity}%",
-        "format-icons": ["", "", "", "", ""]
+    "sway/language": {
+        "format": "{flag}",
+        "min-length": 2,
     },
     "network": {
         "interval": 2,
@@ -145,7 +131,7 @@
         "format-linked": "<span foreground='#928374'></span> {ifname}",
         "format-disconnected": " <span foreground='#928374'></span> ",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n {bandwidthDownBits}\n {bandwidthUpBits}",
-        "on-click": "rofi-nmcli"
+        "on-click": "dmenu-nmcli"
     },
     "pulseaudio": {
         "format": "<span foreground='#928374'>{icon}</span> {volume}%   {format_source}",

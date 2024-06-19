@@ -1,10 +1,10 @@
 [Unit]
-Description=Autoname Hyprland workspaces
+Description=Make inactive windows in sway semi-transparent
 PartOf=graphical-session.target
 After=graphical-session.target
 
 [Service]
-ExecStart=/usr/bin/hyprland-autoname-workspaces -c /etc/hypr/autoname-workspaces.conf
+ExecStart=/usr/local/bin/sway-inactive-window-transparency
 Restart=always
 RestartSec=10s
 
