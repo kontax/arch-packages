@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
-# Name: rofi-nmcli
+# Name: dmenu-nmcli
 # Author: James Coulson
 #
-# A script that generates a rofi menu using nmcli to list and 
+# A script that generates a dmenu menu using nmcli to list and 
 # connect to network devices.
 #
 # Inspired by rofi-bluetooth (https://github.com/nickclyde/rofi-bluetooth)
 # and rofi-wifi-menu (https://github.com/zbaylin/rofi-wifi-menu)
 #
 # Depends on:
-#   Arch repositories: rofi, nmcli, libnotify
+#   Arch repositories: fuzzel, nmcli, libnotify
 
 # Logging
 set -uo pipefail
@@ -148,7 +148,7 @@ create_manual_connection() {
     local matches
     local password
 
-    SSID=$($rofi_command "Enter the SSID: " )
+    SSID=$($dmenu_command "Enter the SSID: " )
     if [ -z "$SSID" ];then
         exit 1
     fi
@@ -170,7 +170,7 @@ create_manual_connection() {
 
     # Otherwise get the password and create the connection
     else
-        password=$($rofi_command "Password: " --password)
+        password=$($dmenu_command "Password: " --password)
         if [ "$password" = "" ];then
             OUT=$(nmcli dev wifi con "$SSID" 2>&1)
         else
@@ -201,7 +201,7 @@ create_8021x_connection() {
 
     # if so, let the user pick
     if [[ "$n_matches" -gt "1" ]]; then
-        wlan_sel=$(echo -e "$wlan" | $rofi_command "ifname: ")
+        wlan_sel=$(echo -e "$wlan" | $dmenu_command "ifname: ")
         [[ -z "$wlan_sel" ]] && exit 1
         does_match=$(echo -e "$wlan_sel" | grep "$wlan")
         [[ -n "$wlan_sel" ]] && [[ -z "$does_match" ]] && exit 1
@@ -209,7 +209,7 @@ create_8021x_connection() {
     fi
 
     # Get the username and password
-    username=$($rofi_command "Identity: ")
+    username=$($dmenu_command "Identity: ")
 
     # Go back if the username or password is blank
     if [[ "$username" == "" ]]; then
@@ -217,7 +217,7 @@ create_8021x_connection() {
         return
     fi
 
-    password=$($rofi_command "Password: " --password)
+    password=$($dmenu_command "Password: " --password)
 
     # Go back if the username or password is blank
     if [[ "$password" == "" ]]; then
@@ -261,7 +261,7 @@ create_connection() {
         echo "WPA/WEP"
 
         # Go back if the password is blank
-        password=$($rofi_command "Password: " --password)
+        password=$($dmenu_command "Password: " --password)
         if [[ "$password" == "" ]]; then
             show_menu
             return
@@ -318,7 +318,7 @@ handle_connection() {
 }
 
 
-# Opens a rofi menu with current network options and where to connect
+# Opens a dmenu menu with current network options and where to connect
 show_menu() {
     local power
     local options
@@ -330,15 +330,15 @@ show_menu() {
     if power_on; then
         power="Power: on"
 
-        # Options passed to rofi
+        # Options passed to dmenu
         options="$power\n$DIVIDER\n$APS\n$DIVIDER\n$MANUAL\nExit"
     else
         power="Power: off"
         options="$power\nExit"
     fi
 
-    # Open rofi menu, read chosen option
-    chosen="$(echo -e "$options" | $rofi_command "WiFi: ")"
+    # Open dmenu menu, read chosen option
+    chosen="$(echo -e "$options" | $dmenu_command "WiFi: ")"
 
     # Match chosen option to command
     case $chosen in
@@ -362,8 +362,8 @@ show_menu() {
     notify_error
 }
 
-# Rofi command to pipe into, can add any options here
-rofi_command="fuzzel -d -p "
+# Dmenu command to pipe into, can add any options here
+dmenu_command="fuzzel -d -p "
 
 show_menu
 

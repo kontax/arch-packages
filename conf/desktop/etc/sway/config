@@ -168,7 +168,7 @@ bindsym --to-code {
     $hyper+p                     exec "wl-clipboard-manager lock; cglaunch passmenu -p pass; wl-clipboard-manager unlock"
     $win+p                       exec cgtoggle pass-gen
     $hyper+m                     exec cgtoggle udiskie-dmenu
-    $hyper+n                       exec cgtoggle rofi-nmcli
+    $hyper+n                       exec cgtoggle dmenu-nmcli
     $hyper+grave                   exec cgtoggle wl-clipboard-manager dmenu
     $hyper+Backspace             exec cgtoggle emoji-dmenu
     $hyper+XF86AudioLowerVolume  exec cgtoggle emoji-dmenu
