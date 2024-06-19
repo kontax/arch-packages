@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(13f8edf456687b332223714cc162c40ab7537493f23637ba4483841ba051b520)
+sha256sums=(4e91551a0046ec0d86d345f4be553f527ae56186e053625505225cc1260089cd)
 
 # Comment for update
 
@@ -259,7 +259,7 @@ package_couldinho-desktop() {
         slurp                   # Region selector for wayland
         swaync                  # Sway notification daemon
         libnotify               # Desktop notification library
-        rofi                    # Launcher
+        fuzzel                   # Launcher
         swayr                   # Window switcher for sway
     )
 
@@ -287,6 +287,8 @@ package_couldinho-desktop() {
         "$pkgdir/etc/systemd/user/wl-clipboard-manager.service"
     install -Dm 0644 desktop/etc/zsh/zprofile \
         "$pkgdir/etc/zsh/couldinho-desktop-zprofile"
+    install -Dm 0644 desktop/etc/xdg/fuzzel/fuzzel.ini \
+        "$pkgdir/etc/xdg/fuzzel/couldinho-desktop-fuzzel.ini"
     install -Dm 0644 desktop/etc/rofi.rasi "$pkgdir/etc/rofi.rasi"
 
     # Desktop mimetype apps
@@ -322,7 +324,6 @@ package_couldinho-desktop() {
         yubikey-touch-detector      # waybar notification for when yubikey needs attention 
         pinentry                    # Enter GPG pins using dmenu
         gtk-theme-arc-gruvbox-git   # Arc grey based theme with some gruvboxd colours
-        rofi-pass-git               # Rofi-based pass handler
         qrencode                    # Encode passwords into QR codes
     )
 
@@ -342,8 +343,6 @@ package_couldinho-desktop() {
         "$pkgdir/etc/systemd/user/waybar-updates.service"
     install -Dm 0644 desktop/etc/systemd/user/waybar-updates.timer \
         "$pkgdir/etc/systemd/user/waybar-updates.timer"
-    install -Dm 0644 desktop/etc/rofi-pass.conf \
-        "$pkgdir/etc/couldinho-desktop-rofi-pass.conf"
 
     # Multimedia
     depends+=(
