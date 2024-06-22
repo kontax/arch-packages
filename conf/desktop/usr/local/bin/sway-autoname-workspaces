@@ -39,6 +39,7 @@ WINDOW_ICONS = {
     "transmission-gtk": "",
     "vimiv": "",
     "virt-manager": "",
+    "vivaldi-stable": "",
     "wofi": "",
     "org.pwmt.zathura": "",
 }
