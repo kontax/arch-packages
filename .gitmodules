@@ -1,0 +1,3 @@
+[submodule "conf/base/etc/xdg/nvim"]
+	path = conf/base/etc/xdg/nvim
+	url = https://github.com/kontax/neovim-config.git
