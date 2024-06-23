@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=32
+pkgrel=33
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(4e91551a0046ec0d86d345f4be553f527ae56186e053625505225cc1260089cd)
+sha256sums=(1966a46f8020b9b2b729e57321765e4afb79e909d2bd341bd65b39ac8e9db2f5)
 
 # Comment for update
 
@@ -108,14 +108,11 @@ package_couldinho-base() {
     )
 
     install -Dm 0644 base/etc/gitconfig "$pkgdir/etc/gitconfig"
-    install -Dm 0644 base/etc/xdg/nvim/init.vim "$pkgdir/etc/xdg/nvim/init.vim"
-    install -Dm 0644 base/etc/xdg/nvim/bootstrap.vim \
-        "$pkgdir/etc/xdg/nvim/bootstrap.vim"
-    install -Dm 0644 base/etc/xdg/nvim/plugins.vim \
-        "$pkgdir/etc/xdg/nvim/plugins.vim"
+    install -Dm 0644 base/etc/xdg/nvim/init.lua "$pkgdir/etc/xdg/nvim/init.lua"
+    install -Dm 0644 base/etc/xdg/nvim/lazy-lock.json \
+        "$pkgdir/etc/xdg/nvim/lazy-lock.json"
     install -dm 0775 "$pkgdir/etc/xdg/nvim/autoload"
-    cp -r base/etc/xdg/nvim/modules "$pkgdir/etc/xdg/nvim/modules"
-    cp -r base/etc/xdg/nvim/config "$pkgdir/etc/xdg/nvim/config"
+    cp -r base/etc/xdg/nvim/lua "$pkgdir/etc/xdg/nvim/lua"
 
     # Base replacements
     depends+=(
