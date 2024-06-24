@@ -485,7 +485,7 @@ repo_path="/home/$user/dev/arch-packages"
 arch-chroot /mnt sudo -u "$user" \
     mkdir "/home/$user/dev"
 arch-chroot /mnt sudo -u "$user" \
-    git clone "$PKG_REPO_URL" "$repo_path"
+    git clone "$PKG_REPO_URL" -b dev --recurse-submodules "$repo_path"
 arch-chroot /mnt sudo -u "$user" \
     cp "$repo_path/pre-commit" "$repo_path/.git/hooks"
 
