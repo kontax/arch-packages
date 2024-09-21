@@ -238,7 +238,7 @@ def setup_sway():
     main.move(3)
     main.focus()
 
-    workspace = Workspace(3)
+    workspace = Workspace(5)
     workspace.add_term(main, 'main')
 
     main.split_horizontal()
@@ -305,7 +305,6 @@ def setup_pwndbg(workspace):
 
 if __name__ == "__main__":
     # TODO:
-    # - Integrate into init-pwndbg or gdbinit
     # - BinaryNinja integration
     workspace = setup_sway()
     setup_pwndbg(workspace)
