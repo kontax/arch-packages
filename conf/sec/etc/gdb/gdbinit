@@ -18,3 +18,11 @@ end
 document init-gef
 Initializes GEF (GDB Enhanced Features)
 end
+
+define init-split
+source /usr/share/pwndbg/gdbinit.py
+source /usr/local/bin/sway-split.py
+end
+document init-split
+Initializes PwnDBG with sway split windows
+end
