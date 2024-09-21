@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=44
+pkgrel=46
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -9,7 +9,7 @@ license=(MIT)
 groups=(couldinho)
 
 source=(conf-files.tar.xz)
-sha256sums=(3b1da92f97ee32e219abba6ef2b82dd45ef1aa67c5479b2bbe4524132dbb24ce)
+sha256sums=(ce88f8f54296578f383e53e7dc24956a6204495eaf64c095c31f0b292b609b09)
 
 # Comment for update
 
@@ -529,6 +529,8 @@ package_couldinho-sec() {
         "$pkgdir/usr/local/bin/gdb-pwndbg"
     install -Dm 0644 sec/etc/gdb/gdbinit \
         "$pkgdir/etc/gdb/couldinho-sec-gdbinit"
+    install -Dm 0644 sec/usr/local/bin/sway-split.py \
+        "$pkgdir/usr/local/bin/sway-split.py"
 
     # Reversing
     depends+=(
