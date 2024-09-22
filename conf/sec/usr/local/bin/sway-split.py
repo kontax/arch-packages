@@ -309,7 +309,7 @@ if __name__ == "__main__":
     # TODO:
     # - Integrate into init-pwndbg or gdbinit
     # - BinaryNinja integration
-    workspace = setup_sway(4)
+    workspace = setup_sway(5)
     setup_pwndbg(workspace)
     atexit.register(close, workspace)
 
