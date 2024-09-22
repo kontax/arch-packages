@@ -178,7 +178,7 @@ class Terminal:
         if tty is None:
             msg = f"Can't find tty of ID {self.id}"
             log.error(msg)
-            raise Exception(msg)
+            #raise Exception(msg)
 
         return tty
 
@@ -192,9 +192,10 @@ class Terminal:
         # The first ZSH child process PID, within which Z4H creates a tmux session
         child_pid = subprocess.check_output(['ps', '-o', 'pid=', '--ppid', str(parent_pid)]).decode().strip()
         log.debug(f"Child PID: {child_pid}")
+        log.debug(f"Con Name: {con.name}")
 
         # If we're not using Z4H, return the child TTY
-        if con.name == 'sh' or 'IPython' in con.name:
+        if con.name == 'sh' or 'IPython' in con.name or con.name.startswith("tmp"):
             log.debug(f"Checking TTY for {child_pid}")
             tty = subprocess.check_output(['ps', '-o', 'tty=', '--ppid', str(parent_pid)]).decode().strip()
             log.debug(f"Found {tty}")
@@ -218,7 +219,8 @@ class Terminal:
 
         if not tty:
             log.error(f"Cannot find tty for window with parent ID {parent_pid}")
-            raise Exception(f"Cannot find tty for window with parent PID {parent_pid}")
+            return None
+            #raise Exception(f"Cannot find tty for window with parent PID {parent_pid}")
 
         log.debug(f"kitty is on terminal /dev/{tty}")
         self.is_tmux = True
@@ -233,12 +235,12 @@ def get_current_term():
     return Terminal(con.id)
 
 
-def setup_sway():
+def setup_sway(workspace_number):
     main = get_current_term()
-    main.move(3)
+    main.move(workspace_number)
     main.focus()
 
-    workspace = Workspace(5)
+    workspace = Workspace(workspace_number)
     workspace.add_term(main, 'main')
 
     main.split_horizontal()
@@ -305,8 +307,9 @@ def setup_pwndbg(workspace):
 
 if __name__ == "__main__":
     # TODO:
+    # - Integrate into init-pwndbg or gdbinit
     # - BinaryNinja integration
-    workspace = setup_sway()
+    workspace = setup_sway(5)
     setup_pwndbg(workspace)
     atexit.register(close, workspace)
 
