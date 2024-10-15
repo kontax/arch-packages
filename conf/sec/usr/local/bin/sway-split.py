@@ -309,7 +309,13 @@ if __name__ == "__main__":
     # TODO:
     # - Integrate into init-pwndbg or gdbinit
     # - BinaryNinja integration
-    workspace = setup_sway(5)
-    setup_pwndbg(workspace)
+    # - Close main window only when not calling GDB directly
+    workspace = None
+    try:
+        workspace = setup_sway(5)
+        setup_pwndbg(workspace)
+    except Exception as e:
+        log.error(f"Error setting up workspace:\n{e}")
+
     atexit.register(close, workspace)
 

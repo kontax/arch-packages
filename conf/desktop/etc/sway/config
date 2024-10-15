@@ -5,7 +5,7 @@ font pango:Taskbar, Inconsolata 10
 input type:keyboard {
     xkb_layout us-hyper
     xkb_numlock on
-    xkb_options caps:hyper
+    xkb_options caps:mod4
 }
 
 input type:touchpad {
