@@ -1,0 +1,14 @@
+
+function wireguard_toggle {
+    active=$(nmcli connection show --active | grep wireguard | cut -d ' ' -f 1 | head -1)
+    all=$(nmcli connection show | grep wireguard | cut -d ' ' -f 1 | head -1)
+    if [[ ${all} == ${active} ]]; then
+        echo "Disabling connection ${all}"
+        nmcli connection down ${all}
+    else
+        echo "Enabling connection ${all}"
+        nmcli connection up ${all}
+    fi
+}
+
+wireguard_toggle
