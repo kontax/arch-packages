@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=50
+pkgrel=51
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -142,6 +142,7 @@ package_couldinho-base() {
         croc                        # Send files securely to another computer
         speedtest-cli               # Test network speed
         net-tools                   # Network configuration tools
+        wireguard-tools             # Secure network tunnels
     )
 
     # Shell
