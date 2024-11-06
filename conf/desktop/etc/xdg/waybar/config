@@ -17,6 +17,7 @@
         "pulseaudio",
         "network",
         "custom/vpn",
+        "custom/wireguard",
         "cpu",
         "memory",
         "disk",
@@ -63,6 +64,11 @@
     "custom/vpn": {
         "exec": "waybar-vpn",
         "return-type": "json"
+    },
+    "custom/wireguard": {
+        "exec": "wireguard-status",
+        "on-click": "wireguard-toggle",
+        "return-type": "json",
     },
     "custom/dnd": {
         "tooltip": false,

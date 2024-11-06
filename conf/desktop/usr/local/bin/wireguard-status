@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function get_conn {
+    conn=$(nmcli connection show --active | grep wireguard | cut -d ' ' -f 1 | head -1)
+    if [[ -n ${conn} ]]; then
+        ipaddr=$(nmcli connection show --active ${conn} | grep "ipv4.addresses:" | awk '{print $2}')
+        icon="<span foreground='#928374'></span>"
+        tooltip="${conn}: ${ipaddr}"
+        class=on
+    else
+        icon="<span foreground='#928374'></span>"
+        tooltip=""
+        class=off
+    fi
+    printf '{"text": " %s ", "class": "%s", "tooltip": "%s"}\n' "$icon" "$class" "$tooltip"
+}
+
+while true; do
+    get_conn
+    sleep 2
+done
