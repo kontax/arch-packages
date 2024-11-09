@@ -1,0 +1,29 @@
+#!/usr/bin/bash
+# Move a workspace specified by number to a specified output
+# Usage: ./move_workspace.sh `workspace_num` `monitor serial or output name`
+
+set -uo pipefail
+trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
+
+# Print out usage
+if [ "$#" -ne 2 ]; then
+        echo "Usage: $0 <workspace_num> <serial|monitor_name>"
+        exit
+fi
+
+ws_num="${1}"
+output="${2}"
+
+ws_name=$(swaymsg -r -t get_workspaces | jq -r ".[] | select(.name | startswith(\"${ws_num}\")) | .name")
+if [[ -z "${ws_name}" ]]; then
+    ws_name="${ws_num}"
+fi
+
+output_name=$(swaymsg -t get_outputs -r | jq -r ".[] | select(.serial==\"$output\") | .name")
+if [[ -z "${output_name}" ]]; then
+    output_name="${output}"
+fi
+
+echo "WORKSPACE: ${ws_name}"
+echo "OUTPUT_NAME: ${output_name}"
+swaymsg workspace "${ws_name}", move workspace to output "${output_name}"
