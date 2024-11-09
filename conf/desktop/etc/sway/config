@@ -315,4 +315,3 @@ bindsym --to-code {
 
 include @sysconfdir@/sway/config.d/*
 exec "systemctl --user import-environment; systemctl --user start sway-session.target"
-exec_always pkill kanshi; exec kanshi

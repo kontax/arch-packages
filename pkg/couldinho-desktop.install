@@ -38,6 +38,7 @@ post_upgrade() {
     systemctl --global enable swayr.service
     systemctl --global enable swaync.service
     systemctl --global enable swayidle.service
+    systemctl --global enable kanshi.service
     systemctl --global enable systembus-notify.service
     systemctl --global enable waybar.service
     systemctl --global enable waybar-updates.timer
