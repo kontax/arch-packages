@@ -37,7 +37,7 @@ class Workspace():
 
     def _create(self):
         i3 = i3ipc.Connection()
-        i3.command(f"workspace {self.id}")
+        i3.command(f"workspace number {self.id}")
 
 
 class Terminal:
@@ -79,7 +79,7 @@ class Terminal:
 
     def move(self, workspace):
         i3 = i3ipc.Connection()
-        i3.command(f"[con_id={self.id}] move to workspace {workspace}")
+        i3.command(f"[con_id={self.id}] move to workspace number {workspace}")
 
     def swap(self, window_id):
         i3 = i3ipc.Connection()
