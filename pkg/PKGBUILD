@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=56
+pkgrel=57
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -269,6 +269,8 @@ package_couldinho-desktop() {
         "$pkgdir/etc/swaylock/config"
     install -Dm 0644 desktop/etc/systemd/user/swayidle.service \
         "$pkgdir/etc/systemd/user/swayidle.service"
+    install -Dm 0644 desktop/etc/systemd/user/kanshi.service \
+        "$pkgdir/etc/systemd/user/kanshi.service"
     install -Dm 0644 desktop/usr/share/fonts/taskbar.ttf \
         "$pkgdir/usr/share/fonts/taskbar.ttf"
     install -Dm 0644 desktop/etc/xdg/waybar/config \
