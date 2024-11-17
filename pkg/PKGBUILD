@@ -1,7 +1,7 @@
 pkgbase='couldinho'
 pkgname=(couldinho-base couldinho-desktop couldinho-laptop couldinho-dev couldinho-sec couldinho-vmware couldinho-xcp-ng)
 pkgver=5
-pkgrel=59
+pkgrel=61
 pkgdesc="Packages for couldinho systems"
 arch=(x86_64)
 url="https://github.com/kontax/arch-packages"
@@ -261,6 +261,7 @@ package_couldinho-desktop() {
         swayr                   # Window switcher for sway
         wdisplays               # GUI Monitor location configuration
         kanshi                  # Persistent output profiles for hotplug
+        swaybg                  # Background for Wayland
     )
 
     install -Dm 0644 desktop/etc/sway/config \
@@ -462,6 +463,7 @@ package_couldinho-dev() {
         docker                  # Containerisation
         docker-compose          # Docker dev management
         docker-credential-pass  # Store and use docker credentials from pass
+        docker-buildx           # Docker CLI plugin for ext. build capabilities
         rustup                  # Rust toolchain installer
         nasm                    # x86 Assembler
         ipython                 # iPython Notebooks
