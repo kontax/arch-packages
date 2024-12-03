@@ -267,7 +267,10 @@ def setup_sway(workspace_number):
     regs.focus()
     regs.split_vertical()
     workspace.open_term('stack', "tty; tail -f /dev/null")
-    workspace.open_term('io', "tty; tail -f /dev/null")
+
+    # Having a remote target renders the IO section pointless
+    if len(gdb.connections()) == 0:
+        workspace.open_term('io', "tty; tail -f /dev/null")
 
     bt.focus()
     bt.split_vertical()
@@ -299,7 +302,10 @@ def setup_pwndbg(workspace):
     contextoutput("regs", workspace.leaves["regs"].tty, True)
     contextoutput("stack", workspace.leaves["stack"].tty, True)
     contextoutput("backtrace", workspace.leaves["backtrace"].tty, True)
-    gdb.execute(f"tty {workspace.leaves['io'].tty}")
+
+    # Having a remote target renders the IO section pointless
+    if len(gdb.connections()) == 0:
+        gdb.execute(f"tty {workspace.leaves['io'].tty}")
     workspace.leaves['code'].set_lines('source-code')
     workspace.leaves['disasm'].set_lines('code')
     workspace.leaves['stack'].set_lines('stack')
