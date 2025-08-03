@@ -190,14 +190,14 @@ class Terminal:
         log.debug(f"Parent PID: {parent_pid}")
 
         # The first ZSH child process PID, within which Z4H creates a tmux session
-        child_pid = subprocess.check_output(['ps', '-o', 'pid=', '--ppid', str(parent_pid)]).decode().strip()
+        child_pid = subprocess.check_output(['ps', '-o', 'pid=', '--ppid', str(parent_pid)]).decode().strip().split()[1]
         log.debug(f"Child PID: {child_pid}")
         log.debug(f"Con Name: {con.name}")
 
         # If we're not using Z4H, return the child TTY
         if con.name == 'sh' or 'IPython' in con.name or con.name.startswith("tmp"):
             log.debug(f"Checking TTY for {child_pid}")
-            tty = subprocess.check_output(['ps', '-o', 'tty=', '--ppid', str(parent_pid)]).decode().strip()
+            tty = subprocess.check_output(['ps', '-o', 'tty=', '--ppid', str(parent_pid)]).decode().strip().split()[1]
             log.debug(f"Found {tty}")
             return f"/dev/{tty}"
 
@@ -281,6 +281,7 @@ def setup_sway(workspace_number):
 
     for w in workspace.leaves:
         window = workspace.leaves[w]
+        log.debug(f"Setting workspace TTY for {w}: {window.id}")
         window.set_tty()
 
     return workspace
@@ -295,13 +296,24 @@ def close(workspace):
 
 def setup_pwndbg(workspace):
     pwndbg.commands.context.config_context_ghidra = "if-no-source"
-    contextoutput("code", workspace.leaves["code"].tty, True)
-    contextoutput("ghidra", workspace.leaves["code"].tty, True)
-    contextoutput("disasm", workspace.leaves["disasm"].tty, True)
-    contextoutput("legend", workspace.leaves["regs"].tty, True)
-    contextoutput("regs", workspace.leaves["regs"].tty, True)
-    contextoutput("stack", workspace.leaves["stack"].tty, True)
-    contextoutput("backtrace", workspace.leaves["backtrace"].tty, True)
+    # Ensure TTY paths are valid before using them
+    for context_name, window_name in [
+        ("code", "code"),
+        ("ghidra", "code"), 
+        ("disasm", "disasm"),
+        ("legend", "regs"),
+        ("regs", "regs"),
+        ("stack", "stack"),
+        ("backtrace", "backtrace")
+    ]:
+        tty_path = workspace.leaves[window_name].tty
+        if tty_path and os.path.exists(tty_path):
+            log.debug(f"Setting {context_name} output to {tty_path}")
+            contextoutput(context_name, tty_path, True)
+        else:
+            log.error(f"Invalid TTY for {context_name}: {tty_path}")
+
+    log.error("Contexts set up")
 
     # Having a remote target renders the IO section pointless
     if len(gdb.connections()) == 0:
@@ -317,8 +329,10 @@ if __name__ == "__main__":
     # - BinaryNinja integration
     # - Close main window only when not calling GDB directly
     workspace = None
+    log.setLevel(logging.INFO)
     try:
         workspace = setup_sway(5)
+        log.debug("\n-------------\n")
         setup_pwndbg(workspace)
     except Exception as e:
         log.error(f"Error setting up workspace:\n{e}")
