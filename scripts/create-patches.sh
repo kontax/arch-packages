@@ -11,7 +11,6 @@ DEPS={
     "laptop": ["desktop"],
     "dev": ["desktop"],
     "sec": ["desktop"],
-    "vmware": ["desktop"]
 }
 
 for group in $[@DEPS]:

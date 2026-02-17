@@ -22,7 +22,6 @@ SYSTEM_OPTIONS=(
     laptop          "HiDPI laptop with i3status options" off \
     dev             "Developer software" off \
     sec             "Reversing & exploitation software" off \
-    vmware          "Includes VMWare virtual drivers" off \
     xcp-ng          "Guest tools for XCP-NG" off \
 )
 
