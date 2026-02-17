@@ -442,7 +442,7 @@ arch-chroot /mnt locale-gen
 if [[ "$yubikey" == "Yes" ]]; then
     echo "root ${part_root} - fido2-device=auto" > /mnt/etc/crypttab.initramfs
 fi
-modules="base consolefont udev autodetect microcode modconf block $encrypt_modules filesystems keyboard"
+modules="base udev autodetect microcode modconf block $encrypt_modules filesystems keyboard"
 cat << EOF > /mnt/etc/mkinitcpio.conf
 MODULES=()
 BINARIES=()
@@ -452,7 +452,8 @@ EOF
 
 # END YUBIKEY CHANGES
 arch-chroot /mnt mkinitcpio -p linux
-arch-chroot /mnt arch-secure-boot initial-setup
+arch-chroot /mnt sbctl create-keys
+arch-chroot /mnt sbctl enroll-keys -m
 
 echo -e "\n  [*] Configuring swap file"
 swap_size=$(free --mebi | awk '/Mem:/ {print $2}')

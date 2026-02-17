@@ -93,7 +93,7 @@ package_couldinho-base() {
     depends+=(
         cryptboot           # Encrypted partitions
         mkinitcpio-encrypt-detached-header # Encrypt hook with detatched header
-        arch-secure-boot    # UEFI Secure Boot
+        sbctl               # UEFI Secure Boot
         intel-ucode         # Microcode patches
         fwupd               # Firmware updater
         terminus-font       # Better font for console
