@@ -54,8 +54,6 @@ in
   environment.etc."vimrc".source = ../../conf/base/etc/vimrc;
   environment.etc."htoprc".source = ../../conf/base/etc/htoprc;
   environment.etc."bat/config".source = ../../conf/base/etc/bat/conf;
-  environment.etc."private-internet-access/pia.conf".source =
-    ../../conf/base/etc/private-internet-access/pia.conf;
 
   # --- Locale / time (was the locale.gen / locale.conf / localtime steps in install.sh) ---
   i18n.defaultLocale = "en_US.UTF-8";

@@ -11,7 +11,6 @@
         "custom/yubikey",
         "custom/systemd",
         "custom/updates",
-        "custom/mail",
         "custom/recording",
         "custom/dnd",
         "pulseaudio",
@@ -56,10 +55,6 @@
         "signal": 1,
         "on-click-right": "waybar-updates refresh",
         "interval": "once"
-    },
-    "custom/mail": {
-        "exec": "waybar-mail",
-        "return-type": "json"
     },
     "custom/vpn": {
         "exec": "waybar-vpn",

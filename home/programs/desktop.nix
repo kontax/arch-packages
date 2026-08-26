@@ -23,15 +23,14 @@
   xdg.configFile."gtk-3.0/settings.ini".source = ../../conf/desktop/etc/gtk-3.0/settings.ini;
   xdg.configFile."mimeapps.list".source = ../../conf/desktop/etc/xdg/mimeapps.list;
 
+  # discord/neomutt/scli/signal-desktop/visidata/vivaldi-stable .desktop
+  # entries were dropped - none of those apps are installed by this flake,
+  # and their Exec= lines hardcoded /usr/bin/* paths that don't exist on
+  # NixOS anyway. vivaldi itself is still installed (desktop.nix) and ships
+  # its own working .desktop file via the package.
   xdg.dataFile = {
     "applications/browser.desktop".source = ../../conf/desktop/usr/local/share/applications/browser.desktop;
-    "applications/discord.desktop".source = ../../conf/desktop/usr/local/share/applications/discord.desktop;
-    "applications/neomutt.desktop".source = ../../conf/desktop/usr/local/share/applications/neomutt.desktop;
     "applications/nvim.desktop".source = ../../conf/desktop/usr/local/share/applications/nvim.desktop;
-    "applications/scli.desktop".source = ../../conf/desktop/usr/local/share/applications/scli.desktop;
-    "applications/signal-desktop.desktop".source = ../../conf/desktop/usr/local/share/applications/signal-desktop.desktop;
-    "applications/visidata.desktop".source = ../../conf/desktop/usr/local/share/applications/visidata.desktop;
-    "applications/vivaldi-stable.desktop".source = ../../conf/desktop/usr/local/share/applications/vivaldi-stable.desktop;
   };
 
   systemd.user.services.swaync = {
