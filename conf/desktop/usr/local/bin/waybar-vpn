@@ -11,9 +11,7 @@ vpn() {
     printf '{"text": " %s ", "class": "%s"}\n' "$icon" "$class"
 }
 
-if grep '^home-' /etc/hostname > /dev/null; then
-    while true; do
-        vpn
-        sleep 5m
-    done
-fi
+while true; do
+    vpn
+    sleep 5m
+done
