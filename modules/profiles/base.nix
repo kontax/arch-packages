@@ -16,22 +16,35 @@ in
     extraGroups = [ "wheel" "uucp" "video" "audio" "storage" "input" "networkmanager" ];
   };
 
-  # --- Shell (zsh4humans-based zshrc/aliases/p10k, sourced by absolute /etc/zsh
-  # paths from within zshrc itself, so those two extra files are kept at the
-  # same literal paths rather than moved into home-manager) ---
+  # --- Shell (zshrc/aliases/p10k, sourced by absolute /etc/zsh paths from
+  # within zshrc itself, so those two extra files are kept at the same
+  # literal paths rather than moved into home-manager) ---
   programs.zsh = {
     enable = true;
-    # was /etc/zsh/couldinho-zshenv -> /etc/zsh/zshenv
-    envExtra = builtins.readFile ../../conf/base/etc/zsh/zshenv;
     # was /etc/zsh/couldinho-zprofile -> /etc/zsh/zprofile (desktop profile overrides this).
     # Also now carries the PATH prepend from base/etc/environment.d/30-path.conf
     # (see comment in that vendored file) rather than environment.sessionVariables.PATH,
     # since NixOS renders sessionVariables as literal `export VAR="..."` assignments -
     # a list there would *replace* PATH instead of extending it.
     loginShellInit = lib.mkDefault (builtins.readFile ../../conf/base/etc/zsh/zprofile);
-    # was /etc/zsh/couldinho-zshrc -> /etc/zsh/zshrc
-    interactiveShellInit = builtins.readFile ../../conf/base/etc/zsh/zshrc;
+    # was /etc/zsh/couldinho-zshrc -> /etc/zsh/zshrc. The old zshrc bootstrapped
+    # zsh4humans, a framework that self-installs by curling a script from
+    # GitHub on every machine's first shell start (envExtra/zshenv was 100%
+    # that bootstrap and is gone entirely now). Replaced below by nixpkgs
+    # packages - fetched and pinned at build time, not at shell-startup time -
+    # for the same prompt and plugins.
+    interactiveShellInit = builtins.readFile ../../conf/base/etc/zsh/zshrc + ''
+
+      # Prompt (was zsh4humans' bundled powerlevel10k)
+      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+      source /etc/zsh/p10k.zsh
+    '';
   };
+  # Autosuggestions + syntax highlighting (was zsh4humans' bundled
+  # zsh-autosuggestions / zsh-syntax-highlighting) - both are native NixOS
+  # module options, so no manual plugin sourcing is needed for these two.
+  programs.zsh.autosuggestions.enable = true;
+  programs.zsh.syntaxHighlighting.enable = true;
   environment.etc."zsh/zsh-aliases".source = ../../conf/base/etc/zsh/zsh-aliases;
   environment.etc."zsh/p10k.zsh".source = ../../conf/base/etc/zsh/p10k.zsh;
   environment.shells = [ pkgs.zsh ];

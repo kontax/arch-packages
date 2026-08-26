@@ -1,52 +1,42 @@
-zstyle    ':z4h:'                                              auto-update            no
-zstyle    ':z4h:'                                              iterm2-integration     yes
-zstyle    ':z4h:'                                              propagate-cwd          yes
-zstyle    ':z4h:*'                                             channel                stable
-zstyle    ':z4h:autosuggestions'                               forward-char           accept
-zstyle    ':z4h:fzf-complete'                                  fzf-command            my-fzf
-zstyle    ':z4h:(fzf-complete|fzf-dir-history|fzf-history)'    fzf-flags              --no-exact --color=hl:14,hl+:14
-zstyle    ':z4h:(fzf-complete|fzf-dir-history)'                fzf-bindings           'tab:repeat'
-zstyle    ':z4h:fzf-complete'                                  find-flags             -name '.git' -prune -print -o -print
-zstyle    ':z4h:ssh:*'                                         enable                 no
-zstyle    ':z4h:ssh:*'                                         ssh-command            command ssh
-zstyle    ':z4h:ssh:*'                                         term                   'xterm-256color'
-zstyle    ':z4h:ssh:*'                                         send-extra-files       '/etc/zsh/zsh-aliases'
-zstyle    ':zle:(up|down)-line-or-beginning-search'            leave-cursor           yes
-zstyle    ':z4h:term-title:ssh'                                preexec                '%* | %n@%m: ${1//\%/%%}'
-zstyle    ':z4h:term-title:local'                              preexec                '%* | ${1//\%/%%}'
-zstyle    ':completion:*:ssh:argument-1:'                      tag-order              hosts users
-zstyle    ':z4h:direnv'                                        enable                 yes
-zstyle    ':completion:*:scp:argument-rest:'                   tag-order              hosts files users
-zstyle    ':completion:*:(ssh|scp|rdp):*:hosts'                hosts
+#!/usr/bin/env zsh
+#
+# Plain zsh - no plugin manager. Prompt (powerlevel10k) and the two
+# highlighting plugins are wired in via modules/profiles/base.nix instead,
+# since they need actual nixpkgs store paths; everything here is
+# self-contained and needs nothing beyond zsh itself, fzf and direnv.
 
-if ! (( P9K_SSH )); then
-    zstyle ':z4h:sudo' term ''
-fi
+## Completion matching (case-insensitive + partial-word) - compinit itself
+## runs automatically via NixOS's programs.zsh.enableGlobalCompInit
 
-###
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'l:|=* r:|=*'
 
-z4h install romkatv/archive || return
-z4h tty-wait --timeout-seconds 1.0 --lines-columns-pattern '<70-> <->'
-z4h init || return
+## Options
 
-####
+setopt GLOB_DOTS   # globs match dotfiles too
+setopt IGNORE_EOF  # Ctrl+D doesn't close the shell
 
-zstyle ':completion:*' matcher-list "m:{a-z}={A-Z}" "l:|=* r:|=*"
+## fzf + direnv shell integration (both ship their own, no plugin manager needed)
 
-####
+source <(fzf --zsh)
+eval "$(direnv hook zsh)"
 
-fpath+=($Z4H/romkatv/archive)
-autoload -Uz archive lsarchive unarchive edit-command-line
+export FZF_DEFAULT_OPTS="--reverse --multi --no-exact --color=hl:14,hl+:14"
+export DIRENV_LOG_FORMAT=
+export SYSTEMD_LESS="${LESS}S"
 
+## Keybindings
+
+autoload -Uz edit-command-line up-line-or-beginning-search down-line-or-beginning-search
 zle -N edit-command-line
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+zstyle ':zle:(up|down)-line-or-beginning-search' leave-cursor yes
 
-my-fzf () {
-    emulate -L zsh -o extended_glob
-    local MATCH MBEGIN MEND
-    fzf "${@:/(#m)--query=?*/$MATCH }"
-}
+bindkey '^[e'  edit-command-line             # Alt+E: edit the command line in $EDITOR
+bindkey '^[[A' up-line-or-beginning-search   # Up: search history backward by prefix
+bindkey '^[[B' down-line-or-beginning-search # Down: search history forward by prefix
 
-my-ctrl-z() {
+toggle-ctrl-z() {
     if [[ $#BUFFER -eq 0 ]]; then
         BUFFER="fg"
         zle accept-line -w
@@ -55,47 +45,23 @@ my-ctrl-z() {
         zle clear-screen -w
     fi
 }
-zle -N my-ctrl-z
+zle -N toggle-ctrl-z
+bindkey '^Z' toggle-ctrl-z   # Ctrl+Z: fg the last job, or suspend the current line
 
-###
+cd-up() { cd .. }
+zle -N cd-up
+bindkey '^[k' cd-up   # Alt+K: cd ..
 
-z4h bindkey z4h-backward-kill-word  Ctrl+Backspace
-z4h bindkey z4h-backward-kill-zword Ctrl+Alt+Backspace
-z4h bindkey z4h-kill-zword          Ctrl+Alt+Delete
+## Terminal title: show user@host while SSH'd in, just the command locally
 
-z4h bindkey backward-kill-line      Ctrl+U
-z4h bindkey kill-line               Alt+U
-z4h bindkey kill-whole-line         Alt+I
+if [[ -n "$SSH_CONNECTION" ]]; then
+    _term_title_preexec() { print -Pn "\e]0;%* | %n@%m: ${1//\%/%%}\a" }
+else
+    _term_title_preexec() { print -Pn "\e]0;%* | ${1//\%/%%}\a" }
+fi
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _term_title_preexec
 
-z4h bindkey z4h-forward-zword       Ctrl+Alt+Right
-z4h bindkey z4h-backward-zword      Ctrl+Alt+Left
+## Aliases/functions
 
-z4h bindkey z4h-cd-back             Alt+H
-z4h bindkey z4h-cd-forward          Alt+L
-z4h bindkey z4h-cd-up               Alt+K
-z4h bindkey z4h-fzf-dir-history     Alt+J
-
-z4h bindkey my-ctrl-z               Ctrl+Z
-z4h bindkey edit-command-line       Alt+E
-
-z4h bindkey z4h-eof                 Ctrl+D
-
-###
-
-setopt GLOB_DOTS
-setopt IGNORE_EOF
-
-###
-
-[ -z "$EDITOR" ] && export EDITOR='nvim'
-[ -z "$VISUAL" ] && export VISUAL='nvim'
-
-export DIRENV_LOG_FORMAT=
-export FZF_DEFAULT_OPTS="--reverse --multi"
-export SYSTEMD_LESS="${LESS}S"
-
-###
-
-z4h source -- /usr/share/LS_COLORS/dircolors.sh
-z4h source -- /etc/zsh/zsh-aliases
-z4h source -- /etc/zsh/p10k.zsh
+source /etc/zsh/zsh-aliases

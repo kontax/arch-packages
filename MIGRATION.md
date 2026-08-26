@@ -93,11 +93,18 @@ no standalone attr (already installed unconditionally by base.nix),
 
 ## Config mapping notes
 
-- **zsh**: system-wide via `programs.zsh` (`envExtra`/`loginShellInit`/
-  `interactiveShellInit`) rather than home-manager, because the original
+- **zsh**: system-wide via `programs.zsh` (`loginShellInit`/
+  `interactiveShellInit`) rather than home-manager, because the vendored
   `zshrc` sources `/etc/zsh/zsh-aliases` and `/etc/zsh/p10k.zsh` by absolute
   path - those two files are kept at the same literal `/etc/zsh/*` paths via
   `environment.etc` so the vendored zshrc doesn't need editing.
+  The original `zshrc` bootstrapped zsh4humans, a plugin manager that curls
+  its own installer from GitHub on a new machine's first shell start; that's
+  been replaced with plain nixpkgs packages (`zsh-powerlevel10k`,
+  `programs.zsh.autosuggestions`/`syntaxHighlighting`) wired in directly by
+  `modules/profiles/base.nix` - fetched and pinned at build time like
+  everything else in this flake, not at shell-startup time. `envExtra`/
+  `zshenv` was 100% that bootstrap and no longer exists.
 - **Keyboard layout**: `conf/base/etc/xkb/symbols/us-hyper` is registered via
   `services.xserver.xkb.extraLayouts`, but the actual X11 keyboard config file
   (`conf/desktop/etc/X11/xorg.conf.d/00-keyboard.conf`) references a layout
