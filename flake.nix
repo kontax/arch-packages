@@ -1,5 +1,5 @@
 {
-  description = "couldinho NixOS systems (base/desktop/laptop/dev/sec/xcp-ng)";
+  description = "couldinho NixOS systems (base/desktop/laptop/dev)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -47,7 +47,7 @@
       overlays.default = overlay;
 
       nixosConfigurations = {
-        # Dual-monitor sway desktop: base + desktop + dev + sec
+        # Dual-monitor sway desktop: base + desktop + dev
         desktop = mkHost { hostName = "desktop"; };
 
         # HiDPI sway laptop: base + desktop + laptop + dev

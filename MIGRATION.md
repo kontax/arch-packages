@@ -36,20 +36,18 @@ gaps:
 
 | Package | Why it's a gap |
 |---|---|
-| `010editor` | Proprietary binary editor, manual download + license |
-| `caido-desktop` | Only SDK/auth client packages exist in nixpkgs, not the desktop app |
-| `binaryninja-free` | Proprietary, licensed download |
 | `gtk-theme-arc-gruvbox-git` | Not packaged. Closest substitutes: `pkgs.gruvbox-gtk-theme` or `pkgs.gruvbox-dark-gtk` (different theme, not a drop-in) |
 | `python-chump-git` (Pushover client for urlwatch) | Not packaged; urlwatch itself is kept, this notification backend is dropped |
 | `udiskie-dmenu-git` | Not packaged; replaced with udiskie's own `--tray` flag (`home/programs/desktop.nix`) |
 | `light` | Unpackaged fork; using `pkgs.acpilight` (maintained fork, slightly different CLI) instead - see `modules/profiles/laptop.nix` |
-| `pwndbg` | **Removed from nixpkgs** (was there previously). `gef` is the available alternative and is what's wired up in `home/programs/gdb.nix`; the `gdb-pwndbg` wrapper script is still bundled but non-functional until pwndbg is packaged/installed some other way |
-| `peda` | Not packaged (superseded by gef/pwndbg upstream anyway); `gdb-peda` wrapper script bundled but non-functional |
-| `pwngdb` | Not packaged |
-| `r2ghidra` | Not packaged for radare2; only a rizin-fork equivalent exists (`pkgs.rizinPlugins.rz-ghidra`), different tool family |
-| `afl-utils` | Not packaged (`aflplusplus` itself is kept) |
-| `xe-guest-utilities` | **Actually exists** (`pkgs.xe-guest-utilities`) - not a gap, see `modules/profiles/xcp-ng.nix`. (Earlier draft of this doc wrongly flagged it as one.) |
 | `checkofficial`, `waybar-updates` scripts | Call pacman-contrib's `checkupdates`, which doesn't exist under NixOS - the scripts are still installed verbatim (via `couldinho-desktop-scripts`) but won't function until rewritten against something like `nix flake update --dry-run` |
+
+The `sec` and `xcp-ng` profiles (reversing/exploitation tooling and XCP-NG
+guest tools) were dropped entirely rather than migrated - not needed, so
+their packages (radare2, ghidra, ida-free, burpsuite, gef/pwndbg/peda,
+wireshark, aflplusplus, xe-guest-utilities, etc.) and gaps (010editor,
+caido-desktop, binaryninja-free, pwndbg, peda, pwngdb, r2ghidra, afl-utils)
+no longer apply.
 
 `lscolors-git` and `dfrs` turned out **not** to be gaps - nixpkgs has
 `pkgs.lscolors` and `pkgs.dfrs` directly, both used in `modules/profiles/base.nix`.
@@ -90,15 +88,6 @@ provides the `docker-credential-pass` binary), `npm`->bundled in `nodejs`,
 no standalone attr, `virt-install`->bundled in `pkgs.virt-manager`
 (`programs.virt-manager.enable`), not a separate package.
 
-**sec**: `ropper`->`python3Packages.ropper` (no top-level `pkgs.ropper`
-alias), everything else (`radare2`, `ida-free`, `ghidra`, `burpsuite`,
-`wireshark`/`wireshark-cli`, `nmap`, `john`, `aflplusplus`,
-`python3Packages.{capstone,unicorn,keystone-engine,r2pipe}`) matched the
-old name or an obvious rename directly.
-
-**xcp-ng**: `xe-guest-utilities`->`pkgs.xe-guest-utilities` (see gaps table
-correction above).
-
 ## Config mapping notes
 
 - **zsh**: system-wide via `programs.zsh` (`envExtra`/`loginShellInit`/
@@ -113,8 +102,6 @@ correction above).
   (this file was vendored byte-for-byte) - not something introduced by this
   migration, but worth checking on real hardware since `jc` may not resolve
   to anything without further setup this repo doesn't capture.
-- **GDB frontends**: only GEF survived (see gaps table); `home/programs/gdb.nix`
-  sources `${pkgs.gef}/share/gef/gef.py` - verify that path once buildable.
 - **Console font**: Arch's `terminus-font` names sizes like
   `ter-132n`/`ter-716n` (Arch's own `setfont` naming); NixOS's
   `pkgs.terminus_font` ships them under the upstream `ter-v<size>n` scheme.

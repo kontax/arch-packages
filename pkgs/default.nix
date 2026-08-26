@@ -23,5 +23,4 @@ in
   couldinho-base-scripts = mkScriptBundle "base" ../conf/base/usr/local/bin;
   couldinho-desktop-scripts = mkScriptBundle "desktop" ../conf/desktop/usr/local/bin;
   couldinho-laptop-scripts = mkScriptBundle "laptop" ../conf/laptop/usr/local/bin;
-  couldinho-sec-scripts = mkScriptBundle "sec" ../conf/sec/usr/local/bin;
 }

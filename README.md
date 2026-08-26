@@ -4,8 +4,8 @@ A NixOS flake for my systems, tuned to my specific hardware and workflow -
 this will overwrite anything already installed on an existing machine.
 
 This used to be an Arch Linux pacman meta-package repo (`couldinho-base` /
-`-desktop` / `-laptop` / `-dev` / `-sec` / `-xcp-ng`) with a from-scratch
-`dialog`-driven installer. It's now a NixOS flake instead: see
+`-desktop` / `-laptop` / `-dev`) with a from-scratch `dialog`-driven
+installer. It's now a NixOS flake instead: see
 [MIGRATION.md](MIGRATION.md) for how each old package/config maps onto this
 new layout, and what didn't have a clean equivalent.
 
@@ -17,10 +17,10 @@ new layout, and what didn't have a clean equivalent.
   (`disko.nix`), hardware-specific kernel config (`hardware-configuration.nix`,
   regenerate with `nixos-generate-config`), and which profiles it composes.
 - `modules/profiles/*.nix` - one file per old package group
-  (base/desktop/laptop/dev/sec/xcp-ng), each pulling in the same packages and
-  config the equivalent `couldinho-*` pacman package used to.
+  (base/desktop/laptop/dev), each pulling in the same packages and config the
+  equivalent `couldinho-*` pacman package used to.
 - `home/` - home-manager config for the primary user's apps (sway, waybar,
-  kitty, mpv, nvim, gdb frontends), imported by the profile modules above.
+  kitty, mpv, nvim), imported by the profile modules above.
 - `pkgs/` - the overlay: bundles the old `conf/*/usr/local/bin` scripts
   verbatim into per-profile packages.
 - `conf/` - unchanged: the actual config file content, vendored by the
