@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # Move a workspace specified by number to a specified output
 # Usage: ./move_workspace.sh `workspace_num` `monitor serial or output name`
 

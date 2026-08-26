@@ -1,5 +1,11 @@
 #!/usr/bin/env zsh
 
+# was base/etc/environment.d/30-path.conf - added here (not via
+# environment.sessionVariables.PATH) since NixOS renders session variables as
+# literal `export VAR="..."` assignments, which would replace PATH instead of
+# extending it. This runs after the Nix-generated PATH is already exported.
+export PATH="$HOME/.local/bin:$HOME/.local/bin-private:$HOME/.local/state/cargo/bin:$PATH"
+
 [[ "$TTY" == /dev/tty* ]] || return 0
 
 export $(systemctl --user show-environment)

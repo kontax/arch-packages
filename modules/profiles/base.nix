@@ -23,7 +23,11 @@ in
     enable = true;
     # was /etc/zsh/couldinho-zshenv -> /etc/zsh/zshenv
     envExtra = builtins.readFile ../../conf/base/etc/zsh/zshenv;
-    # was /etc/zsh/couldinho-zprofile -> /etc/zsh/zprofile (desktop profile overrides this)
+    # was /etc/zsh/couldinho-zprofile -> /etc/zsh/zprofile (desktop profile overrides this).
+    # Also now carries the PATH prepend from base/etc/environment.d/30-path.conf
+    # (see comment in that vendored file) rather than environment.sessionVariables.PATH,
+    # since NixOS renders sessionVariables as literal `export VAR="..."` assignments -
+    # a list there would *replace* PATH instead of extending it.
     loginShellInit = lib.mkDefault (builtins.readFile ../../conf/base/etc/zsh/zprofile);
     # was /etc/zsh/couldinho-zshrc -> /etc/zsh/zshrc
     interactiveShellInit = builtins.readFile ../../conf/base/etc/zsh/zshrc;
@@ -57,6 +61,17 @@ in
     DIFFPROG = "vimdiff";
     PASSWORD_STORE_CHARACTER_SET = "a-zA-Z0-9~!@#$%^&*()-_=+[]{};:,.<>?";
     PASSWORD_STORE_GENERATED_LENGTH = "40";
+
+    # was base/etc/environment.d/40-clean-home.conf - kept $HOME-relative
+    # (rather than chaining off $XDG_*_HOME, which desktop.nix also sets) since
+    # NixOS renders all sessionVariables into one flat shell script and the
+    # cross-module ordering between the two isn't guaranteed; these already
+    # match the XDG defaults desktop.nix sets explicitly.
+    DOCKER_CONFIG = "$HOME/.config/docker";
+    PYLINTRC = "$HOME/.config/pylint/config";
+    CARGO_HOME = "$HOME/.local/state/cargo";
+    PYLINTHOME = "$HOME/.cache/pylint";
+    LESSHISTFILE = "-";
   };
 
   console.font = lib.mkDefault "ter-v16n"; # was FONT=ter-132n/ter-716n (hidpi choice), override per-host
@@ -86,7 +101,15 @@ in
     enable = true;
     reportInterval = 3600;
     enableNotifications = true;
-    extraArgs = [ "--avoid" "'^(systemd|sshd|sway|waybar)$'" ];
+    extraArgs = [ "--avoid" "^(systemd|sshd|sway|waybar)$" ];
+  };
+
+  # --- gpg-agent as SSH agent (zprofile exports SSH_AUTH_SOCK pointing at
+  # $XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh - that socket only exists with
+  # enableSSHSupport on) ---
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
   };
 
   # --- YubiKey touch-to-confirm for sudo/polkit (was pam.d/{sudo,polkit-1}) ---
