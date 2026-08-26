@@ -204,6 +204,7 @@ in
     eza
     ripgrep
     ripgrep-all
+    fd
     bat
     htop
     lscolors # was lscolors-git
