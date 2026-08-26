@@ -17,3 +17,8 @@ build/
 *.tar.xz
 *.tar.gz
 *.tar
+
+## Nix
+result
+result-*
+.direnv/

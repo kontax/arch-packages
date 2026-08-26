@@ -1,0 +1,91 @@
+# Notification daemon, launcher, mimetypes, GTK theme, and the small
+# session-glue services that used to be desktop/etc/systemd/user/*.service.
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    swaynotificationcenter # was swaync (attr renamed upstream, binary is still `swaync`)
+    fuzzel
+    libnotify
+    udiskie
+    gsimplecal
+    qalculate-gtk
+    inotify-tools
+    yubikey-touch-detector
+    pinentry-gnome3
+    qrencode
+    gcr
+    progress
+  ];
+
+  xdg.configFile."swaync/config.json".source = ../../conf/desktop/etc/xdg/swaync/config.json;
+  xdg.configFile."swaync/style.css".source = ../../conf/desktop/etc/xdg/swaync/style.css;
+  xdg.configFile."fuzzel/fuzzel.ini".source = ../../conf/desktop/etc/xdg/fuzzel/fuzzel.ini;
+  xdg.configFile."gtk-3.0/settings.ini".source = ../../conf/desktop/etc/gtk-3.0/settings.ini;
+  xdg.configFile."mimeapps.list".source = ../../conf/desktop/etc/xdg/mimeapps.list;
+
+  xdg.dataFile = {
+    "applications/browser.desktop".source = ../../conf/desktop/usr/local/share/applications/browser.desktop;
+    "applications/discord.desktop".source = ../../conf/desktop/usr/local/share/applications/discord.desktop;
+    "applications/neomutt.desktop".source = ../../conf/desktop/usr/local/share/applications/neomutt.desktop;
+    "applications/nvim.desktop".source = ../../conf/desktop/usr/local/share/applications/nvim.desktop;
+    "applications/scli.desktop".source = ../../conf/desktop/usr/local/share/applications/scli.desktop;
+    "applications/signal-desktop.desktop".source = ../../conf/desktop/usr/local/share/applications/signal-desktop.desktop;
+    "applications/visidata.desktop".source = ../../conf/desktop/usr/local/share/applications/visidata.desktop;
+    "applications/vivaldi-stable.desktop".source = ../../conf/desktop/usr/local/share/applications/vivaldi-stable.desktop;
+  };
+
+  systemd.user.services.swaync = {
+    Unit = {
+      Description = "Sway Notification Center";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service.ExecStart = "${pkgs.swaynotificationcenter}/bin/swaync";
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  systemd.user.services.udiskie = {
+    Unit = {
+      Description = "Automatically mount newly inserted USB drives";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    # --tray replaces the AUR udiskie-dmenu-git tray helper (not packaged in nixpkgs)
+    Service.ExecStart = "${pkgs.udiskie}/bin/udiskie --tray";
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  systemd.user.services.systembus-notify = {
+    Unit = {
+      Description = "Show desktop notifications for earlyoom";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service.ExecStart = "${pkgs.systembus-notify}/bin/systembus-notify -q";
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  systemd.user.services.wl-clipboard-manager = {
+    Unit = {
+      Description = "Clipboard manager daemon";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.couldinho-desktop-scripts}/bin/wl-clipboard-manager daemon";
+      Restart = "always";
+      RestartSec = "10s";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  systemd.user.services.yubikey-touch-detector = {
+    Unit = {
+      Description = "Detect when YubiKey is waiting for a touch";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service.ExecStart = "${pkgs.yubikey-touch-detector}/bin/yubikey-touch-detector --libnotify";
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+}
