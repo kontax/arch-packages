@@ -27,7 +27,7 @@ in
 
     awscli2 # was aws-cli-v2-bin
     aws-sam-cli # was aws-sam-cli-bin
-    nodejs
+    # was npm -> bundled in nodejs, already installed unconditionally by base.nix
 
     android-studio
   ];

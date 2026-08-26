@@ -72,9 +72,17 @@ in
     '')
   ];
 
-  # --- Multimedia (PulseAudio, not Pipewire, matching the old setup) ---
-  hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.support32Bit = false;
+  # --- Multimedia (PipeWire, not the old system's raw PulseAudio - avoids
+  # needing laptop.nix's old pulseaudioFull + module-switch-on-connect
+  # workaround for bluetooth audio, which WirePlumber handles natively) ---
+  hardware.pulseaudio.enable = false;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true; # PulseAudio-protocol compat, used by pavucontrol/pamixer/waybar
+    wireplumber.enable = true;
+  };
   security.rtkit.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -87,7 +95,6 @@ in
 
     # apps / utilities
     alsa-utils
-    alsa-plugins # was pulseaudio-alsa
     pavucontrol
     pamixer
     vimiv-qt # was vimiv

@@ -25,10 +25,9 @@ in
     };
   };
 
-  # was pulseaudio-bluetooth - needs the "Full" pulseaudio build for the
-  # bluetooth module, the desktop profile's default package doesn't have it
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
-  hardware.pulseaudio.extraConfig = "load-module module-switch-on-connect";
+  # was pulseaudio-bluetooth - the desktop profile now uses PipeWire, whose
+  # WirePlumber session manager handles bluetooth output switching natively,
+  # so no pulseaudioFull / module-switch-on-connect workaround is needed.
   hardware.enableRedistributableFirmware = true;
   hardware.firmware = [ pkgs.sof-firmware ];
 

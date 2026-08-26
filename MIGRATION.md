@@ -67,7 +67,8 @@ double check on first build), `ttf-nerd-fonts-symbols[-mono]`->
 that's skipped since the exact font file is already vendored from
 `conf/desktop/usr/share/fonts/`), `pinentry`->`pinentry-gnome3` (no bare
 `pinentry` attr; `pinentry-gtk2` specifically is NOT packaged),
-`pulseaudio-alsa`->`alsa-plugins`, `vimiv`->`vimiv-qt` (GTK version removed
+`pulseaudio-alsa`->N/A (desktop.nix uses PipeWire's own ALSA compat via
+`services.pipewire.alsa.enable`, not a separate package), `vimiv`->`vimiv-qt` (GTK version removed
 from nixpkgs, only the Qt port remains), `zathura-pdf-mupdf`->
 `zathuraPkgs.zathura_pdf_mupdf`, `mpv-mpris`->`pkgs.mpvScripts.mpris` (ships
 as an mpv script, not a binary - wired via `xdg.configFile` in
@@ -78,14 +79,16 @@ bundled via `qt.enable`, not added as a separate package, `vulkan-intel`->N/A
 (bundled in `mesa`, exposed via `hardware.graphics.enable`), `bluez-utils`->N/A
 (bundled in `pkgs.bluez`).
 
-**laptop**: `light`->`acpilight` (see gaps table), `pulseaudio-bluetooth`->
-needs `hardware.pulseaudio.package = pkgs.pulseaudioFull;`, not a separate
-package, `sof-firmware`->`pkgs.sof-firmware` via `hardware.firmware`.
+**laptop**: `light`->`acpilight` (see gaps table), `pulseaudio-bluetooth`->N/A
+(desktop.nix uses PipeWire, not PulseAudio; WirePlumber handles bluetooth
+output switching without any extra package or config), `sof-firmware`->
+`pkgs.sof-firmware` via `hardware.firmware`.
 
 **dev**: `aws-cli-v2-bin`->`awscli2`, `aws-sam-cli-bin`->`aws-sam-cli`,
 `docker-credential-pass`->`docker-credential-helpers` (multi-tool package,
 provides the `docker-credential-pass` binary), `npm`->bundled in `nodejs`,
-no standalone attr, `virt-install`->bundled in `pkgs.virt-manager`
+no standalone attr (already installed unconditionally by base.nix),
+`virt-install`->bundled in `pkgs.virt-manager`
 (`programs.virt-manager.enable`), not a separate package.
 
 ## Config mapping notes

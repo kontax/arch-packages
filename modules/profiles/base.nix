@@ -153,6 +153,28 @@ in
     '';
   };
 
+  # /home is its own btrfs subvolume (disko.nix) and wasn't covered by the old
+  # root-only snapper config - added here, same settings as root, so home
+  # directory changes get the same manual/scheduled snapshot coverage.
+  services.snapper.configs.home = {
+    subvolume = "/home";
+    extraConfig = ''
+      ALLOW_USERS=""
+      ALLOW_GROUPS=""
+      SYNC_ACL="no"
+      SPACE_LIMIT="0.5"
+      BACKGROUND_COMPARISON="yes"
+      NUMBER_CLEANUP="yes"
+      NUMBER_MIN_AGE="1800"
+      NUMBER_LIMIT="50"
+      NUMBER_LIMIT_IMPORTANT="10"
+      TIMELINE_CREATE="no"
+      TIMELINE_CLEANUP="no"
+      EMPTY_PRE_POST_CLEANUP="yes"
+      EMPTY_PRE_POST_MIN_AGE="1800"
+    '';
+  };
+
   # --- Packages ---
   # NB: reflector (pacman mirror-list refresh) has no meaning under Nix -
   # binary cache substituters replace the concept of pacman mirrors entirely,
