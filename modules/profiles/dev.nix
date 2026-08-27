@@ -35,5 +35,7 @@ in
     # was npm -> bundled in nodejs, already installed unconditionally by base.nix
 
     android-studio
+
+    claude-code # unverified attr name - nixpkgs wraps @anthropic-ai/claude-code
   ];
 }

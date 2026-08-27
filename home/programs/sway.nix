@@ -30,6 +30,15 @@
     Unit = {
       Description = "Start the kanshi profile service";
       PartOf = [ "graphical-session.target" ];
+      # kanshi's monitor-output profiles are inherently machine-specific (real
+      # dual-monitor desktop vs a laptop vs this VM's virtual display all need
+      # different profiles), so no config is vendored here - same reasoning
+      # as local.nix for personal values. Without this guard the service
+      # crash-loops with "failed to parse config file" when the file doesn't
+      # exist; skip starting entirely instead. Create
+      # ~/.config/kanshi/config with your real output names and restart this
+      # service once you have one.
+      ConditionPathExists = "%h/.config/kanshi/config";
     };
     Service = {
       Type = "simple";

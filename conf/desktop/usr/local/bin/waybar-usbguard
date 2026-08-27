@@ -1,11 +1,21 @@
 #!/bin/sh
+# Was `usbguard list-devices -b` (server-side target filtering) - usbguard
+# 1.1.4's daemon rejects that over IPC with "Invalid device query target"
+# even though the CLI's own --help lists -b/--blocked as valid (a version
+# skew bug, not a typo). Lists all devices untargeted instead (which the
+# daemon handles fine) and filters for blocked ones client-side using the
+# rule target each device line already includes.
+
+first_blocked_line() {
+    usbguard list-devices | grep -m1 ': block '
+}
 
 listen() {
     dbus-monitor --system --profile "interface='org.usbguard.Devices1'" |
         while read -r line; do
-            blocked="$(usbguard list-devices -b | head -n1 | grep -Po 'name "\K[^"]+')"
+            blocked="$(first_blocked_line | grep -Po 'name "\K[^"]+')"
             if [ -n "$blocked" ]; then
-                printf "{\"text\": \"<span foreground='#928374'></span> %s\"}\n" "$blocked"
+                printf "{\"text\": \"<span foreground='#928374'></span> %s\"}\n" "$blocked"
             else
                 printf '{"text": ""}\n'
             fi
@@ -13,13 +23,13 @@ listen() {
 }
 
 allow() {
-    blocked_id="$(usbguard list-devices -b | head -n1 | grep -Po '^[^:]+')"
-    usbguard allow-device "$blocked_id"
+    blocked_id="$(first_blocked_line | grep -Po '^[^:]+')"
+    [ -n "$blocked_id" ] && usbguard allow-device "$blocked_id"
 }
 
 reject() {
-    blocked_id="$(usbguard list-devices -b | head -n1 | grep -Po '^[^:]+')"
-    usbguard reject-device "$blocked_id"
+    blocked_id="$(first_blocked_line | grep -Po '^[^:]+')"
+    [ -n "$blocked_id" ] && usbguard reject-device "$blocked_id"
 }
 
 if [ "$1" = "allow" ]; then

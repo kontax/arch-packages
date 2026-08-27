@@ -93,6 +93,15 @@ no standalone attr (already installed unconditionally by base.nix),
 
 ## Config mapping notes
 
+- **libvirtd**: `virtualisation.libvirtd.enable = true;` (dev.nix) creates
+  both the legacy monolithic `libvirtd.service` and the modern modular
+  per-subsystem daemons (`virtqemud`, `virtlockd`, `virtlogd`, etc., socket-
+  activated). The legacy unit deliberately shuts itself down shortly after
+  starting ("Make forcefull daemon shutdown", from NixOS's own wrapper
+  script) and is reported as failed by systemd - but `virsh -c qemu:///system
+  list` works fine, confirming the modular daemons handle everything and
+  this is cosmetic noise, not a functional gap. Left as-is rather than
+  risking a speculative override to silence it.
 - **waybar-updates**: rewritten (not just ported) - was a pacman/AUR/pacdiff/
   rebuild-detector checker, none of which apply under NixOS. Now diffs the
   flake's own `flake.lock` against what `nix flake update` would produce in a

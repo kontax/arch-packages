@@ -19,6 +19,23 @@ in
 
   security.polkit.enable = true;
   services.dbus.enable = true;
+  # udiskie (home/programs/desktop.nix) is only the client - on Arch,
+  # installing it pulls in udisks2 as a package dependency and D-Bus
+  # activates the daemon automatically; under NixOS the daemon needs this
+  # explicit enable, which was missing entirely (udiskie failed with a GDBus
+  # error querying the Manager's Version property - nothing was answering).
+  services.udisks2.enable = true;
+
+  # On Arch, swaylock's package ships its own /etc/pam.d/swaylock
+  # automatically; under NixOS nothing configures a PAM stack for it unless
+  # declared explicitly. Without this, PAM has no module stack for the
+  # "swaylock" service at all, so authentication just hangs/fails
+  # indefinitely rather than accepting or rejecting a password - matches the
+  # "locked out, can't unlock" symptom exactly. {} uses NixOS's standard
+  # password-auth default, same as the original Arch package's stock config
+  # (no yubikey touch requirement - that was never set up for swaylock
+  # specifically, only sudo/polkit-1, see base.nix).
+  security.pam.services.swaylock = { };
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-wlr pkgs.xdg-desktop-portal-gtk ];

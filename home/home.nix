@@ -16,5 +16,12 @@
   home.homeDirectory = "/home/${osConfig.couldinho.user}";
   home.stateVersion = "24.05";
 
+  # zsh has its own separate "unconfigured user" wizard (distinct from the
+  # powerlevel10k one in base.nix) that triggers whenever a per-user
+  # ~/.zshrc doesn't exist, regardless of the system-wide /etc/zshrc that
+  # programs.zsh already manages. An empty file is enough to satisfy the
+  # check - the actual shell config still comes entirely from /etc/zshrc.
+  home.file.".zshrc".text = "";
+
   programs.home-manager.enable = true;
 }
