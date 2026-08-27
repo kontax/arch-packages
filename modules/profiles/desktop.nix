@@ -22,6 +22,10 @@ in
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-wlr pkgs.xdg-desktop-portal-gtk ];
+    # xdg-desktop-portal >= 1.17 requires an explicit backend selection
+    # instead of just picking the first one found - "*" keeps the old
+    # (pre-1.17) behaviour of using whichever extraPortal matches first.
+    config.common.default = "*";
   };
 
   # --- Backend (was xorg-xwayland/qt5-wayland/vulkan-intel/vulkan-headers) ---
@@ -75,7 +79,7 @@ in
   # --- Multimedia (PipeWire, not the old system's raw PulseAudio - avoids
   # needing laptop.nix's old pulseaudioFull + module-switch-on-connect
   # workaround for bluetooth audio, which WirePlumber handles natively) ---
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false; # was hardware.pulseaudio.enable - renamed upstream
   services.pipewire = {
     enable = true;
     alsa.enable = true;

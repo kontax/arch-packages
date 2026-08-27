@@ -131,7 +131,7 @@ in
   # --- YubiKey touch-to-confirm for sudo/polkit (was pam.d/{sudo,polkit-1}) ---
   security.pam.u2f = {
     enable = true;
-    cue = true;
+    settings.cue = true; # was top-level `cue` - renamed under settings.*
     settings.cue_prompt = "Please touch YubiKey to confirm the action.";
   };
   security.pam.services.sudo.u2fAuth = true;
