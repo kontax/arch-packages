@@ -64,6 +64,11 @@ in
   };
 
   # --- Fonts (vendored font files below are exact, no guessing needed) ---
+  # JoyPixels isn't covered by the blanket nixpkgs.config.allowUnfree in
+  # base.nix - it needs its own explicit license acceptance.
+  nixpkgs.config.allowUnfreePackages = [ "joypixels" ];
+  nixpkgs.config.joypixels.acceptLicense = true;
+
   fonts.packages = with pkgs; [
     font-awesome # was otf-font-awesome
     joypixels # was ttf-joypixels
