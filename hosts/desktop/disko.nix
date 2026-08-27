@@ -79,6 +79,10 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/efi";
+              # vfat has no unix permissions of its own, so it mounts
+              # world-readable by default - bootctl warns about this since it
+              # exposes the boot loader's random seed file to any local user.
+              mountOptions = [ "umask=0077" ];
             };
           };
         };
