@@ -22,11 +22,10 @@
   };
 
   # Personal information (a GPG key ID, in this case) doesn't belong
-  # hardcoded in this public repo. Left unset here - set it in a local.nix at
-  # the repo root (gitignored, see local.nix.example) if you want
-  # home/programs/gpg-import.nix to set it as ultimately trusted. Assumes the
-  # key is already in the keyring by some other means - this only sets trust,
-  # it doesn't fetch/import anything.
+  # hardcoded in this public repo. Left unset here - set it in
+  # ~/.config/couldinho/local.nix (see local.nix.example) if you want
+  # home/programs/gpg-import.nix to fetch it from a keyserver and set it as
+  # ultimately trusted.
   options.couldinho.gpg.keyId = lib.mkOption {
     type = lib.types.nullOr lib.types.str;
     default = null;
