@@ -88,8 +88,13 @@ in
   console.font = lib.mkDefault "ter-v16n"; # was FONT=ter-132n/ter-716n (hidpi choice), override per-host
   console.packages = [ pkgs.terminus_font ];
 
+  # Plain "us" TTY keymap - the original Arch vconsole.conf never set KEYMAP
+  # at all (so this is just an explicit version of its default), and was
+  # never tied to the desktop profile's custom X11/Wayland "jc"/hyper layout,
+  # which is GUI-only. console.useXkbConfig would derive this keymap from
+  # that X11 config instead, which conflicts with a plain string here - only
+  # set one or the other.
   console.keyMap = "us";
-  console.useXkbConfig = true;
 
   # --- Networking + VPN ---
   networking.networkmanager.enable = true;
