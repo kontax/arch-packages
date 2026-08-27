@@ -16,7 +16,12 @@
 
   boot.lanzaboote = {
     enable = true;
-    pkiBundle = "/etc/secureboot";
+    # sbctl's default key storage location moved from /etc/secureboot to
+    # /var/lib/sbctl at some point - confirmed by `sbctl create-keys`
+    # actually writing keys/db/db.pem etc. under /var/lib/sbctl on this
+    # nixpkgs revision. Must match wherever `sbctl create-keys` really wrote
+    # them, not just lanzaboote's own historical default.
+    pkiBundle = "/var/lib/sbctl";
   };
 
   environment.systemPackages = [ pkgs.sbctl ];
