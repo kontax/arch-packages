@@ -35,7 +35,13 @@ in
     # for the same prompt and plugins.
     interactiveShellInit = builtins.readFile ../../conf/base/etc/zsh/zshrc + ''
 
-      # Prompt (was zsh4humans' bundled powerlevel10k)
+      # Prompt (was zsh4humans' bundled powerlevel10k). The vendored p10k.zsh
+      # was generated years ago against whatever p10k version zsh4humans
+      # bundled at the time - nixpkgs' current zsh-powerlevel10k doesn't
+      # recognize it as "already configured" (version/checksum mismatch) and
+      # offers to run the setup wizard on every new shell. The config itself
+      # still applies correctly regardless - this just silences the nag.
+      typeset -g POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       source /etc/zsh/p10k.zsh
     '';
