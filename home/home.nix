@@ -9,6 +9,7 @@
     ./programs/kitty.nix
     ./programs/mpv.nix
     ./programs/nvim.nix
+    ./programs/gpg-import.nix
   ];
 
   home.username = osConfig.couldinho.user;

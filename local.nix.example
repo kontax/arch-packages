@@ -1,0 +1,14 @@
+# Copy this to local.nix (gitignored, at the repo root - not this file) and
+# fill in real values. local.nix is imported automatically by every host if
+# present (see flake.nix) - it's for personal information that shouldn't be
+# hardcoded into this public repo, currently just a GPG key to import (see
+# modules/options.nix for what each option does, and
+# home/programs/gpg-import.nix for what actually happens with it).
+#
+# NOT YET VERIFIED to actually be picked up by flake evaluation when
+# untracked/gitignored - see the caveat where this was introduced. If
+# `couldinho.gpg.keyId` doesn't seem to take effect, that's most likely why.
+{
+  couldinho.gpg.keyId = "0123456789ABCDEF";
+  couldinho.gpg.keyUrl = "https://example.com/pgp_keys.asc";
+}

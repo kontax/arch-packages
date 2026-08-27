@@ -30,6 +30,11 @@
 
       overlay = import ./pkgs;
 
+      # Personal values (currently just a GPG key ID/URL - see
+      # modules/options.nix and home/programs/gpg-import.nix) don't belong in
+      # this public repo. local.nix is gitignored; see local.nix.example.
+      localModule = nixpkgs.lib.optional (builtins.pathExists ./local.nix) ./local.nix;
+
       mkHost = { hostName, extraModules ? [ ] }:
         nixpkgs.lib.nixosSystem {
           inherit system;
@@ -44,7 +49,7 @@
             ./modules/luks-common.nix
             ./hosts/${hostName}
             { networking.hostName = hostName; }
-          ] ++ extraModules;
+          ] ++ localModule ++ extraModules;
         };
     in
     {

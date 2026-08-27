@@ -22,3 +22,7 @@ build/
 result
 result-*
 .direnv/
+
+## Personal values that don't belong in this public repo - see
+## local.nix.example and modules/options.nix
+/local.nix
