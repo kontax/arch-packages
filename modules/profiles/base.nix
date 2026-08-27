@@ -96,6 +96,14 @@ in
   # set one or the other.
   console.keyMap = "us";
 
+  # --- SSH (not in the original Arch setup - added for remote access;
+  # openFirewall defaults to true, so port 22 opens automatically. Password
+  # auth is left on since no authorized_keys are set up anywhere in this repo
+  # yet - lock it down with users.users.${cfg.user}.openssh.authorizedKeys.keys
+  # + services.openssh.settings.PasswordAuthentication = false once you have
+  # a key you want to use.) ---
+  services.openssh.enable = true;
+
   # --- Networking + VPN ---
   networking.networkmanager.enable = true;
   networking.networkmanager.plugins = with pkgs; [
