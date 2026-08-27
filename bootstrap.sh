@@ -69,13 +69,44 @@ echo "==> Installing NixOS (flake: $REPO_DIR#$HOST)"
 # "Path '...xdg/nvim' ... is not tracked by Git".
 nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST"
 
+# From here on, the OS is already successfully installed - none of the
+# remaining steps should be able to abort the script and make that look like
+# it failed. Password entry is essentially required, so it runs
+# unconditionally; Secure Boot / YubiKey enrollment depend on things this
+# script can't verify (firmware Setup Mode, a physically-present YubiKey), so
+# they're opt-in and any failure just warns instead of aborting.
+
+PRIMARY_USER="$(nix --extra-experimental-features 'nix-command flakes' eval --raw \
+    "$REPO_DIR?submodules=1#nixosConfigurations.$HOST.config.couldinho.user")"
+
+echo
+echo "==> Set root's password"
+nixos-enter --root /mnt -c 'passwd'
+echo
+echo "==> Set $PRIMARY_USER's password"
+nixos-enter --root /mnt -c "passwd $PRIMARY_USER"
+
+echo
+read -rp "Set up Secure Boot signing keys now? [y/N] " _sb
+if [[ "$_sb" =~ ^[Yy]$ ]]; then
+    echo "    (needs the firmware in Setup Mode - see modules/secure-boot.nix)"
+    if ! nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft'; then
+        echo "    Secure Boot key setup failed - see modules/secure-boot.nix for the" >&2
+        echo "    manual steps and retry once the firmware is in Setup Mode." >&2
+    fi
+fi
+
+echo
+read -rp "Enroll a YubiKey for LUKS unlock now (key must be plugged in)? [y/N] " _yk
+if [[ "$_yk" =~ ^[Yy]$ ]]; then
+    if ! nixos-enter --root /mnt -c \
+        'systemd-cryptenroll --fido2-device=auto --fido2-with-client-pin=false --wipe-slot=password /dev/disk/by-partlabel/primary'; then
+        echo "    YubiKey enrollment failed - see modules/luks-common.nix for the" >&2
+        echo "    manual command and retry once the key is plugged in." >&2
+    fi
+fi
+
 cat <<EOF
 
-==> Done. Before rebooting, or on first login, still to do manually
-    (same as the manual steps the old install.sh needed too):
-      - set passwords:      passwd (as root, in the installed system)
-      - Secure Boot:        sbctl create-keys && sbctl enroll-keys --microsoft
-                             (see modules/secure-boot.nix)
-      - YubiKey LUKS unlock: systemd-cryptenroll --fido2-device=auto ...
-                             (see modules/luks-common.nix)
+==> Done. Reboot when ready.
 EOF
