@@ -171,7 +171,14 @@ in
     ALLOW_GROUPS = [ ];
     SYNC_ACL = false;
     SPACE_LIMIT = 0.5;
-    BACKGROUND_COMPARISON = true;
+    # true (the original value) makes snapper-cleanup pre-compute a diff
+    # between snapshots asynchronously via snapperd's D-Bus service - NixOS's
+    # services.snapper module doesn't wire up snapperd's D-Bus registration,
+    # so that call hangs for the D-Bus timeout and fails the whole cleanup
+    # unit (org.freedesktop.DBus.Error.NameHasNoOwner, ~90s wall clock with
+    # ~0 CPU time - a blocked/timed-out IPC call, not an actual crash).
+    # Cleanup and snapshotting themselves don't need this, so it's disabled.
+    BACKGROUND_COMPARISON = false;
     NUMBER_CLEANUP = true;
     NUMBER_MIN_AGE = 1800;
     NUMBER_LIMIT = 50;
@@ -191,7 +198,7 @@ in
     ALLOW_GROUPS = [ ];
     SYNC_ACL = false;
     SPACE_LIMIT = 0.5;
-    BACKGROUND_COMPARISON = true;
+    BACKGROUND_COMPARISON = false; # see the comment on the root config above
     NUMBER_CLEANUP = true;
     NUMBER_MIN_AGE = 1800;
     NUMBER_LIMIT = 50;
