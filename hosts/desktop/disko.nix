@@ -10,7 +10,7 @@
 # `content.extraOpenArgs` to include `[ "--header" "/dev/disk/by-id/<header-device>" ]`
 # and set `settings.header` accordingly; see modules/luks-common.nix for the
 # FIDO2 enrollment step.
-{ disk ? "/dev/nvme0n1" }:
+{ disk ? "/dev/nvme0n1", ... }:
 {
   disko.devices = {
     disk.main = {
