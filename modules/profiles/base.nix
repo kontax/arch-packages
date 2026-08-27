@@ -151,23 +151,27 @@ in
   # equivalent (system config changes are already tracked via NixOS generations);
   # this config only covers manual/scheduled snapshots of /. See MIGRATION.md.
   # subvolume -> SUBVOLUME and extraConfig -> direct attributes: both renames
-  # nixpkgs made to services.snapper.configs.* since this was first written -
-  # values themselves are unchanged, just no longer wrapped in one raw block.
+  # nixpkgs made to services.snapper.configs.* since this was first written.
+  # The rework also gave each field its natural Nix type instead of treating
+  # everything as a raw config-file string - lists for the space-separated
+  # user/group fields, bools for the yes/no flags, ints for the numeric
+  # limits/ages. Values themselves are unchanged from the original
+  # base/etc/snapper/configs/root.
   services.snapper.configs.root = {
     SUBVOLUME = "/";
-    ALLOW_USERS = "";
-    ALLOW_GROUPS = "";
-    SYNC_ACL = "no";
-    SPACE_LIMIT = "0.5";
-    BACKGROUND_COMPARISON = "yes";
-    NUMBER_CLEANUP = "yes";
-    NUMBER_MIN_AGE = "1800";
-    NUMBER_LIMIT = "50";
-    NUMBER_LIMIT_IMPORTANT = "10";
-    TIMELINE_CREATE = "no";
-    TIMELINE_CLEANUP = "no";
-    EMPTY_PRE_POST_CLEANUP = "yes";
-    EMPTY_PRE_POST_MIN_AGE = "1800";
+    ALLOW_USERS = [ ];
+    ALLOW_GROUPS = [ ];
+    SYNC_ACL = false;
+    SPACE_LIMIT = 0.5;
+    BACKGROUND_COMPARISON = true;
+    NUMBER_CLEANUP = true;
+    NUMBER_MIN_AGE = 1800;
+    NUMBER_LIMIT = 50;
+    NUMBER_LIMIT_IMPORTANT = 10;
+    TIMELINE_CREATE = false;
+    TIMELINE_CLEANUP = false;
+    EMPTY_PRE_POST_CLEANUP = true;
+    EMPTY_PRE_POST_MIN_AGE = 1800;
   };
 
   # /home is its own btrfs subvolume (disko.nix) and wasn't covered by the old
@@ -175,19 +179,19 @@ in
   # directory changes get the same manual/scheduled snapshot coverage.
   services.snapper.configs.home = {
     SUBVOLUME = "/home";
-    ALLOW_USERS = "";
-    ALLOW_GROUPS = "";
-    SYNC_ACL = "no";
-    SPACE_LIMIT = "0.5";
-    BACKGROUND_COMPARISON = "yes";
-    NUMBER_CLEANUP = "yes";
-    NUMBER_MIN_AGE = "1800";
-    NUMBER_LIMIT = "50";
-    NUMBER_LIMIT_IMPORTANT = "10";
-    TIMELINE_CREATE = "no";
-    TIMELINE_CLEANUP = "no";
-    EMPTY_PRE_POST_CLEANUP = "yes";
-    EMPTY_PRE_POST_MIN_AGE = "1800";
+    ALLOW_USERS = [ ];
+    ALLOW_GROUPS = [ ];
+    SYNC_ACL = false;
+    SPACE_LIMIT = 0.5;
+    BACKGROUND_COMPARISON = true;
+    NUMBER_CLEANUP = true;
+    NUMBER_MIN_AGE = 1800;
+    NUMBER_LIMIT = 50;
+    NUMBER_LIMIT_IMPORTANT = 10;
+    TIMELINE_CREATE = false;
+    TIMELINE_CLEANUP = false;
+    EMPTY_PRE_POST_CLEANUP = true;
+    EMPTY_PRE_POST_MIN_AGE = 1800;
   };
 
   # --- Packages ---
