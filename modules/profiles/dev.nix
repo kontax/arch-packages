@@ -5,12 +5,13 @@ let
 in
 {
   # "adbusers" dropped along with programs.adb.enable - systemd handles the
-  # udev/uaccess rules automatically now, no group membership needed
-  users.users.${cfg.user}.extraGroups = [ "docker" "libvirtd" ];
+  # udev/uaccess rules automatically now, no group membership needed.
+  # "libvirtd" also dropped along with virtualisation.libvirtd/virt-manager
+  # below - not used, and the legacy libvirtd.service was a persistently
+  # failed unit for no functional benefit.
+  users.users.${cfg.user}.extraGroups = [ "docker" ];
 
   virtualisation.docker.enable = true;
-  virtualisation.libvirtd.enable = true;
-  programs.virt-manager.enable = true;
 
   environment.systemPackages = with pkgs; [
     docker-compose
