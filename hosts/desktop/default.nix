@@ -4,7 +4,12 @@
 {
   imports = [
     ./hardware-configuration.nix
-    (import ./disko.nix { disk = "/dev/nvme0n1"; }) # EDIT to the real device
+    # Currently the Proxmox test VM: its disk shows up as /dev/sda (not
+    # nvme-style), and it's a 32G disk - the default 32G swapfile alone would
+    # fill it, causing disk-full/I/O errors partway through install. EDIT
+    # both back to real values (or delete the overrides) once this host is
+    # real hardware.
+    (import ./disko.nix { disk = "/dev/sda"; swapSize = "2G"; })
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
     ../../modules/profiles/dev.nix

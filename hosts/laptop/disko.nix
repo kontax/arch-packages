@@ -10,7 +10,7 @@
 # `content.extraOpenArgs` to include `[ "--header" "/dev/disk/by-id/<header-device>" ]`
 # and set `settings.header` accordingly; see modules/luks-common.nix for the
 # FIDO2 enrollment step.
-{ disk ? "/dev/nvme0n1", ... }:
+{ disk ? "/dev/nvme0n1", swapSize ? "16G", ... }:
 {
   disko.devices = {
     disk.main = {
@@ -57,8 +57,11 @@
                   "/swap" = {
                     mountpoint = "/swap";
                     mountOptions = [ "noatime" "nodiratime" "discard" "compress=zstd" ];
-                    # TODO: set to match physical RAM for hibernation support (was `free --mebi` in install.sh)
-                    swap.swapfile.size = "16G";
+                    # Default (16G) matches physical RAM for hibernation support
+                    # (was `free --mebi` in install.sh) - override for smaller
+                    # disks, e.g. test VMs, via the swapSize argument:
+                    #   nixos-install ... (or disko directly) --argstr swapSize "4G"
+                    swap.swapfile.size = swapSize;
                   };
                   "/snapshots" = {
                     mountpoint = "/.snapshots";
