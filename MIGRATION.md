@@ -93,6 +93,13 @@ no standalone attr (already installed unconditionally by base.nix),
 
 ## Config mapping notes
 
+- **nvim submodule + Nix**: `conf/base/etc/xdg/nvim` is a git submodule
+  (`.gitmodules`), and Nix's flake git-tree filtering does not include
+  submodule content by default - it'll error with
+  `Path '...xdg/nvim' ... is not tracked by Git` otherwise. Every flake
+  invocation needs `?submodules=1` on the flake ref (`nix flake check
+  '.?submodules=1'`, `--flake '.?submodules=1#desktop'`, etc.) - see
+  README.md and `bootstrap.sh` for where this is already wired in.
 - **zsh**: system-wide via `programs.zsh` (`loginShellInit`/
   `interactiveShellInit`) rather than home-manager, because the vendored
   `zshrc` sources `/etc/zsh/zsh-aliases` and `/etc/zsh/p10k.zsh` by absolute

@@ -54,7 +54,11 @@ read -rp "Press enter once done: " _
 
 echo
 echo "==> Installing NixOS (flake: $REPO_DIR#$HOST)"
-nixos-install --root /mnt --flake "$REPO_DIR#$HOST"
+# ?submodules=1 is required: the nvim config (conf/base/etc/xdg/nvim) is a
+# git submodule, and Nix's git-tree filtering ignores submodule content
+# unless asked for it - without this, evaluation fails with
+# "Path '...xdg/nvim' ... is not tracked by Git".
+nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST"
 
 cat <<EOF
 

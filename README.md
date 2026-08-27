@@ -41,9 +41,15 @@ new layout, and what didn't have a clean equivalent.
 
 ## Day to day
 
+The `?submodules=1` is required, not optional - the nvim config
+(`conf/base/etc/xdg/nvim`) is a git submodule, and Nix's git-tree filtering
+ignores submodule content unless you ask for it; without this flag you'll
+hit `Path '...xdg/nvim' ... is not tracked by Git`.
+
 ```bash
-sudo nixos-rebuild switch --flake .#desktop   # or #laptop
-nix flake update                              # bump pinned inputs
+nix flake check '.?submodules=1'
+sudo nixos-rebuild switch --flake '.?submodules=1#desktop'   # or #laptop
+nix flake update                                             # bump pinned inputs
 ```
 
 ## Adding a new host
