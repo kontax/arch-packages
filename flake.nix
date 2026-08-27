@@ -14,8 +14,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Tracks master rather than a release tag - v0.4.1 pinned to a nixpkgs
+    # revision old enough that `boot.bootspec.enable` (which that release
+    # still sets) has since been removed from nixpkgs entirely, breaking
+    # `nix flake check` outright. master tracks nixpkgs-unstable.
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.1";
+      url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

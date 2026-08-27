@@ -4,12 +4,13 @@ let
   cfg = config.couldinho;
 in
 {
-  users.users.${cfg.user}.extraGroups = [ "docker" "libvirtd" "adbusers" ];
+  # "adbusers" dropped along with programs.adb.enable - systemd handles the
+  # udev/uaccess rules automatically now, no group membership needed
+  users.users.${cfg.user}.extraGroups = [ "docker" "libvirtd" ];
 
   virtualisation.docker.enable = true;
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
-  programs.adb.enable = true;
 
   environment.systemPackages = with pkgs; [
     docker-compose
@@ -18,6 +19,10 @@ in
     rustup
     nasm
     python3Packages.ipython
+
+    # was programs.adb.enable - option removed, systemd 258 handles uaccess
+    # rules automatically now; this just gets the `adb` binary itself
+    android-tools
 
     lld
     clang
