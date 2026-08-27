@@ -12,6 +12,12 @@
 
   couldinho.user = "james";
 
+  # Currently being tested in a Proxmox VM, where Secure Boot doesn't add
+  # anything and Proxmox's OVMF virtual firmware has been finicky about
+  # custom key enrollment persisting. Flip back to true (or delete this
+  # line, since true is the default) once this host is real hardware.
+  couldinho.secureBoot = false;
+
   # was hidpi=No -> FONT=ter-716n
   console.font = lib.mkForce "ter-716n";
 
