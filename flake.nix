@@ -32,8 +32,13 @@
 
       # Personal values (currently just a GPG key ID/URL - see
       # modules/options.nix and home/programs/gpg-import.nix) don't belong in
-      # this public repo. local.nix is gitignored; see local.nix.example.
-      localModule = nixpkgs.lib.optional (builtins.pathExists ./local.nix) ./local.nix;
+      # this public repo. Lives outside the repo entirely (not just
+      # gitignored) - Nix flakes only evaluate files tracked by git, so a
+      # gitignored-and-untracked local.nix at the repo root was silently
+      # invisible to flake evaluation no matter what it contained. Reading
+      # from $HOME requires --impure (see README.md's rebuild command).
+      localPath = builtins.getEnv "HOME" + "/.config/couldinho/local.nix";
+      localModule = nixpkgs.lib.optional (builtins.pathExists localPath) localPath;
 
       mkHost = { hostName, extraModules ? [ ] }:
         nixpkgs.lib.nixosSystem {
