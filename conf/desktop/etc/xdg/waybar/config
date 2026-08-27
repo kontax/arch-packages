@@ -37,6 +37,7 @@
     "custom/usbguard": {
         "exec": "waybar-usbguard",
         "return-type": "json",
+        "interval": 1,
         "on-click": "waybar-usbguard allow",
         "on-click-right": "waybar-usbguard reject"
     },
