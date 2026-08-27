@@ -31,4 +31,24 @@
     default = null;
     description = "GPG key ID to mark as ultimately trusted, if set. See local.nix.example.";
   };
+
+  # Same reasoning as couldinho.gpg.keyId above - the pass repo URL and the
+  # pass-git-helper mapping (which pass entry backs which git remote) are
+  # personal, not secret (the store itself is what's actually encrypted, and
+  # reading it back out still needs the GPG secret key above to be present -
+  # on a YubiKey for this setup, not just imported). See
+  # home/programs/password-store.nix and local.nix.example.
+  options.couldinho.passwordStore = {
+    url = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Git URL to clone/pull as ~/.password-store, if set. See local.nix.example.";
+    };
+
+    mapping = lib.mkOption {
+      type = lib.types.nullOr lib.types.lines;
+      default = null;
+      description = "Contents of ~/.config/pass-git-helper/git-pass-mapping.ini, if set. See local.nix.example.";
+    };
+  };
 }
