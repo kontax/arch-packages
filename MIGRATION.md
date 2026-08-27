@@ -40,7 +40,7 @@ gaps:
 | `python-chump-git` (Pushover client for urlwatch) | Not packaged; urlwatch itself is kept, this notification backend is dropped |
 | `udiskie-dmenu-git` | Not packaged; replaced with udiskie's own `--tray` flag (`home/programs/desktop.nix`) |
 | `light` | Unpackaged fork; using `pkgs.acpilight` (maintained fork, slightly different CLI) instead - see `modules/profiles/laptop.nix` |
-| `checkofficial`, `waybar-updates` scripts | Call pacman-contrib's `checkupdates`, which doesn't exist under NixOS - the scripts are still installed verbatim (via `couldinho-desktop-scripts`) but won't function until rewritten against something like `nix flake update --dry-run` |
+| `checkofficial` script | Calls pacman-contrib's `checkupdates`, which doesn't exist under NixOS - still installed verbatim (via `couldinho-desktop-scripts`) but non-functional |
 
 The `sec` and `xcp-ng` profiles (reversing/exploitation tooling and XCP-NG
 guest tools) were dropped entirely rather than migrated - not needed, so
@@ -93,6 +93,13 @@ no standalone attr (already installed unconditionally by base.nix),
 
 ## Config mapping notes
 
+- **waybar-updates**: rewritten (not just ported) - was a pacman/AUR/pacdiff/
+  rebuild-detector checker, none of which apply under NixOS. Now diffs the
+  flake's own `flake.lock` against what `nix flake update` would produce in a
+  scratch copy, reporting which inputs have newer revisions available.
+  Assumes the flake is checked out at `$HOME/arch-packages` (override via
+  `WAYBAR_UPDATES_FLAKE_DIR`) **and that `flake.lock` is actually committed**
+  - without a committed lock file there's nothing to diff against.
 - **nvim submodule + Nix**: `conf/base/etc/xdg/nvim` is a git submodule
   (`.gitmodules`), and Nix's flake git-tree filtering does not include
   submodule content by default - it'll error with

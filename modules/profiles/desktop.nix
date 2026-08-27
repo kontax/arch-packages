@@ -103,6 +103,7 @@ in
     swappy
 
     # apps / utilities
+    jq # used by waybar-updates to diff flake.lock
     alsa-utils
     pavucontrol
     pamixer

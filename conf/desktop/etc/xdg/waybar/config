@@ -53,6 +53,7 @@
         "exec": "waybar-updates show",
         "return-type": "json",
         "signal": 1,
+        "on-click": "waybar-updates notify",
         "on-click-right": "waybar-updates refresh",
         "interval": "once"
     },

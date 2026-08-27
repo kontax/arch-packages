@@ -1,54 +1,70 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# Checks for pending updates to this flake's own inputs (nixpkgs,
+# home-manager, disko, lanzaboote) - was a pacman/AUR/pacdiff/rebuild-detector
+# checker, none of which mean anything under NixOS. Assumes the flake is
+# checked out at $HOME/arch-packages (override with WAYBAR_UPDATES_FLAKE_DIR)
+# and that it has a committed flake.lock to compare against.
+set -uo pipefail
 
 cache_path="${XDG_CACHE_HOME:-$HOME/.cache}/waybar-updates"
+flake_dir="${WAYBAR_UPDATES_FLAKE_DIR:-$HOME/arch-packages}"
 
-case "$1" in
-    show)
-        if [ -f "$cache_path" ]; then
-            cat "$cache_path"
-        else
-            printf '{"text": "waybar-updates cache is missing"}\n'
+show() {
+    if [ -f "$cache_path" ]; then
+        cat "$cache_path"
+    else
+        printf '{"text": ""}\n'
+    fi
+}
+
+notify() {
+    tooltip="$(sed -n 's/.*"tooltip": *"\([^"]*\)".*/\1/p' "$cache_path" 2>/dev/null | sed 's/\\n/\n/g')"
+    if [ -n "$tooltip" ]; then
+        notify-send "Flake updates available" "$tooltip"
+    else
+        notify-send "Flake updates" "Everything up to date"
+    fi
+}
+
+refresh() {
+    if [ ! -f "$flake_dir/flake.lock" ]; then
+        printf '{"text": ""}\n' > "$cache_path"
+        return
+    fi
+
+    tmp="$(mktemp -d)"
+    trap 'rm -rf "$tmp"' EXIT
+    cp "$flake_dir/flake.nix" "$flake_dir/flake.lock" "$tmp/"
+
+    if ! (cd "$tmp" && nix --extra-experimental-features 'nix-command flakes' flake update) >/dev/null 2>&1; then
+        # Network down or similar - keep showing whatever was last cached
+        # rather than replacing it with a false "nothing pending".
+        return
+    fi
+
+    changed=""
+    for name in $(jq -r '.nodes | keys[]' "$flake_dir/flake.lock"); do
+        old_rev="$(jq -r --arg n "$name" '.nodes[$n].locked.rev // empty' "$flake_dir/flake.lock")"
+        new_rev="$(jq -r --arg n "$name" '.nodes[$n].locked.rev // empty' "$tmp/flake.lock")"
+        if [ -n "$old_rev" ] && [ -n "$new_rev" ] && [ "$old_rev" != "$new_rev" ]; then
+            changed="${changed}${changed:+\n}${name}"
         fi
-        ;;
-    refresh)
-        pac="$(checkupdates)"
-        aur="$(aur repo -Su -d couldinho-arch-aur)"
-        off="$(checkofficial)"
-        dif="$(pacdiff -o)"
-        reb="$(checkrebuild)"
+    done
 
-        pac_n=$(printf "$pac" | grep -c '^')
-        aur_n=$(printf "$aur" | grep -c '^')
-        off_n=$(printf "$off" | grep -c '^')
-        dif_n=$(printf "$dif" | grep -c '^')
-        reb_n=$(printf "$reb" | grep -c '^')
+    if [ -z "$changed" ]; then
+        printf '{"text": ""}\n' > "$cache_path"
+    else
+        n="$(printf '%b' "$changed" | grep -c '^')"
+        printf "{\"text\": \"<span foreground='#928374'></span> %s\", \"tooltip\": \"Flake inputs with updates available:\\n%s\" }\n" \
+            "$n" "$changed" > "$cache_path"
+    fi
 
-        text=""
-        tooltip=""
+    pkill -RTMIN+1 -x waybar 2>/dev/null || true
+}
 
-        [ -n "$text" -o -n "$off" ] && text="/${off_n}${text}"
-        [ -n "$off" ]               && tooltip="Became official:\n\n$off\n\n${tooltip}"
-        [ -n "$text" -o -n "$reb" ] && text="/${reb_n}${text}"
-        [ -n "$reb" ]               && tooltip="Rebuild required:\n\n$reb\n\n${tooltip}"
-        [ -n "$text" -o -n "$dif" ] && text="/${dif_n}${text}"
-        [ -n "$dif" ]               && tooltip="pacdiff:\n\n$dif\n\n${tooltip}"
-        [ -n "$text" -o -n "$aur" ] && text="/${aur_n}${text}"
-        [ -n "$aur" ]               && tooltip="AUR:\n\n$aur\n\n${tooltip}"
-        [ -n "$text" -o -n "$pac" ] && text="${pac_n}${text}"
-        [ -n "$pac" ]               && tooltip="pacman:\n\n$pac\n\n${tooltip}"
-
-        tooltip="$(printf "$tooltip" | perl -pe 's/\n/\\n/g' | perl -pe 's/(?:\\n)+$//')"
-
-        if [ -z "$text" ]; then
-            printf '{"text": ""}\n' > "$cache_path"
-        else
-            printf "{\"text\": \"<span foreground='#928374'></span> %s\", \"tooltip\": \"%s\" }\n" "$text" "$tooltip" > "$cache_path"
-        fi
-
-        pkill -RTMIN+1 -x waybar
-        ;;
-    *)
-        echo >&2 "Usage: $0 <show|refresh>"
-        exit 1
-        ;;
+case "${1:-}" in
+    show) show ;;
+    refresh) refresh ;;
+    notify) notify ;;
+    *) echo >&2 "Usage: $0 <show|refresh|notify>"; exit 1 ;;
 esac
