@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# pkgs.pass's own passmenu execs a program literally named `dmenu-wl` under
+# $WAYLAND_DISPLAY - functional (once this repo stopped shadowing it with an
+# unrelated same-named script, see git log), but a plain suckless-dmenu-style
+# top bar, inconsistent with every other picker in this setup (rofi-bluetooth,
+# pinentry-rofi, dmenu-nmcli's rofi tooling) which all use rofi's centered
+# popup. Reimplements the same entry-listing + pass show -c behaviour
+# passmenu has, just via rofi instead - pass show -c already handles the
+# Wayland-vs-X11 clipboard split correctly on its own (checks $WAYLAND_DISPLAY,
+# uses wl-copy), this only replaces the picker.
+prefix="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+
+selection="$(
+    find "$prefix" -name '*.gpg' -printf '%P\n' | sed 's/\.gpg$//' | sort |
+        rofi -dmenu "$@"
+)"
+
+[ -n "$selection" ] || exit 0
+
+pass show -c "$selection"
