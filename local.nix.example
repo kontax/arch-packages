@@ -20,6 +20,10 @@
 # (`ssh-add -L` once the card's plugged in) as a read-only deploy key on the
 # password-store repo.
 #
+# If the git server sits behind a non-default SSH port (e.g. proxied through
+# HAProxy), use the full ssh://user@host:port/path form - the git@host:path
+# scp-like shorthand has no way to express a port.
+#
 # Reading from $HOME requires --impure - see README.md's rebuild command.
 {
   couldinho.gpg.keyId = "0123456789ABCDEF";
