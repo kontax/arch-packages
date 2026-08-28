@@ -167,7 +167,11 @@ bindsym --to-code {
     $hyper+d                     exec cgtoggle fuzzel
     $hyper+p                     exec "wl-clipboard-manager lock; cglaunch passmenu -p pass; wl-clipboard-manager unlock"
     $win+p                       exec cgtoggle pass-gen
-    $hyper+m                     exec cgtoggle udiskie-dmenu
+    # $hyper+m used to open udiskie-dmenu here - unpackaged (MIGRATION.md),
+    # replaced with udiskie's own --tray flag, which needs a "tray" module
+    # in waybar to actually show/click (not currently present in
+    # modules-left/right) - removed the dead binding rather than leave it
+    # doing nothing.
     $hyper+n                       exec cgtoggle dmenu-nmcli
     $hyper+grave                   exec cgtoggle wl-clipboard-manager dmenu
     $hyper+Backspace             exec cgtoggle emoji-dmenu
@@ -225,10 +229,15 @@ bindsym --to-code {
     $hyper+q exec swaync-client --close-all
 
     # Brightness control
-    XF86MonBrightnessUp         exec light -A 1%
-    XF86MonBrightnessDown       exec light -U 1%
-    Shift+XF86MonBrightnessUp   exec light -A 5%
-    Shift+XF86MonBrightnessDown exec light -U 5%
+    # light doesn't exist (MIGRATION.md: replaced by acpilight, whose CLI is
+    # xbacklight not light) - was still called literally here, unlike
+    # waybar-movie's identical bug (already fixed) this one was never caught
+    # since brightness keys just silently did nothing rather than logging
+    # anywhere obvious.
+    XF86MonBrightnessUp         exec xbacklight -inc 1
+    XF86MonBrightnessDown       exec xbacklight -dec 1
+    Shift+XF86MonBrightnessUp   exec xbacklight -inc 5
+    Shift+XF86MonBrightnessDown exec xbacklight -dec 5
 
     # Media control
     XF86AudioPlay exec playerctl --player playerctld play-pause
