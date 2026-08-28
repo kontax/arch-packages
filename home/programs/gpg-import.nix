@@ -34,7 +34,7 @@ lib.mkIf (keyId != null) {
     # trust (value 6) without ever touching a tty; it wants the full
     # fingerprint rather than whatever ID form keyId happens to be, so
     # resolve that first.
-    fpr="$(${pkgs.gnupg}/bin/gpg --with-colons --fingerprint "${keyId}" | awk -F: '/^fpr:/ { print $10; exit }')"
+    fpr="$(${pkgs.gnupg}/bin/gpg --with-colons --fingerprint "${keyId}" | ${pkgs.gawk}/bin/awk -F: '/^fpr:/ { print $10; exit }')"
     $DRY_RUN_CMD bash -c "echo \"$fpr:6:\" | ${pkgs.gnupg}/bin/gpg --import-ownertrust"
   '';
 }
