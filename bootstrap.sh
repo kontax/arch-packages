@@ -4,7 +4,10 @@
 # install.sh - most of what that script asked interactively (hostname, user,
 # disk layout, encryption, package set) is now declared in this repo instead;
 # the only two things you still choose at install time are which host to
-# build and the disk to partition (destructive - double check it).
+# build and the disk to partition (destructive - double check it). One more
+# prerequisite this script can't do for you: ~/.config/couldinho/local.nix
+# (see local.nix.example) needs to already exist, since couldinho.user has
+# no default and every host reads it from there.
 set -euo pipefail
 trap 's=$?; echo "$0: error on line $LINENO: $BASH_COMMAND"; exit $s' ERR
 
@@ -35,6 +38,22 @@ if [ ! -d "$HOST_DIR" ]; then
     echo "No such host: $HOST (looked in $HOST_DIR)" >&2
     exit 1
 fi
+
+# couldinho.user has no default (modules/options.nix) - every host reads it
+# from ~/.config/couldinho/local.nix, which this script doesn't generate
+# (it's meant to be hand-authored, and often carries more than just the
+# username - a GPG key ID, password-store config). $HOME here is root's,
+# since this script needs sudo - checked and evaluated now, before the
+# destructive disko step, so a missing/broken local.nix fails fast instead
+# of after the disk's already been wiped.
+if [ ! -f "$HOME/.config/couldinho/local.nix" ]; then
+    echo "No $HOME/.config/couldinho/local.nix found - copy" >&2
+    echo "$REPO_DIR/local.nix.example there and fill it in (at minimum" >&2
+    echo "couldinho.user), then rerun." >&2
+    exit 1
+fi
+PRIMARY_USER="$(nix --extra-experimental-features 'nix-command flakes' eval --raw \
+    "$REPO_DIR?submodules=1#nixosConfigurations.$HOST.config.couldinho.user")"
 
 if [ -z "$DISK" ]; then
     echo "Available disks:"
@@ -87,10 +106,21 @@ nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST" --no-bootloader
 # install right after it will fail too and give a clearer, fatal signal
 # that it still needs to be redone once the firmware issue is fixed.
 
-PRIMARY_USER="$(nix --extra-experimental-features 'nix-command flakes' eval --raw \
-    "$REPO_DIR?submodules=1#nixosConfigurations.$HOST.config.couldinho.user")"
 SECURE_BOOT="$(nix --extra-experimental-features 'nix-command flakes' eval \
     "$REPO_DIR?submodules=1#nixosConfigurations.$HOST.config.couldinho.secureBoot")"
+
+echo
+echo "==> Copying local.nix into $PRIMARY_USER's new home"
+# $HOME/.config/couldinho/local.nix (checked for above) only satisfied this
+# script's own evaluation, running as root on the live ISO's ephemeral
+# filesystem - /home/$PRIMARY_USER on the target disk is a different user,
+# a different home, and after reboot a different filesystem entirely.
+# Without this, the very first nixos-rebuild switch on the installed system
+# would hit the exact same missing-local.nix failure all over again.
+mkdir -p "/mnt/home/$PRIMARY_USER/.config/couldinho"
+cp "$HOME/.config/couldinho/local.nix" "/mnt/home/$PRIMARY_USER/.config/couldinho/local.nix"
+nixos-enter --root /mnt -c \
+    "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/.config/couldinho && chmod 600 /home/$PRIMARY_USER/.config/couldinho/local.nix"
 
 echo
 echo "==> Set root's password"
