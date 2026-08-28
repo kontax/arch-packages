@@ -53,4 +53,22 @@
       description = "Contents of ~/.config/pass-git-helper/git-pass-mapping.ini, if set. See local.nix.example.";
     };
   };
+
+  # Same reasoning as the options above - a name/email is personal, and
+  # /etc/gitconfig (modules/profiles/base.nix) is public and shared across
+  # every host, so it deliberately has no [user] section. See
+  # home/programs/git.nix and local.nix.example.
+  options.couldinho.git = {
+    userName = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "git user.name, if set. See local.nix.example.";
+    };
+
+    userEmail = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "git user.email, if set. See local.nix.example.";
+    };
+  };
 }

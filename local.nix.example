@@ -6,11 +6,12 @@
 # information that shouldn't be hardcoded into this public repo: which user
 # account every host builds around (couldinho.user - required, every host
 # needs it, no default), a GPG key ID to fetch from a keyserver and trust
-# (see modules/options.nix and home/programs/gpg-import.nix), and the pass
+# (see modules/options.nix and home/programs/gpg-import.nix), the pass
 # password-store's git URL plus its pass-git-helper mapping (see
-# home/programs/password-store.nix) - both optional. None of this makes
-# secrets readable on its own - decrypting the password store still needs
-# the GPG secret key physically present, on a YubiKey for this setup.
+# home/programs/password-store.nix), and a git user.name/user.email (see
+# home/programs/git.nix) - all optional. None of this makes secrets
+# readable on its own - decrypting the password store still needs the GPG
+# secret key physically present, on a YubiKey for this setup.
 #
 # Use an SSH (not HTTPS) URL for passwordStore.url, authenticated via the
 # GPG key's Authenticate subkey (gpg-import.nix turns on gpg-agent's SSH
@@ -30,6 +31,11 @@
   couldinho.user = "you";
 
   couldinho.gpg.keyId = "0123456789ABCDEF";
+
+  couldinho.git = {
+    userName = "Your Name";
+    userEmail = "you@example.com";
+  };
 
   couldinho.passwordStore = {
     url = "git@git.example.com:you/password-store.git";

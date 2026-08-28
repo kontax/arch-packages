@@ -11,6 +11,7 @@
     ./programs/nvim.nix
     ./programs/gpg-import.nix
     ./programs/password-store.nix
+    ./programs/git.nix
   ];
 
   home.username = osConfig.couldinho.user;
