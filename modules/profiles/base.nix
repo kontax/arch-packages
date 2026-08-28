@@ -140,6 +140,17 @@ in
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
+    # Left unset, this defaults to picking pinentry-gnome3 (the module's
+    # auto-detect heuristic falls back to "gnome3 on all other systems with
+    # X enabled" - true here even under sway, since services.xserver.enable
+    # is on for xkb keyboard config). Its GTK dialog doesn't reliably grab
+    # keyboard focus outside an actual GNOME session under wlroots
+    # compositors - confirmed on real hardware, the PIN prompt appeared but
+    # couldn't be typed into. pinentry-rofi uses the same rofi launcher
+    # already relied on elsewhere in this sway setup (dmenu-nmcli,
+    # rofi-bluetooth), so it gets the same reliable focus every other rofi
+    # menu already has.
+    pinentryPackage = pkgs.pinentry-rofi;
   };
 
   # --- YubiKey touch-to-confirm for sudo/polkit (was pam.d/{sudo,polkit-1}) ---

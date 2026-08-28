@@ -11,9 +11,7 @@
     qalculate-gtk
     inotify-tools
     yubikey-touch-detector
-    pinentry-gnome3
     qrencode
-    gcr
     progress
   ];
 
