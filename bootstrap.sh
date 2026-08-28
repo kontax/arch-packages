@@ -102,7 +102,12 @@ echo "==> Installing NixOS (flake: $REPO_DIR#$HOST)"
 # --impure: same reason as the PRIMARY_USER eval above - without it,
 # nixos-install would silently build with local.nix's values (couldinho.user
 # included) unresolved rather than actually using them.
-nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST" --no-bootloader --impure
+#
+# --no-root-password: nixos-install prompts for root's password itself by
+# default as its own final step - suppressed here since the explicit
+# "Set root's password" step below already covers it, right next to the
+# primary user's, rather than duplicating an unlabeled prompt mid-install.
+nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST" --no-bootloader --impure --no-root-password
 
 # From here on the system is built and copied, just not yet bootable - none
 # of the remaining steps should be able to abort the script and make that
