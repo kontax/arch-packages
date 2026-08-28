@@ -10,6 +10,15 @@ in
     couldinho-laptop-scripts # rofi-bluetooth
   ];
 
+  # acpilight ships its own udev rule (chgrp video + chmod g+w on the
+  # backlight sysfs brightness file) but a package's udev rules aren't
+  # auto-registered just by installing it under NixOS the way they would be
+  # via an Arch pacman hook - confirmed on real hardware, xbacklight failed
+  # with a plain [Errno 13] Permission denied writing
+  # /sys/class/backlight/intel_backlight/brightness with no rule active at
+  # all.
+  services.udev.packages = [ pkgs.acpilight ];
+
   services.tlp.enable = true;
 
   # was standalone `iwd` package alongside NetworkManager - use NM's iwd
