@@ -162,41 +162,28 @@ echo "==> Installing the bootloader"
 # machine that can't boot.
 nixos-enter --root /mnt -c '/run/current-system/bin/switch-to-configuration boot'
 
-echo
-read -rp "Enroll a YubiKey for LUKS unlock now (key must be plugged in)? [y/N] " _yk
-if [[ "$_yk" =~ ^[Yy]$ ]]; then
-    # Adding a FIDO2 unlock slot needs proving access to an existing one
-    # first (the passphrase disko asked for while formatting), and a
-    # PIN-protected key also needs its PIN just to create the credential in
-    # the first place - regardless of --fido2-with-client-pin=false below,
-    # which only controls whether future *unlocks* need the PIN again (they
-    # won't - touch only). Neither ask-password prompt can reach an
-    # interactive terminal from inside the nixos-enter chroot below (no
-    # running systemd instance there to service the request), failing with
-    # "Failed to query password"/"Failed to acquire user PIN: No such file
-    # or directory" - so both are read here instead and passed through via
-    # $PASSWORD/$PIN, which systemd-cryptenroll reads as non-interactive
-    # overrides for exactly this.
-    read -rsp "Existing disk passphrase (to authorize the new FIDO2 slot): " LUKS_PASSWORD
-    echo
-    read -rsp "YubiKey FIDO2 PIN (leave blank if this key has none set): " FIDO2_PIN
-    echo
+# Not attempted here, even though the key may already be plugged in: adding
+# a FIDO2 unlock slot needs the existing disk passphrase to authorize it,
+# and a PIN-protected key also needs its PIN to create the credential at
+# all. Both are systemd-cryptenroll's own interactive ask-password prompts,
+# which can't reach a terminal from inside the nixos-enter chroot used
+# throughout this script (no systemd instance in there to service the
+# request - "Failed to query password"/"Failed to acquire user PIN: No such
+# file or directory"). There's no environment-variable override for this -
+# systemd-cryptenroll's actual non-interactive mechanism is its own
+# credentials system (cryptenroll.passphrase, cryptenroll.fido2-pin, loaded
+# via $CREDENTIALS_DIRECTORY or `systemd-run --set-credential=`), which is
+# more machinery than is worth wiring into a chroot for a one-time step -
+# see modules/luks-common.nix for the plain command to run after reboot,
+# where it prompts normally.
+cat <<EOF
 
-    # disko names GPT partition labels "disk-<diskName>-<partitionName>" (all
-    # of this repo's disko.nix files use disk.main + a "primary" partition,
-    # giving "disk-main-primary"), not just the bare partition name.
-    CRYPTENROLL_CMD="$(printf 'PASSWORD=%q' "$LUKS_PASSWORD")"
-    if [ -n "$FIDO2_PIN" ]; then
-        CRYPTENROLL_CMD="$CRYPTENROLL_CMD $(printf 'PIN=%q' "$FIDO2_PIN")"
-    fi
-    CRYPTENROLL_CMD="$CRYPTENROLL_CMD systemd-cryptenroll --fido2-device=auto --fido2-with-client-pin=false --wipe-slot=password /dev/disk/by-partlabel/disk-main-primary"
-
-    if ! nixos-enter --root /mnt -c "$CRYPTENROLL_CMD"; then
-        echo "    YubiKey enrollment failed - see modules/luks-common.nix for the" >&2
-        echo "    manual command and retry once the key is plugged in." >&2
-    fi
-    unset LUKS_PASSWORD FIDO2_PIN CRYPTENROLL_CMD
-fi
+==> YubiKey LUKS enrollment (optional, not done by this script)
+After rebooting and logging in, with the key plugged in:
+  sudo systemd-cryptenroll --fido2-device=auto --fido2-with-client-pin=false \\
+      --wipe-slot=password /dev/disk/by-partlabel/disk-main-primary
+See modules/luks-common.nix.
+EOF
 
 cat <<EOF
 

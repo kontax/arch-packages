@@ -13,13 +13,19 @@
 # is named "main" and its partition "primary", the label is "disk-main-primary".
 # Afterwards add "fido2-device=auto" to that host's crypttabExtraOpts.
 #
-# Run directly like this (sudo, no chroot) on an already-booted real system,
-# it'll prompt interactively for the existing disk passphrase and, if the key
-# has one set, its FIDO2 PIN. bootstrap.sh runs the same command inside a
-# nixos-enter chroot instead, where neither prompt can reach a terminal (no
-# systemd instance in there to service the ask-password request) - see its
-# own comments for why it reads both upfront and passes them via $PASSWORD/
-# $PIN, which systemd-cryptenroll accepts as non-interactive overrides.
+# Deliberately not attempted by bootstrap.sh itself - run this directly
+# (sudo, no chroot) on an already-booted real system with the key plugged
+# in, and it prompts interactively as needed, both for the existing disk
+# passphrase and, if the key has one set, its FIDO2 PIN. Inside a
+# nixos-enter chroot (which is where bootstrap.sh runs everything else)
+# neither prompt can reach a terminal - no systemd instance in there to
+# service the ask-password request - failing with "Failed to query
+# password"/"Failed to acquire user PIN: No such file or directory".
+# systemd-cryptenroll has no environment-variable override for this despite
+# some claims to the contrary online - its actual non-interactive mechanism
+# is its own credentials system (cryptenroll.passphrase, cryptenroll.fido2-pin,
+# loaded via $CREDENTIALS_DIRECTORY or `systemd-run --set-credential=`),
+# more machinery than's worth wiring into a chroot for a one-time step.
 { ... }:
 {
   boot.initrd.systemd.enable = true;
