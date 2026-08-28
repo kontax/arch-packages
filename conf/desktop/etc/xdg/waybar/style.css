@@ -9,17 +9,7 @@
   background: @background;
   border: none;
   border-radius: 0;
-  /* Font Awesome 7 and Symbols Nerd Font (modules/profiles/desktop.nix)
-   * both claim glyphs in the same legacy Font Awesome 4 Private Use Area
-   * codepoints this config's icon spans use (e.g. U+F097) - two fonts
-   * both "covering" a codepoint is exactly the case Pango's fallback
-   * arbitration is unreliable for, confirmed on real hardware: the clock
-   * module's time icon rendered as a literal "T" instead of a clock glyph.
-   * Listing Font Awesome explicitly (Free then Brands, for the
-   * custom/movie module's youtube icon which is Brands-only) resolves the
-   * collision deterministically instead of leaving it to chance.
-   */
-  font-family: Input, "pango:Taskbar", "Font Awesome 7 Free", "Font Awesome 7 Brands", "Symbols Nerd Font";
+  font-family: Input, "pango:Taskbar";
   font-size: 13px;
   min-height: 0;
 }

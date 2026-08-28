@@ -22,9 +22,9 @@ marker="/tmp/waybar-movie"
 
 show() {
     if [ -e "$marker" ]; then
-        printf "{\"text\": \" <span foreground='#928374'></span> \", \"class\": \"on\"}\n"
+        printf "{\"text\": \" <span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> \", \"class\": \"on\"}\n"
     else
-        printf "{\"text\": \" <span foreground='#928374'></span> \", \"class\": \"off\"}\n"
+        printf "{\"text\": \" <span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> \", \"class\": \"off\"}\n"
     fi
 }
 

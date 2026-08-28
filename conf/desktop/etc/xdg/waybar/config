@@ -66,10 +66,10 @@
         "tooltip": false,
         "format": "{icon}",
         "format-icons": {
-            "notification": "<span foreground='#928374'></span>",
-            "none": "<span foreground='#928374'></span>",
-            "dnd-notification": "<span foreground='#928374'></span>",
-            "dnd-none": "<span foreground='#928374'></span>"
+            "notification": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>",
+            "none": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>",
+            "dnd-notification": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>",
+            "dnd-none": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>"
         },
         "return-type": "json",
         "exec": "swaync-client --subscribe-waybar",
@@ -91,31 +91,31 @@
     },
     "clock": {
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "<span foreground='#928374'></span> {:%a, %d %b  <span foreground='#928374'></span> %H:%M}"
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {:%a, %d %b  <span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> %H:%M}"
     },
     "cpu": {
-        "format": "<span foreground='#928374'></span> {usage}%",
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {usage}%",
         "states": {
             "warning": 70,
             "critical": 90
         }
     },
     "disk": {
-        "format": "<span foreground='#928374'></span> {percentage_free}%",
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {percentage_free}%",
         "states": {
             "warning": 70,
             "critical": 90
         }
     },
     "memory": {
-        "format": "<span foreground='#928374'></span> {}%",
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {}%",
         "states": {
             "warning": 70,
             "critical": 90
         }
     },
     "backlight": {
-        "format": "<span foreground='#928374'>{icon}</span> {percent}%",
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'>{icon}</span> {percent}%",
         "format-icons": [""],
         "tooltip-format": "{percent}%"
     },
@@ -125,20 +125,20 @@
     },
     "network": {
         "interval": 2,
-        "format-wifi": "<span foreground='#928374'></span> {essid}",
-        "format-ethernet": "<span foreground='#928374'></span> {ifname}",
-        "format-linked": "<span foreground='#928374'></span> {ifname}",
-        "format-disconnected": " <span foreground='#928374'></span> ",
+        "format-wifi": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {essid}",
+        "format-ethernet": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {ifname}",
+        "format-linked": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {ifname}",
+        "format-disconnected": " <span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> ",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n {bandwidthDownBits}\n {bandwidthUpBits}",
         "on-click": "dmenu-nmcli"
     },
     "pulseaudio": {
-        "format": "<span foreground='#928374'>{icon}</span> {volume}%   {format_source}",
-        "format-bluetooth": "<span foreground='#928374'>{icon}</span> {volume}%   {format_source}",
-        "format-bluetooth-muted": "<span foreground='#928374'> {icon}</span>   {format_source}",
-        "format-muted": "<span foreground='#928374'></span>   {format_source}",
-        "format-source": "<span foreground='#928374'></span> {volume}%",
-        "format-source-muted": "<span foreground='#928374'></span>",
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'>{icon}</span> {volume}%   {format_source}",
+        "format-bluetooth": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'>{icon}</span> {volume}%   {format_source}",
+        "format-bluetooth-muted": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'> {icon}</span>   {format_source}",
+        "format-muted": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>   {format_source}",
+        "format-source": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {volume}%",
+        "format-source-muted": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>",
         "format-icons": {
             "headphone": "",
             "hands-free": "",

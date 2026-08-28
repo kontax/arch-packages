@@ -23,7 +23,7 @@ first_blocked_line() {
 show() {
     blocked="$(first_blocked_line | grep -Po 'name "\K[^"]+')"
     if [ -n "$blocked" ]; then
-        printf "{\"text\": \"<span foreground='#928374'></span> %s\"}\n" "$blocked"
+        printf "{\"text\": \"<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> %s\"}\n" "$blocked"
     else
         printf '{"text": ""}\n'
     fi

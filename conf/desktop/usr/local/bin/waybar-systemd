@@ -18,5 +18,5 @@ else
 
     tooltip="$(printf "$tooltip" | perl -pe 's/\n/\\n/g' | perl -pe 's/(?:\\n)+$//')"
 
-    printf '{"text": " %s", "tooltip": "%s" }\n' "$text" "$tooltip"
+    printf "{\"text\": \"<span face='Font Awesome 7 Free,Font Awesome 7 Brands'></span> %s\", \"tooltip\": \"%s\" }\n" "$text" "$tooltip"
 fi
