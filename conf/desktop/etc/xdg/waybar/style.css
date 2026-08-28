@@ -55,7 +55,6 @@ window#waybar {
 #custom-decrypted,
 #custom-updates,
 #custom-mail,
-#custom-vpn.off,
 #battery.warning,
 #disk.warning,
 #memory.warning,
@@ -106,7 +105,6 @@ window#waybar {
   margin: 0 6px;
 }
 
-#custom-vpn,
 #custom-dnd,
 #language,
 #custom-recording {
@@ -140,7 +138,6 @@ window#waybar {
 }
 
 #custom-decrypted,
-#custom-movie,
-#custom-vpn {
+#custom-movie {
   color: @dim;
 }

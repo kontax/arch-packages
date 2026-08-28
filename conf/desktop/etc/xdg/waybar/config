@@ -15,7 +15,6 @@
         "custom/dnd",
         "pulseaudio",
         "network",
-        "custom/vpn",
         "custom/wireguard",
         "cpu",
         "memory",
@@ -57,10 +56,6 @@
         "on-click": "waybar-updates notify",
         "on-click-right": "waybar-updates refresh",
         "interval": "once"
-    },
-    "custom/vpn": {
-        "exec": "waybar-vpn",
-        "return-type": "json"
     },
     "custom/wireguard": {
         "exec": "wireguard-status",

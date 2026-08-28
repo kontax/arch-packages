@@ -9,7 +9,7 @@ function get_conn {
         class=on
     else
         icon="<span foreground='#928374'></span>"
-        tooltip=""
+        tooltip="WireGuard: disconnected. Click to connect."
         class=off
     fi
     printf '{"text": " %s ", "class": "%s", "tooltip": "%s"}\n' "$icon" "$class" "$tooltip"
