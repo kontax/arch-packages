@@ -54,4 +54,17 @@ in
   # build environment has. Doesn't affect the actual udiskie binary we ship,
   # just skips running its tests during the nixpkgs build.
   udiskie = prev.udiskie.overrideAttrs (_: { doCheck = false; });
+
+  # Upstream packaging bug, not ours: gtk-3.0/gtk.css leaks one GTK4-only
+  # property (its gtk-3.0 and gtk-4.0 variants are almost certainly
+  # generated from shared SCSS source) - confirmed on real hardware, waybar
+  # (a GTK3 app, home/programs/waybar.nix) logged "Theme parsing error:
+  # gtk.css:1048:16: 'border-spacing' is not a valid property name".
+  # Harmless (GTK skips the one invalid declaration and keeps going), but
+  # strip it from every variant's gtk-3.0 stylesheet so it parses clean.
+  gruvbox-gtk-theme = prev.gruvbox-gtk-theme.overrideAttrs (old: {
+    postInstall = (old.postInstall or "") + ''
+      sed -i '/border-spacing: 6px;/d' $out/share/themes/*/gtk-3.0/gtk.css
+    '';
+  });
 }
