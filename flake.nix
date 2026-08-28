@@ -37,7 +37,24 @@
       # gitignored-and-untracked local.nix at the repo root was silently
       # invisible to flake evaluation no matter what it contained. Reading
       # from $HOME requires --impure (see README.md's rebuild command).
-      localPath = builtins.getEnv "HOME" + "/.config/couldinho/local.nix";
+      #
+      # $HOME alone breaks under the documented `sudo nixos-rebuild switch`
+      # (README.md/bootstrap.sh) - confirmed on real hardware, sudo does not
+      # preserve HOME here (no env_keep+=HOME), so it resolves to /root
+      # instead, /root/.config/couldinho/local.nix has never existed
+      # (bootstrap.sh only ever copies local.nix into the *primary* user's
+      # home, never root's), and couldinho.user et al silently come back
+      # unset deep in dependent modules. sudo does always set SUDO_USER
+      # itself though (unaffected by env_reset - it's not inherited from the
+      # caller's environment), so fall back to that user's home when the
+      # plain $HOME path doesn't exist.
+      homeLocalPath = builtins.getEnv "HOME" + "/.config/couldinho/local.nix";
+      sudoUser = builtins.getEnv "SUDO_USER";
+      sudoUserLocalPath = "/home/" + sudoUser + "/.config/couldinho/local.nix";
+      localPath =
+        if builtins.pathExists homeLocalPath then homeLocalPath
+        else if sudoUser != "" && builtins.pathExists sudoUserLocalPath then sudoUserLocalPath
+        else homeLocalPath;
       localModule = nixpkgs.lib.optional (builtins.pathExists localPath) localPath;
 
       mkHost = { hostName, extraModules ? [ ] }:
