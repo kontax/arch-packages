@@ -236,6 +236,12 @@ in
     cifs-utils
     neovim
     nodejs
+    # Was in couldinho-base's depends=(...), missed during the migration -
+    # every other python3 reference in this flake (pkgs/default.nix's script
+    # interpreters, nvim's pynvim, dev.nix's ipython, desktop.nix's i3ipc/
+    # pillow) is a build-time dependency baked into one specific derivation,
+    # not a general-purpose interpreter on PATH.
+    python3
     fwupd
 
     # Base replacements
