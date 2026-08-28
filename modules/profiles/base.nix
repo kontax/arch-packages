@@ -234,6 +234,7 @@ in
     git
     delta # was git-delta
     cifs-utils
+    nfs-utils # mount.nfs/mount.nfs4 - was missing entirely, no NFS client support anywhere in this flake
     neovim
     nodejs
     # Was in couldinho-base's depends=(...), missed during the migration -
