@@ -67,17 +67,30 @@ echo "==> Installing NixOS (flake: $REPO_DIR#$HOST)"
 # git submodule, and Nix's git-tree filtering ignores submodule content
 # unless asked for it - without this, evaluation fails with
 # "Path '...xdg/nvim' ... is not tracked by Git".
-nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST"
+#
+# --no-bootloader: bootloader install is deferred to below, after Secure
+# Boot signing keys exist if this host needs them (couldinho.secureBoot).
+# lanzaboote needs an sbctl key bundle to sign against, and sbctl itself only
+# exists in the target's store once nixos-install has built and copied the
+# system - so those keys can't be created before this line runs, only
+# between this line and the actual bootloader-install step. See
+# modules/secure-boot.nix.
+nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST" --no-bootloader
 
-# From here on, the OS is already successfully installed - none of the
-# remaining steps should be able to abort the script and make that look like
-# it failed. Password entry is essentially required, so it runs
-# unconditionally; Secure Boot / YubiKey enrollment depend on things this
-# script can't verify (firmware Setup Mode, a physically-present YubiKey), so
-# they're opt-in and any failure just warns instead of aborting.
+# From here on the system is built and copied, just not yet bootable - none
+# of the remaining steps should be able to abort the script and make that
+# look like a fresh disko/nixos-install failure. Password entry and the
+# final bootloader install are required, so they run unconditionally;
+# Secure Boot key setup and YubiKey enrollment depend on things this script
+# can't verify (firmware Setup Mode, a physically-present YubiKey) - if
+# Secure Boot key setup fails, warn and keep going, since the bootloader
+# install right after it will fail too and give a clearer, fatal signal
+# that it still needs to be redone once the firmware issue is fixed.
 
 PRIMARY_USER="$(nix --extra-experimental-features 'nix-command flakes' eval --raw \
     "$REPO_DIR?submodules=1#nixosConfigurations.$HOST.config.couldinho.user")"
+SECURE_BOOT="$(nix --extra-experimental-features 'nix-command flakes' eval \
+    "$REPO_DIR?submodules=1#nixosConfigurations.$HOST.config.couldinho.secureBoot")"
 
 echo
 echo "==> Set root's password"
@@ -86,15 +99,25 @@ echo
 echo "==> Set $PRIMARY_USER's password"
 nixos-enter --root /mnt -c "passwd $PRIMARY_USER"
 
-echo
-read -rp "Set up Secure Boot signing keys now? [y/N] " _sb
-if [[ "$_sb" =~ ^[Yy]$ ]]; then
-    echo "    (needs the firmware in Setup Mode - see modules/secure-boot.nix)"
+if [ "$SECURE_BOOT" = "true" ]; then
+    echo
+    echo "==> Setting up Secure Boot signing keys (needs the firmware in Setup Mode)"
     if ! nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft'; then
         echo "    Secure Boot key setup failed - see modules/secure-boot.nix for the" >&2
-        echo "    manual steps and retry once the firmware is in Setup Mode." >&2
+        echo "    manual steps. The bootloader install right after this will fail too" >&2
+        echo "    until it's fixed; once the firmware's in Setup Mode, rerun:" >&2
+        echo "      sudo nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft'" >&2
+        echo "      sudo nixos-enter --root /mnt -c '/run/current-system/bin/switch-to-configuration boot'" >&2
     fi
 fi
+
+echo
+echo "==> Installing the bootloader"
+# Not wrapped in a soft-fail check like the steps above - without this, the
+# disk has no working boot entry at all, so a failure here has to actually
+# stop the script rather than let it reach "Done, reboot when ready" with a
+# machine that can't boot.
+nixos-enter --root /mnt -c '/run/current-system/bin/switch-to-configuration boot'
 
 echo
 read -rp "Enroll a YubiKey for LUKS unlock now (key must be plugged in)? [y/N] " _yk

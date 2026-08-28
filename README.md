@@ -37,12 +37,19 @@ new layout, and what didn't have a clean equivalent.
 2. Clone this repo (`git clone --recurse-submodules <url>` - the nvim config
    is a submodule).
 3. `sudo ./bootstrap.sh <host> <disk>`, e.g. `sudo ./bootstrap.sh desktop /dev/nvme0n1`.
-   This partitions the disk with disko, generates the hardware config, and
-   runs `nixos-install`. **This wipes the target disk.**
-4. After first boot: set passwords (`passwd`), enroll Secure Boot keys, and
-   enroll a YubiKey for LUKS if you use one - see the comments in
-   `modules/secure-boot.nix` and `modules/luks-common.nix` for the exact
-   commands.
+   This partitions the disk with disko, generates the hardware config, runs
+   `nixos-install`, sets root's and the primary user's passwords, sets up
+   Secure Boot signing keys and installs the bootloader (if the host has
+   `couldinho.secureBoot` enabled - see `modules/secure-boot.nix`), and
+   optionally enrolls a YubiKey for LUKS unlock. **This wipes the target
+   disk.** All of this happens before you ever reboot into the new system -
+   if Secure Boot key setup fails partway through (usually because the
+   firmware isn't in "Setup Mode" yet), the script stops with instructions
+   for retrying it from the still-live installer, since a machine with no
+   bootloader installed can't boot at all.
+4. Reboot. If you skipped Secure Boot or YubiKey enrollment above, or need
+   to redo either one, see the comments in `modules/secure-boot.nix` and
+   `modules/luks-common.nix` for the exact commands.
 
 ## Day to day
 
