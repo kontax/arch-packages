@@ -130,10 +130,16 @@ echo "==> Copying local.nix into $PRIMARY_USER's new home"
 # a different home, and after reboot a different filesystem entirely.
 # Without this, the very first nixos-rebuild switch on the installed system
 # would hit the exact same missing-local.nix failure all over again.
+# mkdir -p runs directly (not via nixos-enter), so it creates .config as
+# root on the live ISO's view of /mnt - only chowning the couldinho
+# subdirectory afterward left the parent .config itself root-owned, which
+# is enough to break every later home-manager write under it (sway, waybar,
+# etc. all live under ~/.config) - confirmed on real hardware, home-manager
+# activation silently stopped at the first one it couldn't write.
 mkdir -p "/mnt/home/$PRIMARY_USER/.config/couldinho"
 cp "$HOME/.config/couldinho/local.nix" "/mnt/home/$PRIMARY_USER/.config/couldinho/local.nix"
 nixos-enter --root /mnt -c \
-    "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/.config/couldinho && chmod 600 /home/$PRIMARY_USER/.config/couldinho/local.nix"
+    "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/.config && chmod 600 /home/$PRIMARY_USER/.config/couldinho/local.nix"
 
 echo
 echo "==> Set root's password"
