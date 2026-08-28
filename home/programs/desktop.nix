@@ -18,6 +18,12 @@
     # pinentry-rofi only because that package wraps its own private rofi
     # runtime dependency, invisible outside its own wrapper.
     rofi
+    # gtk-3.0/settings.ini names gtk-theme-name=Arc-Gruvbox - a confirmed
+    # migration gap (MIGRATION.md), never packaged for NixOS, so GTK apps
+    # (pavucontrol included) silently fell back to stock Adwaita. Not a
+    # drop-in match for the old Arc-Gruvbox theme, but close in spirit and
+    # actually packaged.
+    gruvbox-gtk-theme
   ];
 
   xdg.configFile."swaync/config.json".source = ../../conf/desktop/etc/xdg/swaync/config.json;
