@@ -27,14 +27,30 @@ lib.mkIf (keyId != null) {
   services.gpg-agent.enableSshSupport = true;
 
   home.activation.trustPersonalGpgKey = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys "${keyId}"
+    # Runs during early boot (system-level home-manager-james.service, no
+    # After=network-online.target), so the keyserver isn't reliably reachable
+    # yet - confirmed on real hardware, this raced NetworkManager-wait-online
+    # and lost. Warn and carry on rather than aborting the rest of activation
+    # (sway/waybar/dotfiles linking etc. all run after this in the same
+    # activation script) - worst case the key is just missing/untrusted until
+    # the next activation succeeds in fetching it.
+    if ! $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys "${keyId}"; then
+      echo "trustPersonalGpgKey: keyserver fetch of ${keyId} failed (network not up yet?) - skipping for this activation" >&2
+    fi
+
     # `gpg --edit-key trust` (even scripted via --command-fd) still opens
     # /dev/tty and fails outright when run from activation with no
     # controlling terminal. --import-ownertrust sets the same ultimate
     # trust (value 6) without ever touching a tty; it wants the full
     # fingerprint rather than whatever ID form keyId happens to be, so
-    # resolve that first.
-    fpr="$(${pkgs.gnupg}/bin/gpg --with-colons --fingerprint "${keyId}" | ${pkgs.gawk}/bin/awk -F: '/^fpr:/ { print $10; exit }')"
-    $DRY_RUN_CMD bash -c "echo \"$fpr:6:\" | ${pkgs.gnupg}/bin/gpg --import-ownertrust"
+    # resolve that first - only set trust if the key is actually present
+    # locally (this run or a previous one), an empty $fpr would otherwise
+    # write a bogus ":6:" line to the trustdb.
+    fpr="$(${pkgs.gnupg}/bin/gpg --with-colons --fingerprint "${keyId}" 2>/dev/null | ${pkgs.gawk}/bin/awk -F: '/^fpr:/ { print $10; exit }')"
+    if [ -n "$fpr" ]; then
+      $DRY_RUN_CMD bash -c "echo \"$fpr:6:\" | ${pkgs.gnupg}/bin/gpg --import-ownertrust"
+    else
+      echo "trustPersonalGpgKey: ${keyId} not present locally - cannot set trust, skipping" >&2
+    fi
   '';
 }
