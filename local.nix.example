@@ -11,12 +11,21 @@
 # still needs the GPG secret key physically present, on a YubiKey for this
 # setup.
 #
+# Use an SSH (not HTTPS) URL for passwordStore.url, authenticated via the
+# GPG key's Authenticate subkey (gpg-import.nix turns on gpg-agent's SSH
+# support for this) rather than a username/password - putting real
+# credentials in this file would land them in the world-readable /nix/store
+# once built, unlike a git URL or pass-git-helper routing rule, which are
+# personal but not secret. Register the public half
+# (`ssh-add -L` once the card's plugged in) as a read-only deploy key on the
+# password-store repo.
+#
 # Reading from $HOME requires --impure - see README.md's rebuild command.
 {
   couldinho.gpg.keyId = "0123456789ABCDEF";
 
   couldinho.passwordStore = {
-    url = "https://git.example.com/you/password-store.git";
+    url = "git@git.example.com:you/password-store.git";
     mapping = ''
       [DEFAULT]
       username_extractor=regex_search
