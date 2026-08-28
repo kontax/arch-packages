@@ -71,6 +71,16 @@ in
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_STATE_HOME = "$HOME/.local/state";
 
+    # gtk-3.0/settings.ini's gtk-theme-name alone isn't enough - confirmed
+    # on real hardware, GTK3 apps (pavucontrol included) rendered as plain
+    # default Adwaita, not even honoring settings.ini's own
+    # gtk-application-prefer-dark-theme. No XSettings daemon or
+    # xdg-desktop-portal runs under bare sway, and GTK3 falls back to
+    # GSettings schema defaults ahead of settings.ini in that case rather
+    # than actually reading it. GTK_THEME overrides both unconditionally -
+    # confirmed working (GTK_THEME=Gruvbox-Dark pavucontrol rendered
+    # correctly) where settings.ini alone did not.
+    GTK_THEME = "Gruvbox-Dark";
     LIBVA_DRIVER_NAME = "iHD";
     MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland-egl";
