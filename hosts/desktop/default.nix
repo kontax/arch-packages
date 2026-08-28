@@ -1,27 +1,18 @@
 # Dual-monitor desktop: base + desktop + dev (was
-# `user_system=(base desktop dev)` in the install.sh checklist).
+# `user_system=(base desktop dev)` in the install.sh checklist). Real
+# hardware template - see hosts/desktop-vm for the Proxmox VM this was
+# actually developed/tested against before deploying here.
 { lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
-    # Currently the Proxmox test VM: its disk shows up as /dev/sda (not
-    # nvme-style), and it's a 32G disk - the default 32G swapfile alone would
-    # fill it, causing disk-full/I/O errors partway through install. EDIT
-    # both back to real values (or delete the overrides) once this host is
-    # real hardware.
-    (import ./disko.nix { disk = "/dev/sda"; swapSize = "2G"; })
+    (import ./disko.nix { disk = "/dev/nvme0n1"; }) # EDIT to the real device
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
     ../../modules/profiles/dev.nix
   ];
 
   couldinho.user = "james";
-
-  # Currently being tested in a Proxmox VM, where Secure Boot doesn't add
-  # anything and Proxmox's OVMF virtual firmware has been finicky about
-  # custom key enrollment persisting. Flip back to true (or delete this
-  # line, since true is the default) once this host is real hardware.
-  couldinho.secureBoot = false;
 
   # was hidpi=No -> FONT=ter-716n
   console.font = lib.mkForce "ter-716n";

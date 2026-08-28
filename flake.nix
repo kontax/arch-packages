@@ -59,6 +59,10 @@
         # Dual-monitor sway desktop: base + desktop + dev
         desktop = mkHost { hostName = "desktop"; };
 
+        # Proxmox VM used to develop/test the desktop host before deploying
+        # to the real machine above - see hosts/desktop-vm's own comments.
+        desktop-vm = mkHost { hostName = "desktop-vm"; };
+
         # HiDPI sway laptop: base + desktop + laptop + dev
         laptop = mkHost { hostName = "laptop"; };
       };

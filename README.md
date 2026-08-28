@@ -13,9 +13,14 @@ new layout, and what didn't have a clean equivalent.
 
 - `flake.nix` - inputs (nixpkgs, home-manager, disko, lanzaboote) and the
   `nixosConfigurations` for each real machine.
-- `hosts/<name>/` - one real machine each (`desktop`, `laptop`): disk layout
-  (`disko.nix`), hardware-specific kernel config (`hardware-configuration.nix`,
-  regenerate with `nixos-generate-config`), and which profiles it composes.
+- `hosts/<name>/` - one machine each: disk layout (`disko.nix`),
+  hardware-specific kernel config (`hardware-configuration.nix`, regenerate
+  with `nixos-generate-config`), and which profiles it composes. `desktop`
+  and `laptop` are real-hardware templates (`hardware-configuration.nix` is
+  a placeholder until you regenerate it on the actual machine); `desktop-vm`
+  is a Proxmox VM used to develop/test the `desktop` host's config before
+  ever touching real hardware with it - see its own comments for what's
+  VM-specific.
 - `modules/profiles/*.nix` - one file per old package group
   (base/desktop/laptop/dev), each pulling in the same packages and config the
   equivalent `couldinho-*` pacman package used to.
@@ -48,7 +53,7 @@ hit `Path '...xdg/nvim' ... is not tracked by Git`.
 
 ```bash
 nix flake check '.?submodules=1'
-sudo nixos-rebuild switch --flake '.?submodules=1#desktop'   # or #laptop
+sudo nixos-rebuild switch --flake '.?submodules=1#desktop'   # or #laptop / #desktop-vm
 nix flake update                                             # bump pinned inputs
 ```
 
