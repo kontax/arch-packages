@@ -154,6 +154,18 @@ in
     anki
     freerdp
     python3Packages.pillow
+    # Were all missing entirely - each broke a live keybinding/service:
+    playerctl # media keys + sway-exit's pause-before-lock (both call playerctl/playerctld)
+    ffmpeg # sway-gif-area's mkv->gif encoding step
+    sqlite3 # wl-clipboard-manager's history db - confirmed on real hardware,
+            # its systemd service was running and failing this exact way on
+            # every clipboard copy: "sqlite3: command not found"
+    file # wl-clipboard-manager's MIME-type detection - same live failure
+    dmenu-wayland # provides the real `dmenu-wl` binary - pkgs.pass's own
+      # passmenu script execs literally that name under $WAYLAND_DISPLAY,
+      # and this repo's own (removed) usr/local/bin/dmenu-wl script was a
+      # same-named but incompatible kitty+fzf file picker shadowing it on
+      # PATH, silently breaking $hyper+p's pass-to-clipboard flow
 
     # web
     vivaldi
