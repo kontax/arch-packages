@@ -52,7 +52,12 @@ if [ ! -f "$HOME/.config/couldinho/local.nix" ]; then
     echo "couldinho.user), then rerun." >&2
     exit 1
 fi
-PRIMARY_USER="$(nix --extra-experimental-features 'nix-command flakes' eval --raw \
+# --impure: without it, builtins.getEnv "HOME" in flake.nix silently returns
+# "" instead of erroring (documented Nix behaviour for impure builtins under
+# pure eval), so local.nix's path resolves to a bogus one at the filesystem
+# root and never actually gets imported - couldinho.user then comes back
+# completely undefined rather than this check ever catching a real problem.
+PRIMARY_USER="$(nix --extra-experimental-features 'nix-command flakes' eval --impure --raw \
     "$REPO_DIR?submodules=1#nixosConfigurations.$HOST.config.couldinho.user")"
 
 if [ -z "$DISK" ]; then
@@ -94,7 +99,10 @@ echo "==> Installing NixOS (flake: $REPO_DIR#$HOST)"
 # system - so those keys can't be created before this line runs, only
 # between this line and the actual bootloader-install step. See
 # modules/secure-boot.nix.
-nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST" --no-bootloader
+# --impure: same reason as the PRIMARY_USER eval above - without it,
+# nixos-install would silently build with local.nix's values (couldinho.user
+# included) unresolved rather than actually using them.
+nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST" --no-bootloader --impure
 
 # From here on the system is built and copied, just not yet bootable - none
 # of the remaining steps should be able to abort the script and make that
@@ -106,7 +114,7 @@ nixos-install --root /mnt --flake "$REPO_DIR?submodules=1#$HOST" --no-bootloader
 # install right after it will fail too and give a clearer, fatal signal
 # that it still needs to be redone once the firmware issue is fixed.
 
-SECURE_BOOT="$(nix --extra-experimental-features 'nix-command flakes' eval \
+SECURE_BOOT="$(nix --extra-experimental-features 'nix-command flakes' eval --impure \
     "$REPO_DIR?submodules=1#nixosConfigurations.$HOST.config.couldinho.secureBoot")"
 
 echo
