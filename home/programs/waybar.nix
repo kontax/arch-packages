@@ -18,6 +18,19 @@
       ExecStart = "${pkgs.waybar}/bin/waybar";
       Restart = "on-failure";
       RestartSec = "3s";
+      # GTK_THEME (modules/profiles/desktop.nix) is inherited from the user
+      # session by default - confirmed on real hardware, once it started
+      # applying to waybar (a GTK3 app under the hood), the Gruvbox-Dark
+      # theme's own gtk.css overrode font-size for button-based widgets with
+      # higher specificity than this repo's style.css, shrinking
+      # sway/workspaces' per-window icons (the only module using real GTK
+      # buttons, everything else is plain labels) to roughly half size.
+      # GTK CSS has no !important (tried it - hard parse error, crashes
+      # waybar outright rather than warning and skipping). waybar is fully
+      # self-themed via style.css already and never needed the system GTK
+      # theme, so just don't inherit it here instead of fighting the
+      # theme's specificity.
+      UnsetEnvironment = "GTK_THEME";
     };
     Install.WantedBy = [ "graphical-session.target" ];
   };
