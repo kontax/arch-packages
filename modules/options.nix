@@ -1,12 +1,14 @@
 # Shared options referenced across profile modules, filled in per-host.
 { lib, ... }:
 {
+  # No default - every host needs this, and it's the same person across all
+  # of this repo's hosts, so it's set once via ~/.config/couldinho/local.nix
+  # (see local.nix.example) rather than repeated in each hosts/<name>/
+  # default.nix. Was the free-text `user` prompt in the old install.sh
+  # dialog wizard.
   options.couldinho.user = lib.mkOption {
     type = lib.types.str;
-    description = ''
-      Primary interactive user for this host - was the free-text `user`
-      prompt in the old install.sh dialog wizard.
-    '';
+    description = "Primary interactive user for every host. See local.nix.example.";
   };
 
   options.couldinho.secureBoot = lib.mkOption {

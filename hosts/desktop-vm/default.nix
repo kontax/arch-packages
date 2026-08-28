@@ -17,8 +17,6 @@
     ../../modules/profiles/dev.nix
   ];
 
-  couldinho.user = "james";
-
   # Secure Boot doesn't add anything in a VM (the hypervisor already fully
   # controls the guest), and Proxmox's OVMF virtual firmware has been finicky
   # about custom key enrollment persisting.

@@ -12,8 +12,6 @@
     ../../modules/profiles/dev.nix
   ];
 
-  couldinho.user = "james";
-
   # was hidpi=No -> FONT=ter-716n
   console.font = lib.mkForce "ter-716n";
 
