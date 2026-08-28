@@ -40,7 +40,7 @@ gaps:
 | `python-chump-git` (Pushover client for urlwatch) | Not packaged; urlwatch itself is kept, this notification backend is dropped |
 | `udiskie-dmenu-git` | Not packaged; replaced with udiskie's own `--tray` flag (`home/programs/desktop.nix`) |
 | `light` | Unpackaged fork; using `pkgs.acpilight` (maintained fork, slightly different CLI) instead - see `modules/profiles/laptop.nix` |
-| `checkofficial` script | Calls pacman-contrib's `checkupdates`, which doesn't exist under NixOS - still installed verbatim (via `couldinho-desktop-scripts`) but non-functional |
+| `checkofficial` script | Calls pacman-contrib's `checkupdates`, which doesn't exist under NixOS - removed outright rather than carried forward non-functional |
 
 The `sec` and `xcp-ng` profiles (reversing/exploitation tooling and XCP-NG
 guest tools) were dropped entirely rather than migrated - not needed, so

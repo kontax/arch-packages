@@ -42,7 +42,6 @@ window#waybar {
 }
 
 #custom-usbguard,
-#custom-decrypted,
 #custom-updates,
 #custom-mail,
 #battery.warning,
@@ -78,7 +77,6 @@ window#waybar {
 #custom-usbguard,
 #custom-yubikey,
 #custom-eyes,
-#custom-decrypted,
 #custom-security,
 #custom-systemd,
 #custom-updates,
@@ -126,6 +124,3 @@ window#waybar {
   color: @foreground;
 }
 
-#custom-decrypted {
-  color: @dim;
-}
