@@ -26,6 +26,17 @@ in
   # error querying the Manager's Version property - nothing was answering).
   services.udisks2.enable = true;
 
+  # Same story again, this time for swaync: it persists settings (DND state
+  # included) via dconf/GSettings, and nothing registered dconf's D-Bus
+  # service as activatable - confirmed on real hardware via swaync's own
+  # journal: "failed to commit changes to dconf: ... ServiceUnknown: The
+  # name is not activatable". Toggling DND appeared to apply (swaync-client
+  # --toggle-dnd printed the new state) but reverted almost immediately -
+  # the write silently failed and a subsequent read fell back to the old,
+  # unpersisted value, which looked like the waybar icon "flashing" on
+  # click. programs.dconf.enable wires up the missing D-Bus service.
+  programs.dconf.enable = true;
+
   # On Arch, swaylock's package ships its own /etc/pam.d/swaylock
   # automatically; under NixOS nothing configures a PAM stack for it unless
   # declared explicitly. Without this, PAM has no module stack for the
