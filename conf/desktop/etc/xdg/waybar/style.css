@@ -49,7 +49,6 @@ window#waybar {
 #disk.warning,
 #memory.warning,
 #cpu.warning,
-#custom-movie.on,
 #custom-dnd.dnd-notification,
 #custom-dnd.dnd-none {
   border-top: 3px solid @background;
@@ -127,7 +126,6 @@ window#waybar {
   color: @foreground;
 }
 
-#custom-decrypted,
-#custom-movie {
+#custom-decrypted {
   color: @dim;
 }

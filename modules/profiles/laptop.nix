@@ -7,7 +7,6 @@ in
   environment.systemPackages = with pkgs; [
     acpilight # was `light` (haikarainen/light unpackaged; this is the maintained fork)
     wlsunset
-    wluma
     couldinho-laptop-scripts # rofi-bluetooth
   ];
 
