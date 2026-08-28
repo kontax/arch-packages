@@ -19,8 +19,8 @@
   # disko.nix's "luks" device name has to match. The credential itself still
   # needs enrolling separately: `sudo systemd-cryptenroll --fido2-device=auto
   # --fido2-with-client-pin=false --wipe-slot=password
-  # /dev/disk/by-partlabel/primary` (bootstrap.sh offers this as an optional
-  # step) - see modules/luks-common.nix.
+  # /dev/disk/by-partlabel/disk-main-primary` (bootstrap.sh offers this as an
+  # optional step) - see modules/luks-common.nix.
   boot.initrd.luks.devices.luks.crypttabExtraOpts = [ "fido2-device=auto" ];
 
   system.stateVersion = "24.05";

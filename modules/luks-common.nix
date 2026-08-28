@@ -7,7 +7,10 @@
 # call in the old install.sh) is a one-time manual step done after install, since
 # it needs the physical key present:
 #   sudo systemd-cryptenroll --fido2-device=auto --fido2-with-client-pin=false \
-#       --wipe-slot=password /dev/disk/by-partlabel/primary
+#       --wipe-slot=password /dev/disk/by-partlabel/disk-main-primary
+# disko names GPT partition labels "disk-<diskName>-<partitionName>", not just
+# the bare partition name - confirmed on real hardware, since disko.nix's disk
+# is named "main" and its partition "primary", the label is "disk-main-primary".
 # Afterwards add "fido2-device=auto" to that host's crypttabExtraOpts.
 { ... }:
 {

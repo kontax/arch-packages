@@ -160,8 +160,11 @@ nixos-enter --root /mnt -c '/run/current-system/bin/switch-to-configuration boot
 echo
 read -rp "Enroll a YubiKey for LUKS unlock now (key must be plugged in)? [y/N] " _yk
 if [[ "$_yk" =~ ^[Yy]$ ]]; then
+    # disko names GPT partition labels "disk-<diskName>-<partitionName>" (all
+    # of this repo's disko.nix files use disk.main + a "primary" partition,
+    # giving "disk-main-primary"), not just the bare partition name.
     if ! nixos-enter --root /mnt -c \
-        'systemd-cryptenroll --fido2-device=auto --fido2-with-client-pin=false --wipe-slot=password /dev/disk/by-partlabel/primary'; then
+        'systemd-cryptenroll --fido2-device=auto --fido2-with-client-pin=false --wipe-slot=password /dev/disk/by-partlabel/disk-main-primary'; then
         echo "    YubiKey enrollment failed - see modules/luks-common.nix for the" >&2
         echo "    manual command and retry once the key is plugged in." >&2
     fi
