@@ -16,5 +16,14 @@
   # was hidpi=Yes -> FONT=ter-132n
   console.font = lib.mkForce "ter-132n";
 
+  # Makes the initrd actually attempt FIDO2 unlock at boot (touch the
+  # YubiKey when it flashes) instead of only prompting for the passphrase -
+  # disko.nix's "luks" device name has to match. The credential itself still
+  # needs enrolling separately: `sudo systemd-cryptenroll --fido2-device=auto
+  # --fido2-with-client-pin=false --wipe-slot=password
+  # /dev/disk/by-partlabel/primary` (bootstrap.sh offers this as an optional
+  # step) - see modules/luks-common.nix.
+  boot.initrd.luks.devices.luks.crypttabExtraOpts = [ "fido2-device=auto" ];
+
   system.stateVersion = "24.05";
 }
