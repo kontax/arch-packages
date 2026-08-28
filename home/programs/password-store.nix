@@ -28,7 +28,18 @@ lib.mkMerge [
       # "fatal: unable to fork", the same failure shape as the bare awk in
       # gpg-import.nix. Qualify it explicitly via GIT_SSH_COMMAND rather
       # than relying on whatever's reachable.
-      export GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh"
+      # accept-new: this is the very first SSH connection to this host from
+      # a freshly-bootstrapped machine, so there's no known_hosts entry yet.
+      # Interactive ssh would just prompt "are you sure? (yes/no)" here, but
+      # there's no tty to ask from activation - confirmed on real hardware,
+      # it fell through to trying $SSH_ASKPASS (unset, another dead end)
+      # then gave up with "Host key verification failed." TOFU-trusting a
+      # personal server the user already hardcoded themselves in local.nix
+      # is the same trust decision an interactive "yes" would make; unlike
+      # StrictHostKeyChecking=no, accept-new still fails on a *later* key
+      # change for an already-known host, so this doesn't blind a real
+      # MITM after the first successful clone.
+      export GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=accept-new"
       # Same narrow-service-environment problem for SSH_AUTH_SOCK: the auth
       # here is the YubiKey's Authenticate subkey via gpg-agent's SSH support
       # (gpg-import.nix), whose socket path is normally exported by
