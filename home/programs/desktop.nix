@@ -13,6 +13,11 @@
     yubikey-touch-detector
     qrencode
     progress
+    # Was missing entirely - rofi-bluetooth (couldinho-laptop-scripts) calls
+    # bare `rofi`, which had no provider anywhere in this flake. Worked for
+    # pinentry-rofi only because that package wraps its own private rofi
+    # runtime dependency, invisible outside its own wrapper.
+    rofi
   ];
 
   xdg.configFile."swaync/config.json".source = ../../conf/desktop/etc/xdg/swaync/config.json;
@@ -20,6 +25,10 @@
   xdg.configFile."fuzzel/fuzzel.ini".source = ../../conf/desktop/etc/xdg/fuzzel/fuzzel.ini;
   xdg.configFile."gtk-3.0/settings.ini".source = ../../conf/desktop/etc/gtk-3.0/settings.ini;
   xdg.configFile."mimeapps.list".source = ../../conf/desktop/etc/xdg/mimeapps.list;
+  # Gruvbox theme (matches kitty.conf's palette) - rofi reads this
+  # automatically with no -theme flag needed, so it covers pinentry-rofi and
+  # rofi-bluetooth alike, not just one or the other.
+  xdg.configFile."rofi/config.rasi".source = ../../conf/desktop/etc/xdg/rofi/config.rasi;
 
   # discord/neomutt/scli/signal-desktop/visidata/vivaldi-stable .desktop
   # entries were dropped - none of those apps are installed by this flake,

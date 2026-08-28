@@ -1,0 +1,97 @@
+/*
+ * Gruvbox Dark theme - same palette as conf/desktop/etc/xdg/kitty/kitty.conf,
+ * so rofi-based prompts (pinentry-rofi, rofi-bluetooth) match the rest of the
+ * desktop instead of rofi's stock default theme.
+ */
+* {
+    bg0:    #1d2021;
+    bg1:    #282828;
+    bg2:    #3c3836;
+    fg0:    #ebdbb2;
+    fg1:    #d5c4a1;
+    gray:   #928374;
+    red:    #fb4934;
+    orange: #fe8019;
+
+    background-color: transparent;
+    text-color:       @fg0;
+    font:              "sans-serif 11";
+}
+
+window {
+    background-color: @bg0;
+    border:            2px;
+    border-color:      @orange;
+    border-radius:     4px;
+    padding:           10px;
+    width:             30%;
+}
+
+mainbox {
+    background-color: transparent;
+    children:          [ "inputbar", "message", "listview" ];
+    spacing:            10px;
+}
+
+inputbar {
+    background-color: @bg1;
+    text-color:        @fg0;
+    padding:            8px;
+    border-radius:      4px;
+    children:           [ "prompt", "entry" ];
+}
+
+prompt {
+    text-color: @orange;
+    padding:    0px 8px 0px 0px;
+}
+
+entry {
+    placeholder-color: @gray;
+    text-color:        @fg0;
+}
+
+message {
+    background-color: @bg1;
+    text-color:        @fg1;
+    padding:            8px;
+    border-radius:      4px;
+}
+
+textbox {
+    text-color: @fg1;
+}
+
+listview {
+    background-color: transparent;
+    lines:              8;
+    spacing:             4px;
+    cycle:                true;
+    dynamic:              true;
+}
+
+element {
+    background-color: transparent;
+    text-color:        @fg1;
+    padding:            6px 8px;
+    border-radius:      4px;
+}
+
+element selected {
+    background-color: @bg2;
+    text-color:        @orange;
+}
+
+element-text {
+    background-color: inherit;
+    text-color:        inherit;
+    vertical-align:    0.5;
+}
+
+error-message {
+    background-color: @bg0;
+    text-color:        @red;
+    border:            2px;
+    border-color:      @red;
+    padding:           10px;
+}
