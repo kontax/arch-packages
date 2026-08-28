@@ -21,6 +21,20 @@ lib.mkMerge [
     # server and no YubiKey to auth with yet, and a failed activation
     # script would otherwise break every rebuild until that's sorted.
     home.activation.clonePasswordStore = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      # This runs under home-manager-james.service's much narrower systemd
+      # PATH (coreutils/findutils/gnugrep/gnused/systemd only), which
+      # doesn't include openssh - a bare `ssh` on the git subprocess's PATH
+      # fails with "error: cannot run ssh: No such file or directory" /
+      # "fatal: unable to fork", the same failure shape as the bare awk in
+      # gpg-import.nix. Qualify it explicitly via GIT_SSH_COMMAND rather
+      # than relying on whatever's reachable.
+      export GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh"
+      # Same narrow-service-environment problem for SSH_AUTH_SOCK: the auth
+      # here is the YubiKey's Authenticate subkey via gpg-agent's SSH support
+      # (gpg-import.nix), whose socket path is normally exported by
+      # environment.extraInit for interactive shells - this activation
+      # script isn't one, so resolve it the same way extraInit does.
+      export SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-$(${pkgs.gnupg}/bin/gpgconf --list-dirs agent-ssh-socket)}"
       if [ -d "$HOME/.password-store/.git" ]; then
         $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$HOME/.password-store" pull --ff-only ||
           echo "warning: couldn't update ~/.password-store" >&2

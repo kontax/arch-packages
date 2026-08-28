@@ -193,5 +193,17 @@ EOF
 
 cat <<EOF
 
+==> Password store
+home/programs/password-store.nix clones ~/.password-store via SSH,
+authenticated by the YubiKey's Authenticate subkey through gpg-agent - that
+needs a real login session (for gpg-agent's SSH socket to exist) and the
+key physically present, neither of which this script's first activation
+has. It's non-fatal on failure and retried on every "nixos-rebuild switch",
+so log in, plug the key in, and rebuild once (even with no other changes)
+to pick it up if it didn't clone automatically.
+EOF
+
+cat <<EOF
+
 ==> Done. Reboot when ready.
 EOF
