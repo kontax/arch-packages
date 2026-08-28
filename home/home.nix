@@ -10,6 +10,7 @@
     ./programs/mpv.nix
     ./programs/nvim.nix
     ./programs/gpg-import.nix
+    ./programs/password-store.nix
   ];
 
   home.username = osConfig.couldinho.user;

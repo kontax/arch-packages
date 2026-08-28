@@ -51,10 +51,15 @@ The `?submodules=1` is required, not optional - the nvim config
 ignores submodule content unless you ask for it; without this flag you'll
 hit `Path '...xdg/nvim' ... is not tracked by Git`.
 
+`--impure` is required too - `~/.config/couldinho/local.nix` (personal
+values that don't belong in this public repo, see `local.nix.example`)
+lives outside the repo on purpose, and reading it needs `$HOME` via
+`builtins.getEnv`, which only works in impure evaluation.
+
 ```bash
-nix flake check '.?submodules=1'
-sudo nixos-rebuild switch --flake '.?submodules=1#desktop'   # or #laptop / #desktop-vm
-nix flake update                                             # bump pinned inputs
+nix flake check '.?submodules=1' --impure
+sudo nixos-rebuild switch --flake '.?submodules=1#desktop' --impure   # or #laptop / #desktop-vm
+nix flake update                                                      # bump pinned inputs
 ```
 
 ## Adding a new host

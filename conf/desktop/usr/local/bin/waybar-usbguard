@@ -5,21 +5,28 @@
 # skew bug, not a typo). Lists all devices untargeted instead (which the
 # daemon handles fine) and filters for blocked ones client-side using the
 # rule target each device line already includes.
+#
+# Was also dbus-monitor-driven (listening for org.usbguard.Devices1 signals
+# via the usbguard-dbus bridge), but that bridge needs
+# services.usbguard.dbus.enable, which this repo doesn't set - so
+# org.usbguard1 was never activatable (busctl introspect fails with "unknown
+# unit": the dbus-org.usbguard.service systemd alias the bridge relies on
+# doesn't exist). dbus-monitor's match filter therefore never matched a real
+# usbguard signal; the widget only ever refreshed once, from dbus-monitor's
+# own unconditional startup NameAcquired signal about itself, then stayed
+# stale forever regardless of clicks. Poll instead, like custom/progress does.
 
 first_blocked_line() {
     usbguard list-devices | grep -m1 ': block '
 }
 
-listen() {
-    dbus-monitor --system --profile "interface='org.usbguard.Devices1'" |
-        while read -r line; do
-            blocked="$(first_blocked_line | grep -Po 'name "\K[^"]+')"
-            if [ -n "$blocked" ]; then
-                printf "{\"text\": \"<span foreground='#928374'></span> %s\"}\n" "$blocked"
-            else
-                printf '{"text": ""}\n'
-            fi
-        done
+show() {
+    blocked="$(first_blocked_line | grep -Po 'name "\K[^"]+')"
+    if [ -n "$blocked" ]; then
+        printf "{\"text\": \"<span foreground='#928374'></span> %s\"}\n" "$blocked"
+    else
+        printf '{"text": ""}\n'
+    fi
 }
 
 allow() {
@@ -37,5 +44,5 @@ if [ "$1" = "allow" ]; then
 elif [ "$1" = "reject" ]; then
     reject
 else
-    listen
+    show
 fi
