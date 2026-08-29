@@ -22,16 +22,34 @@ OUT=""
 SSID=""
 DIVIDER="---------"
 MANUAL="Manual Connection"
-FIELDS="IN-USE,SSID,BARS,BSSID,SECURITY"
-APS=$(nmcli --fields $FIELDS dev wifi list --rescan yes \
+FIELDS="IN-USE,SSID,BARS,SECURITY"
+RAW_APS=$(nmcli --fields $FIELDS dev wifi list --rescan yes)
+# Column widths must come from the header row, not a data row - confirmed
+# live, this used to sample the first *AP* line instead, and a multi-word
+# SSID there (e.g. "DIRECT-2D-HP ENVY 6000 series") desyncs the fixed
+# widths for every row, truncating SSIDs and misreading the security
+# column entirely for the rest of the menu. Header labels (IN-USE, SSID,
+# BARS, SECURITY) are always single tokens, so they're a stable reference
+# regardless of which AP happens to be first.
+#
+# The IN-USE and SSID header widths are merged into one FIELDWIDTHS group
+# (in-use width replaced by 1): the sed below collapses each row's real
+# IN-USE column (a "*" or blank, padded to that header width) down to
+# just its one marker character glued directly onto the SSID text, so
+# get_column_location's "SSID is field 1" offset (it treats IN-USE as
+# folded into SSID, not its own field) only lines up if FIELDWIDTHS
+# matches that same collapse - confirmed live: without merging here,
+# every field boundary after IN-USE was off by (header IN-USE width - 1)
+# characters, truncating SSIDs and reading security off a garbage offset.
+read -r inuse_width ssid_width bars_width security_width <<< "$(echo "$RAW_APS" \
+    | head -n 1 | grep -Po '\S+\s*' \
+    | awk '{printf "%d ", length($0)}'
+)"
+WIDTHS="$((1 + ssid_width)) $bars_width $security_width"
+APS=$(echo "$RAW_APS" \
             | tail -n +2 \
             | sed 's#^\(.\)\s*#\1#' \
             | sed '/^ --/d'
-)
-WIDTHS=$(echo "$APS" \
-    | grep -v -e "^*" \
-    | head -n 1 | grep -Po '\S+\s*' \
-    | awk '{printf "%d ", length($0)}'
 )
 # Multiple APs (mesh/extenders, or just neighbouring APs on the same
 # network) show up as separate lines with an identical SSID - nmcli
@@ -80,49 +98,45 @@ get_column_location() {
     return $field_num
 }
 
-# Pull out the SSID from the selected BSSID
+# Pull out the SSID from a chosen row. $row is one of $APS's own lines
+# verbatim (rofi returns back exactly what it was given), not re-derived
+# by searching $APS again - BSSID used to be needed for that lookup, but
+# once AP lists this uses are deduped by SSID (above), SSID alone is
+# already a unique key, so there's nothing left that needs BSSID for.
 get_ssid() {
-    local bssid
+    local row
     local ssid_loc
 
-    bssid=$1
+    row=$1
 
     get_column_location "SSID"
     ssid_loc=$?
-    SSID=$(echo "$APS" \
-        | grep "$bssid" \
+    SSID=$(echo "$row" \
         | awk -v FIELDWIDTHS="$WIDTHS" "{print \$$ssid_loc}" \
-        | sed 's/^*//' \
+        | sed 's/^\*//;s/^ *//;s/ *$//' \
     )
     echo $SSID
 }
 
-# Pull out the BSSID from the AP's in range
-get_bssid() {
-    local chosen
-    local bssid_loc
-    local bssid
-
-    chosen=$1
-
-    get_column_location "BSSID"
-    bssid_loc=$?
-    bssid=$(echo "$chosen" | awk -v FIELDWIDTHS="$WIDTHS" "{print \$$bssid_loc}" )
-    echo $bssid
-}
-
-
+# Pull out the security type from a chosen row. Previously read a $bssid
+# variable it never actually took as a parameter (relying on the caller's
+# local happening to still be in scope) - takes the row directly instead.
 get_security() {
+    local row
     local security_loc
     local selected_security
 
+    row=$1
+
     get_column_location "SECURITY"
     security_loc=$?
-    selected_security=$(echo "$APS" \
-        | grep "$bssid" \
-        | sed 's/^[ \*]\s*//g' \
+    # Was stripping the leading marker/space *before* the FIELDWIDTHS
+    # split - that shifts every column boundary left by one character,
+    # desyncing the whole row. Confirmed live: returned empty for the
+    # active AP's row. Extract first, same as get_ssid, then clean up.
+    selected_security=$(echo "$row" \
         | awk -v FIELDWIDTHS="$WIDTHS" "{print \$$security_loc}" \
-        | sed 's/^*//' \
+        | sed 's/^\*//;s/^ *//;s/ *$//' \
     )
     echo $selected_security
 }
@@ -252,13 +266,13 @@ create_8021x_connection() {
 
 # Create a new connection based on a selected SSID
 create_connection() {
-    local bssid
+    local row
     local selected_security
     local password
 
-    bssid="$1"
+    row="$1"
 
-    selected_security=$(get_security "$bssid")
+    selected_security=$(get_security "$row")
     echo "Security: $selected_security"
 
     # 802.1x Security
@@ -288,17 +302,16 @@ create_connection() {
 
 
 handle_connection() {
-    local bssid
+    local row
     local selected_security
     local active_ap
     local connections
 
-    bssid="$1"
-    echo "BSSID: $bssid"
-    selected_security=$(get_security "$bssid")
+    row="$1"
+    selected_security=$(get_security "$row")
 
     # Pull out the SSID of the AP selected
-    SSID=$(get_ssid "$bssid")
+    SSID=$(get_ssid "$row")
     echo "Chosen SSID: $SSID"
 
     # Get the active AP
@@ -311,7 +324,7 @@ handle_connection() {
     )
 
     # If the currently active AP is selected, turn it off
-    if echo "$active_ap" | grep "$bssid"; then
+    if [[ "$row" == "$active_ap" ]]; then
         echo "Chosen active AP"
         nmcli con down "$SSID"
 
@@ -323,7 +336,7 @@ handle_connection() {
     # Otherwise create a new connection
     else
         echo "Creating a new connection"
-        create_connection "$bssid"
+        create_connection "$row"
     fi
 }
 
@@ -333,8 +346,6 @@ show_menu() {
     local power
     local options
     local chosen
-    local bssid
-    local selected_ap
 
     # Get menu options
     if power_on; then
@@ -347,8 +358,17 @@ show_menu() {
         options="$power\nExit"
     fi
 
-    # Open dmenu menu, read chosen option
-    chosen="$(echo -e "$options" | $dmenu_command "WiFi: ")"
+    # Open dmenu menu, read chosen option. nmcli's own column padding
+    # assumes a monospace terminal - rendered in the theme's proportional
+    # sans-serif font (config.rasi) the SSID/BARS/SECURITY columns drift
+    # out of alignment, confirmed live. Overriding just this menu's font
+    # to the Nerd Font Mono already vendored for the bar (desktop.nix)
+    # makes nmcli's existing alignment render correctly instead of
+    # hand-rolling column formatting to compensate for a proportional font.
+    # rofi's plain -font flag is silently overridden by config.rasi's own
+    # font: property (confirmed live: -font had zero visible effect, even
+    # at a wildly different size) - -theme-str actually takes precedence.
+    chosen="$(echo -e "$options" | $dmenu_command "WiFi: " -theme-str '* { font: "Inconsolata Nerd Font Mono 11"; }')"
 
     # Match chosen option to command
     case $chosen in
@@ -362,11 +382,13 @@ show_menu() {
             create_manual_connection
             ;;
         *)
-
-            # Handle the connection if one is selected
-            bssid=$(get_bssid "$chosen")
-            selected_ap=$(nmcli --fields $FIELDS dev wifi list | grep "$bssid")
-            if [[ $selected_ap ]]; then handle_connection "$bssid"; fi
+            # $chosen is one of $APS's own lines verbatim if a device was
+            # selected (rofi returns back exactly what it was given) -
+            # confirm that rather than trust blindly, then hand the whole
+            # row to handle_connection to pull ssid/security out of directly.
+            if echo "$APS" | grep -qxF "$chosen"; then
+                handle_connection "$chosen"
+            fi
             ;;
     esac
     notify_error
