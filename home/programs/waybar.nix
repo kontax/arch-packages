@@ -29,7 +29,13 @@
       # waybar outright rather than warning and skipping). waybar is fully
       # self-themed via style.css already and never needed the system GTK
       # theme, so just don't inherit it here instead of fighting the
-      # theme's specificity.
+      # theme's specificity. Side effect: any GUI app waybar itself spawns
+      # (an on-click command in conf/desktop/waybar/config, e.g. pavucontrol)
+      # inherits waybar's own environment at spawn time, not the login
+      # session's - confirmed live, pavucontrol popped up in stock
+      # Adwaita/light when launched by clicking the volume widget even
+      # though the session's own GTK_THEME was set correctly. Such
+      # on-click commands need to set GTK_THEME=Gruvbox-Dark themselves.
       UnsetEnvironment = "GTK_THEME";
     };
     Install.WantedBy = [ "graphical-session.target" ];

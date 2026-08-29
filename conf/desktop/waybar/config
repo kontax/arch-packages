@@ -140,7 +140,7 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "on-click": "pavucontrol"
+        "on-click": "GTK_THEME=Gruvbox-Dark pavucontrol"
     }
 }
 
