@@ -26,10 +26,12 @@ new layout, and what didn't have a clean equivalent.
   equivalent `couldinho-*` pacman package used to.
 - `home/` - home-manager config for the primary user's apps (sway, waybar,
   kitty, mpv, nvim), imported by the profile modules above.
-- `pkgs/` - the overlay: bundles the old `conf/*/usr/local/bin` scripts
-  verbatim into per-profile packages.
-- `conf/` - unchanged: the actual config file content, vendored by the
-  modules/home-manager files above rather than rewritten.
+- `pkgs/` - the overlay: bundles the `conf/*/bin` scripts verbatim into
+  per-profile packages.
+- `conf/` - the actual config file content, vendored byte-for-byte rather
+  than rewritten. Organized by app (`conf/desktop/waybar/config`, etc.)
+  rather than mirroring the old Arch filesystem paths those files used to
+  install to - meaningless once Nix just symlinks files by explicit path.
 
 ## Installing on a new machine
 
@@ -54,9 +56,9 @@ new layout, and what didn't have a clean equivalent.
 ## Day to day
 
 The `?submodules=1` is required, not optional - the nvim config
-(`conf/base/etc/xdg/nvim`) is a git submodule, and Nix's git-tree filtering
-ignores submodule content unless you ask for it; without this flag you'll
-hit `Path '...xdg/nvim' ... is not tracked by Git`.
+(`conf/base/nvim`) is a git submodule, and Nix's git-tree filtering ignores
+submodule content unless you ask for it; without this flag you'll hit
+`Path '...nvim' ... is not tracked by Git`.
 
 `--impure` is required too - `~/.config/couldinho/local.nix` (personal
 values that don't belong in this public repo, see `local.nix.example`)

@@ -65,7 +65,7 @@ double check on first build), `ttf-nerd-fonts-symbols[-mono]`->
 `nerd-fonts.symbols-only` (nixpkgs restructured nerd-fonts into per-font attrs
 - `ttf-inconsolata`'s nerd variant would be `nerd-fonts.inconsolata`, but
 that's skipped since the exact font file is already vendored from
-`conf/desktop/usr/share/fonts/`), `pinentry`->`pinentry-gnome3` (no bare
+`conf/desktop/share/fonts/`), `pinentry`->`pinentry-gnome3` (no bare
 `pinentry` attr; `pinentry-gtk2` specifically is NOT packaged),
 `pulseaudio-alsa`->N/A (desktop.nix uses PipeWire's own ALSA compat via
 `services.pipewire.alsa.enable`, not a separate package), `vimiv`->`vimiv-qt` (GTK version removed
@@ -102,10 +102,10 @@ per-subsystem daemons) for no functional benefit if nothing uses it.
   Assumes the flake is checked out at `$HOME/arch-packages` (override via
   `WAYBAR_UPDATES_FLAKE_DIR`) **and that `flake.lock` is actually committed**
   - without a committed lock file there's nothing to diff against.
-- **nvim submodule + Nix**: `conf/base/etc/xdg/nvim` is a git submodule
+- **nvim submodule + Nix**: `conf/base/nvim` is a git submodule
   (`.gitmodules`), and Nix's flake git-tree filtering does not include
   submodule content by default - it'll error with
-  `Path '...xdg/nvim' ... is not tracked by Git` otherwise. Every flake
+  `Path '...nvim' ... is not tracked by Git` otherwise. Every flake
   invocation needs `?submodules=1` on the flake ref (`nix flake check
   '.?submodules=1'`, `--flake '.?submodules=1#desktop'`, etc.) - see
   README.md and `bootstrap.sh` for where this is already wired in.
@@ -121,9 +121,9 @@ per-subsystem daemons) for no functional benefit if nothing uses it.
   `modules/profiles/base.nix` - fetched and pinned at build time like
   everything else in this flake, not at shell-startup time. `envExtra`/
   `zshenv` was 100% that bootstrap and no longer exists.
-- **Keyboard layout**: `conf/base/etc/xkb/symbols/us-hyper` is registered via
+- **Keyboard layout**: `conf/base/xkb/symbols/us-hyper` is registered via
   `services.xserver.xkb.extraLayouts`, but the actual X11 keyboard config file
-  (`conf/desktop/etc/X11/xorg.conf.d/00-keyboard.conf`) references a layout
+  (`conf/desktop/X11/xorg.conf.d/00-keyboard.conf`) references a layout
   named `jc`, not `us-hyper`. That mismatch already existed in the source repo
   (this file was vendored byte-for-byte) - not something introduced by this
   migration, but worth checking on real hardware since `jc` may not resolve

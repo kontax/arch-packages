@@ -14,8 +14,8 @@
     swaybg
   ];
 
-  xdg.configFile."sway/config".source = ../../conf/desktop/etc/sway/config;
-  xdg.configFile."swaylock/config".source = ../../conf/desktop/etc/swaylock/config;
+  xdg.configFile."sway/config".source = ../../conf/desktop/sway/config;
+  xdg.configFile."swaylock/config".source = ../../conf/desktop/swaylock/config;
 
   systemd.user.targets.sway-session = {
     Unit = {

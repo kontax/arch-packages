@@ -2,11 +2,11 @@
 {
   home.packages = [ pkgs.waybar ];
 
-  xdg.configFile."waybar/config".source = ../../conf/desktop/etc/xdg/waybar/config;
-  # laptop profile overrides this with conf/laptop/etc/xdg/waybar/extra.conf
+  xdg.configFile."waybar/config".source = ../../conf/desktop/waybar/config;
+  # laptop profile overrides this with conf/laptop/waybar/extra.conf
   xdg.configFile."waybar/extra.conf".source =
-    lib.mkDefault ../../conf/desktop/etc/xdg/waybar/extra.conf;
-  xdg.configFile."waybar/style.css".source = ../../conf/desktop/etc/xdg/waybar/style.css;
+    lib.mkDefault ../../conf/desktop/waybar/extra.conf;
+  xdg.configFile."waybar/style.css".source = ../../conf/desktop/waybar/style.css;
 
   systemd.user.services.waybar = {
     Unit = {

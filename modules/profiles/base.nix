@@ -26,14 +26,14 @@ in
     # (see comment in that vendored file) rather than environment.sessionVariables.PATH,
     # since NixOS renders sessionVariables as literal `export VAR="..."` assignments -
     # a list there would *replace* PATH instead of extending it.
-    loginShellInit = lib.mkDefault (builtins.readFile ../../conf/base/etc/zsh/zprofile);
+    loginShellInit = lib.mkDefault (builtins.readFile ../../conf/base/zsh/zprofile);
     # was /etc/zsh/couldinho-zshrc -> /etc/zsh/zshrc. The old zshrc bootstrapped
     # zsh4humans, a framework that self-installs by curling a script from
     # GitHub on every machine's first shell start (envExtra/zshenv was 100%
     # that bootstrap and is gone entirely now). Replaced below by nixpkgs
     # packages - fetched and pinned at build time, not at shell-startup time -
     # for the same prompt and plugins.
-    interactiveShellInit = builtins.readFile ../../conf/base/etc/zsh/zshrc + ''
+    interactiveShellInit = builtins.readFile ../../conf/base/zsh/zshrc + ''
 
       # Prompt (was zsh4humans' bundled powerlevel10k). The vendored p10k.zsh
       # was generated years ago against whatever p10k version zsh4humans
@@ -51,15 +51,15 @@ in
   # module options, so no manual plugin sourcing is needed for these two.
   programs.zsh.autosuggestions.enable = true;
   programs.zsh.syntaxHighlighting.enable = true;
-  environment.etc."zsh/zsh-aliases".source = ../../conf/base/etc/zsh/zsh-aliases;
-  environment.etc."zsh/p10k.zsh".source = ../../conf/base/etc/zsh/p10k.zsh;
+  environment.etc."zsh/zsh-aliases".source = ../../conf/base/zsh/zsh-aliases;
+  environment.etc."zsh/p10k.zsh".source = ../../conf/base/zsh/p10k.zsh;
   environment.shells = [ pkgs.zsh ];
   environment.pathsToLink = [ "/share/zsh" ];
 
-  environment.etc."gitconfig".source = ../../conf/base/etc/gitconfig;
-  environment.etc."vimrc".source = ../../conf/base/etc/vimrc;
-  environment.etc."htoprc".source = ../../conf/base/etc/htoprc;
-  environment.etc."bat/config".source = ../../conf/base/etc/bat/conf;
+  environment.etc."gitconfig".source = ../../conf/base/gitconfig;
+  environment.etc."vimrc".source = ../../conf/base/vimrc;
+  environment.etc."htoprc".source = ../../conf/base/htoprc;
+  environment.etc."bat/config".source = ../../conf/base/bat/conf;
 
   # --- Locale / time (was the locale.gen / locale.conf / localtime steps in install.sh) ---
   i18n.defaultLocale = "en_US.UTF-8";

@@ -40,8 +40,8 @@ in
   hardware.firmware = [ pkgs.sof-firmware ];
 
   environment.etc."X11/xorg.conf.d/40-libinput.conf".source =
-    ../../conf/laptop/usr/share/X11/xorg.conf.d/40-libinput.conf;
+    ../../conf/laptop/share/X11/xorg.conf.d/40-libinput.conf;
 
   home-manager.users.${cfg.user}.xdg.configFile."waybar/extra.conf".source =
-    lib.mkForce ../../conf/laptop/etc/xdg/waybar/extra.conf;
+    lib.mkForce ../../conf/laptop/waybar/extra.conf;
 }

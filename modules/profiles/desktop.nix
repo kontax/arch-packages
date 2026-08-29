@@ -11,7 +11,7 @@ in
   home-manager.users.${cfg.user}.imports = [ ../../home/home.nix ];
 
   # --- Desktop zprofile override (autostarts sway on tty1), replaces base's ---
-  programs.zsh.loginShellInit = builtins.readFile ../../conf/desktop/etc/zsh/zprofile;
+  programs.zsh.loginShellInit = builtins.readFile ../../conf/desktop/zsh/zprofile;
 
   # No display manager - sway is launched from the zprofile on tty1, exactly
   # like the old system (which never used a DM either).
@@ -66,13 +66,13 @@ in
   };
 
   environment.etc."X11/xorg.conf.d/00-keyboard.conf".source =
-    ../../conf/desktop/etc/X11/xorg.conf.d/00-keyboard.conf;
+    ../../conf/desktop/X11/xorg.conf.d/00-keyboard.conf;
   # The us-hyper symbols file registered as an XKB layout, for use in sway's
   # `input * xkb_layout` / the above xorg.conf.d keyboard options.
   services.xserver.xkb.extraLayouts."us-hyper" = {
     description = "US layout with Hyper on CapsLock";
     languages = [ "eng" ];
-    symbolsFile = ../../conf/base/etc/xkb/symbols/us-hyper;
+    symbolsFile = ../../conf/base/xkb/symbols/us-hyper;
   };
 
   # --- Session env vars (was desktop/etc/environment.d/{20-xdg,60-wayland}.conf) ---
@@ -114,8 +114,8 @@ in
   ] ++ [
     (pkgs.runCommand "couldinho-desktop-fonts" { } ''
       mkdir -p $out/share/fonts
-      cp "${../../conf/desktop/usr/share/fonts}/Inconsolata Nerd Font Complete Mono.otf" "$out/share/fonts/"
-      cp "${../../conf/desktop/usr/share/fonts}/taskbar.ttf" "$out/share/fonts/"
+      cp "${../../conf/desktop/share/fonts}/Inconsolata Nerd Font Complete Mono.otf" "$out/share/fonts/"
+      cp "${../../conf/desktop/share/fonts}/taskbar.ttf" "$out/share/fonts/"
     '')
   ];
 
@@ -177,5 +177,5 @@ in
     couldinho-desktop-scripts
   ];
 
-  environment.etc."xdg/nvim".source = ../../conf/base/etc/xdg/nvim; # kept for root/system-wide nvim invocations
+  environment.etc."xdg/nvim".source = ../../conf/base/nvim; # kept for root/system-wide nvim invocations
 }

@@ -26,15 +26,15 @@
     gruvbox-gtk-theme
   ];
 
-  xdg.configFile."swaync/config.json".source = ../../conf/desktop/etc/xdg/swaync/config.json;
-  xdg.configFile."swaync/style.css".source = ../../conf/desktop/etc/xdg/swaync/style.css;
-  xdg.configFile."fuzzel/fuzzel.ini".source = ../../conf/desktop/etc/xdg/fuzzel/fuzzel.ini;
-  xdg.configFile."gtk-3.0/settings.ini".source = ../../conf/desktop/etc/gtk-3.0/settings.ini;
-  xdg.configFile."mimeapps.list".source = ../../conf/desktop/etc/xdg/mimeapps.list;
+  xdg.configFile."swaync/config.json".source = ../../conf/desktop/swaync/config.json;
+  xdg.configFile."swaync/style.css".source = ../../conf/desktop/swaync/style.css;
+  xdg.configFile."fuzzel/fuzzel.ini".source = ../../conf/desktop/fuzzel/fuzzel.ini;
+  xdg.configFile."gtk-3.0/settings.ini".source = ../../conf/desktop/gtk-3.0/settings.ini;
+  xdg.configFile."mimeapps.list".source = ../../conf/desktop/mimeapps.list;
   # Gruvbox theme (matches kitty.conf's palette) - rofi reads this
   # automatically with no -theme flag needed, so it covers pinentry-rofi and
   # rofi-bluetooth alike, not just one or the other.
-  xdg.configFile."rofi/config.rasi".source = ../../conf/desktop/etc/xdg/rofi/config.rasi;
+  xdg.configFile."rofi/config.rasi".source = ../../conf/desktop/rofi/config.rasi;
 
   # discord/neomutt/scli/signal-desktop/visidata/vivaldi-stable .desktop
   # entries were dropped - none of those apps are installed by this flake,
@@ -42,8 +42,8 @@
   # NixOS anyway. vivaldi itself is still installed (desktop.nix) and ships
   # its own working .desktop file via the package.
   xdg.dataFile = {
-    "applications/browser.desktop".source = ../../conf/desktop/usr/local/share/applications/browser.desktop;
-    "applications/nvim.desktop".source = ../../conf/desktop/usr/local/share/applications/nvim.desktop;
+    "applications/browser.desktop".source = ../../conf/desktop/share/applications/browser.desktop;
+    "applications/nvim.desktop".source = ../../conf/desktop/share/applications/nvim.desktop;
   };
 
   systemd.user.services.swaync = {
