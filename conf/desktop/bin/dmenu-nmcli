@@ -62,6 +62,19 @@ APS=$(echo "$APS" | awk -v FIELDWIDTHS="$WIDTHS" '
     { ssid = $1; gsub(/^[ *]+|[ ]+$/, "", ssid); if (!seen[ssid]++) print $0 }
 ')
 
+# A lock/unlock glyph reads faster than squinting at "WPA2" vs blank, but
+# create_connection further down still needs the real security *type*
+# (WPA/WEP vs 802.1X vs open) to decide how to prompt for credentials -
+# so this is a display-only copy, never used for that decision. Inconsolata
+# Nerd Font Mono (forced for this menu below, for the same column-alignment
+# reason) covers both U+F023/U+F09C directly, and since it's the only font
+# in play here there's no risk of the cross-font PUA collisions that bit
+# waybar's icons earlier - see git log for that whole saga.
+DISPLAY_APS=$(echo "$APS" | awk -v FIELDWIDTHS="$WIDTHS" -v lock=$'' -v unlock=$'' '
+    { security = $3; gsub(/^ +| +$/, "", security); icon = (security == "") ? unlock : lock;
+      printf "%s%s  %s\n", $1, $2, icon }
+')
+
 
 # Use libnotify to send any errors that occur and show the menu again
 notify_error() {
@@ -346,13 +359,15 @@ show_menu() {
     local power
     local options
     local chosen
+    local chosen_ssid
+    local row
 
     # Get menu options
     if power_on; then
         power="Power: on"
 
         # Options passed to dmenu
-        options="$power\n$DIVIDER\n$APS\n$DIVIDER\n$MANUAL\nExit"
+        options="$power\n$DIVIDER\n$DISPLAY_APS\n$DIVIDER\n$MANUAL\nExit"
     else
         power="Power: off"
         options="$power\nExit"
@@ -382,12 +397,27 @@ show_menu() {
             create_manual_connection
             ;;
         *)
-            # $chosen is one of $APS's own lines verbatim if a device was
-            # selected (rofi returns back exactly what it was given) -
-            # confirm that rather than trust blindly, then hand the whole
-            # row to handle_connection to pull ssid/security out of directly.
-            if echo "$APS" | grep -qxF "$chosen"; then
-                handle_connection "$chosen"
+            # $chosen is one of $DISPLAY_APS's own lines verbatim if a
+            # device was selected (rofi returns back exactly what it was
+            # given), not $APS's - get_ssid only reads field 1 (SSID),
+            # and DISPLAY_APS's printf leaves that field's characters
+            # untouched from the original row, so it still comes out
+            # right even though the rest of the line (security column
+            # replaced by the lock/unlock icon) no longer matches $APS's
+            # layout. Map back to the real $APS row by SSID before
+            # handing off - handle_connection needs the actual security
+            # type (WPA/WEP/802.1X/open), not the display icon.
+            chosen_ssid=$(get_ssid "$chosen")
+            if [[ -n "$chosen_ssid" ]]; then
+                row=$(echo "$APS" | while IFS= read -r candidate; do
+                    if [[ "$(get_ssid "$candidate")" == "$chosen_ssid" ]]; then
+                        echo "$candidate"
+                        break
+                    fi
+                done)
+                if [[ -n "$row" ]]; then
+                    handle_connection "$row"
+                fi
             fi
             ;;
     esac
