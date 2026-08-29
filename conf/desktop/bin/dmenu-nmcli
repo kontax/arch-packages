@@ -10,7 +10,7 @@
 # and rofi-wifi-menu (https://github.com/zbaylin/rofi-wifi-menu)
 #
 # Depends on:
-#   Arch repositories: fuzzel, nmcli, libnotify
+#   Arch repositories: rofi, nmcli, libnotify
 
 # Logging
 set -uo pipefail
@@ -33,6 +33,16 @@ WIDTHS=$(echo "$APS" \
     | head -n 1 | grep -Po '\S+\s*' \
     | awk '{printf "%d ", length($0)}'
 )
+# Multiple APs (mesh/extenders, or just neighbouring APs on the same
+# network) show up as separate lines with an identical SSID - nmcli
+# already sorts by signal strength, so keeping the first line per SSID
+# keeps the strongest one and drops the rest. Uses the same FIELDWIDTHS
+# convention as get_ssid() below ($1 is SSID once the leading in-use
+# marker's been collapsed by the sed above), so it stays consistent with
+# how every other field lookup here already parses these lines.
+APS=$(echo "$APS" | awk -v FIELDWIDTHS="$WIDTHS" '
+    { ssid = $1; gsub(/^[ *]+|[ ]+$/, "", ssid); if (!seen[ssid]++) print $0 }
+')
 
 
 # Use libnotify to send any errors that occur and show the menu again
@@ -170,7 +180,7 @@ create_manual_connection() {
 
     # Otherwise get the password and create the connection
     else
-        password=$($dmenu_command "Password: " --password)
+        password=$($dmenu_command "Password: " -password)
         if [ "$password" = "" ];then
             OUT=$(nmcli dev wifi con "$SSID" 2>&1)
         else
@@ -217,7 +227,7 @@ create_8021x_connection() {
         return
     fi
 
-    password=$($dmenu_command "Password: " --password)
+    password=$($dmenu_command "Password: " -password)
 
     # Go back if the username or password is blank
     if [[ "$password" == "" ]]; then
@@ -261,7 +271,7 @@ create_connection() {
         echo "WPA/WEP"
 
         # Go back if the password is blank
-        password=$($dmenu_command "Password: " --password)
+        password=$($dmenu_command "Password: " -password)
         if [[ "$password" == "" ]]; then
             show_menu
             return
@@ -362,8 +372,12 @@ show_menu() {
     notify_error
 }
 
-# Dmenu command to pipe into, can add any options here
-dmenu_command="fuzzel -d -p "
+# Was fuzzel, which looked out of place once every other prompt in this
+# setup (pinentry-rofi, rofi-pass, rofi-bluetooth) switched to the shared
+# Gruvbox rofi theme - this picks it up automatically like they do. The
+# password prompts above were updated to rofi's actual -password flag
+# (single dash, not fuzzel's --password) to match.
+dmenu_command="rofi -dmenu -p "
 
 show_menu
 
