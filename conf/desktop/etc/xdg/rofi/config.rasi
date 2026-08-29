@@ -11,7 +11,7 @@
     fg1:    #d5c4a1;
     gray:   #928374;
     red:    #fb4934;
-    orange: #fe8019;
+    yellow: #fabd2f;
 
     background-color: transparent;
     text-color:       @fg0;
@@ -21,7 +21,7 @@
 window {
     background-color: @bg0;
     border:            2px;
-    border-color:      @orange;
+    border-color:      @yellow;
     border-radius:     4px;
     padding:           10px;
     width:             30%;
@@ -42,7 +42,7 @@ inputbar {
 }
 
 prompt {
-    text-color: @orange;
+    text-color: @yellow;
     padding:    0px 8px 0px 0px;
 }
 
@@ -64,22 +64,50 @@ textbox {
 
 listview {
     background-color: transparent;
+    border:            0px;
     lines:              8;
     spacing:             4px;
     cycle:                true;
     dynamic:              true;
+    scrollbar:            true;
 }
 
-element {
+scrollbar {
+    background-color: @bg1;
+    handle-color:      @gray;
+    handle-width:       6px;
+    border-radius:      4px;
+}
+
+/* rofi's element state is two compound classes (row-parity x semantic
+ * type) joined by a dot - a bare "element"/"element selected" selector
+ * only covers what it names, anything else (alternate rows, and normal's
+ * .normal/.urgent/.active split) silently falls back to rofi's own
+ * compiled-in defaults instead of inheriting these. Confirmed live: with
+ * only the bare selectors, unselected rows rendered with a stock cream
+ * background nowhere in this palette. Covering every combination
+ * explicitly instead of relying on cascade/inheritance across them.
+ */
+element normal.normal, element alternate.normal {
     background-color: transparent;
     text-color:        @fg1;
     padding:            6px 8px;
     border-radius:      4px;
 }
 
-element selected {
+element normal.urgent, element alternate.urgent,
+element normal.active, element alternate.active {
+    background-color: transparent;
+    text-color:        @red;
+    padding:            6px 8px;
+    border-radius:      4px;
+}
+
+element selected.normal, element selected.urgent, element selected.active {
     background-color: @bg2;
-    text-color:        @orange;
+    text-color:        @yellow;
+    padding:            6px 8px;
+    border-radius:      4px;
 }
 
 element-text {
