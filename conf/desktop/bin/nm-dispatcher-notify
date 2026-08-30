@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# NetworkManager dispatcher hook (networking.networkmanager.dispatcherScripts,
+# modules/profiles/desktop.nix) - notifies the desktop session whenever a
+# device's active connection actually changes, regardless of how that
+# happened: plugging/unplugging the USB hub's ethernet, NetworkManager's own
+# autoconnect back to WiFi once ethernet drops, or a successful manual pick
+# via dmenu-nmcli (conf/desktop/bin/dmenu-nmcli, which only notifies a
+# *failed* attempt itself - see its own notify_result). Runs as root
+# (NetworkManager's own dispatcher.d convention), so notify-send has to be
+# run explicitly as the desktop user against their session bus - nothing
+# here would reach the user's swaync otherwise.
+#
+# ${COULDINHO_USER:?} is set by the tiny wrapper in desktop.nix that execs
+# this script - required, not defaulted, since a missing value here means
+# every notification silently goes nowhere rather than to the wrong session.
+set -uo pipefail
+
+IFACE="$1"
+ACTION="$2"
+
+# Only these two mean an actual connect/disconnect - dhcp4-change and
+# friends fire on lease renewal with nothing user-visible to report.
+case "$ACTION" in
+    up | down) ;;
+    *) exit 0 ;;
+esac
+
+device_type="$(nmcli -t -f GENERAL.TYPE device show "$IFACE" 2>/dev/null | cut -d: -f2)"
+case "$device_type" in
+    wifi) label="WiFi" ;;
+    ethernet) label="Ethernet" ;;
+    *) exit 0 ;; # loopback, bridges, etc. - not interesting here
+esac
+
+name="${CONNECTION_ID:-$IFACE}"
+
+user_id="$(id -u "${COULDINHO_USER:?}" 2>/dev/null)" || exit 0
+runtime_dir="/run/user/$user_id"
+[ -S "$runtime_dir/bus" ] || exit 0 # no active session to notify
+
+notify() {
+    runuser -u "$COULDINHO_USER" -- env \
+        XDG_RUNTIME_DIR="$runtime_dir" \
+        DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime_dir/bus" \
+        notify-send "$@"
+}
+
+if [ "$ACTION" = down ]; then
+    notify "$label" "Disconnected from $name"
+    exit 0
+fi
+
+# No dedup needed against dmenu-nmcli's own notifications here - it only
+# reports a *failed* connection attempt (which never brings the device up,
+# so never reaches this script at all); every successful one, including
+# ones it triggers, is reported here instead.
+notify "$label" "Connected to $name"

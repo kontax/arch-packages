@@ -1,0 +1,147 @@
+{
+    "layer": "top",
+    "height": 25,
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode"
+    ],
+    "modules-right": [
+        "custom/progress",
+        "custom/usbguard",
+        "custom/yubikey",
+        "custom/systemd",
+        "custom/updates",
+        "custom/recording",
+        "custom/dnd",
+        "pulseaudio",
+        "network",
+        "custom/wireguard",
+        "cpu",
+        "memory",
+        "disk",
+        "backlight",
+        "sway/language",
+        "battery",
+        "clock"
+    ],
+
+    "include": "extra.conf",
+
+    "custom/progress": {
+        "exec": "waybar-progress",
+        "return-type": "json",
+        "interval": 1
+    },
+    "custom/usbguard": {
+        "exec": "waybar-usbguard",
+        "return-type": "json",
+        "interval": 1,
+        "on-click": "waybar-usbguard allow",
+        "on-click-right": "waybar-usbguard reject"
+    },
+    "custom/yubikey": {
+        "exec": "waybar-yubikey",
+        "return-type": "json"
+    },
+    "custom/systemd": {
+        "exec": "waybar-systemd",
+        "return-type": "json",
+        "interval": 10
+    },
+    "custom/updates": {
+        "exec": "waybar-updates show",
+        "return-type": "json",
+        "signal": 1,
+        "on-click": "waybar-updates refresh",
+        "on-click-right": "kitty --class waybar-update waybar-update-confirm",
+        "interval": "once"
+    },
+    "custom/wireguard": {
+        "exec": "wireguard-status",
+        "on-click": "wireguard-toggle",
+        "return-type": "json",
+    },
+    "custom/dnd": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>",
+            "none": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>",
+            "dnd-notification": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>",
+            "dnd-none": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>"
+        },
+        "return-type": "json",
+        "exec": "swaync-client --subscribe-waybar",
+        "on-click": "swaync-client --toggle-dnd --skip-wait",
+        "escape": true
+    },
+    "custom/recording": {
+        "exec": "waybar-recording",
+        "return-type": "json",
+        "signal": 3,
+        "interval": "once"
+    },
+    "clock": {
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {:%a, %d %b  <span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> %H:%M}"
+    },
+    "cpu": {
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {usage}%",
+        "states": {
+            "warning": 70,
+            "critical": 90
+        }
+    },
+    "disk": {
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {percentage_free}%",
+        "states": {
+            "warning": 70,
+            "critical": 90
+        }
+    },
+    "memory": {
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {}%",
+        "states": {
+            "warning": 70,
+            "critical": 90
+        }
+    },
+    "backlight": {
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'>{icon}</span> {percent}%",
+        "format-icons": [""],
+        "tooltip-format": "{percent}%"
+    },
+    "sway/language": {
+        "format": "{flag}",
+        "min-length": 2,
+    },
+    "network": {
+        "interval": 2,
+        "format-wifi": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {essid}",
+        "format-ethernet": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {ifname}",
+        "format-linked": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {ifname}",
+        "format-disconnected": " <span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> ",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n {bandwidthDownBits}\n {bandwidthUpBits}",
+        "on-click": "dmenu-nmcli"
+    },
+    "pulseaudio": {
+        "format": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'>{icon}</span> {volume}%   {format_source}",
+        "format-bluetooth": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'>{icon}</span> {volume}%   {format_source}",
+        "format-bluetooth-muted": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'> {icon}</span>   {format_source}",
+        "format-muted": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>   {format_source}",
+        "format-source": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> {volume}%",
+        "format-source-muted": "<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span>",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "GTK_THEME=Gruvbox-Dark pavucontrol"
+    }
+}
+
+// vi: ft=json

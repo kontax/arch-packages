@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# progress -q separates fields with literal tab characters, not just
+# newlines - confirmed on real hardware, waybar intermittently logged
+# "custom/progress: Error parsing JSON: ... Control character in string"
+# whenever it reported something, since only \n was ever escaped here and
+# a raw tab byte in a JSON string is invalid per spec.
+output="$(progress -q)"
+text="$(printf "%s" "$output" | sed 's/\[[^]]*\] //g' | awk 'BEGIN { ORS=" " } NR%3==1 { op=$1 } NR%3==2 { pct=($1+0); if (op != "gpg" && pct > 0 && pct < 100) { print op, $1 } }')"
+tooltip="$(printf "%s" "$output" | perl -pe 's/\t/\\t/g; s/\n/\\n/g' | perl -pe 's/(?:\\n)+$//')"
+
+printf '{"text": "%s", "tooltip": "%s"}\n' "$text" "$tooltip"

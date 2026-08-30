@@ -17,3 +17,15 @@ build/
 *.tar.xz
 *.tar.gz
 *.tar
+
+## Nix
+result
+result-*
+.direnv/
+
+## Personal values that don't belong in this public repo - see
+## local.nix.example and modules/options.nix. Real one now lives at
+## ~/.config/couldinho/local.nix (flakes don't see untracked files at the
+## repo root at all, so gitignoring one here was never sufficient); this
+## entry stays as a safety net in case one ends up here again.
+/local.nix

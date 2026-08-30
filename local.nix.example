@@ -1,0 +1,51 @@
+# Copy this to ~/.config/couldinho/local.nix (outside the repo entirely -
+# not just gitignored, since Nix flakes only evaluate files tracked by git
+# and a gitignored-and-untracked file at the repo root turned out to be
+# invisible to flake evaluation) and fill in real values. Imported
+# automatically by every host if present (see flake.nix) - it's for personal
+# information that shouldn't be hardcoded into this public repo: which user
+# account every host builds around (couldinho.user - required, every host
+# needs it, no default), a GPG key ID to fetch from a keyserver and trust
+# (see modules/options.nix and home/programs/gpg-import.nix), the pass
+# password-store's git URL plus its pass-git-helper mapping (see
+# home/programs/password-store.nix), and a git user.name/user.email (see
+# home/programs/git.nix) - all optional. None of this makes secrets
+# readable on its own - decrypting the password store still needs the GPG
+# secret key physically present, on a YubiKey for this setup.
+#
+# Use an SSH (not HTTPS) URL for passwordStore.url, authenticated via the
+# GPG key's Authenticate subkey (gpg-import.nix turns on gpg-agent's SSH
+# support for this) rather than a username/password - putting real
+# credentials in this file would land them in the world-readable /nix/store
+# once built, unlike a git URL or pass-git-helper routing rule, which are
+# personal but not secret. Register the public half
+# (`ssh-add -L` once the card's plugged in) as a read-only deploy key on the
+# password-store repo.
+#
+# If the git server sits behind a non-default SSH port (e.g. proxied through
+# HAProxy), use the full ssh://user@host:port/path form - the git@host:path
+# scp-like shorthand has no way to express a port.
+#
+# Reading from $HOME requires --impure - see README.md's rebuild command.
+{
+  couldinho.user = "you";
+
+  couldinho.gpg.keyId = "0123456789ABCDEF";
+
+  couldinho.git = {
+    userName = "Your Name";
+    userEmail = "you@example.com";
+  };
+
+  couldinho.passwordStore = {
+    url = "git@git.example.com:you/password-store.git";
+    mapping = ''
+      [DEFAULT]
+      username_extractor=regex_search
+      regex_username=^username: (.*)$
+
+      [github.com/you*]
+      target=Development/github.com/token-personal
+    '';
+  };
+}

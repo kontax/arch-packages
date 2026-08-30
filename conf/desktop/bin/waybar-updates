@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# Checks for pending updates among this host's explicitly-installed
+# packages (environment.systemPackages + every home-manager user's
+# home.packages) - was a pacman/AUR/pacdiff/rebuild-detector checker under
+# Arch, none of which mean anything under NixOS. Compares each package's
+# .pname/.version between the flake's committed flake.lock and what
+# `nix flake update` would produce in a scratch copy - pure evaluation only
+# (pname/version are plain derivation attributes), never builds or
+# downloads anything. Assumes the flake is checked out at
+# ~/dev/arch-packages (bootstrap.sh places it there) with a committed
+# flake.lock to compare against.
+set -uo pipefail
+
+flake_dir="$HOME/dev/arch-packages"
+cache_path="${XDG_CACHE_HOME:-$HOME/.cache}/waybar-updates"
+host="$(hostname)"
+
+show() {
+    if [ -f "$cache_path" ]; then
+        cat "$cache_path"
+    else
+        printf '{"text": ""}\n'
+    fi
+}
+
+# Prints {"name": "version", ...} for every explicitly-installed package in
+# the given flake checkout, for $host.
+eval_packages() {
+    nix --extra-experimental-features 'nix-command flakes' eval --impure --json \
+        "$1?submodules=1#nixosConfigurations.$host.config" --apply '
+        cfg:
+        let
+          sysPkgs = cfg.environment.systemPackages or [ ];
+          homeUsers = builtins.attrValues (cfg.home-manager.users or { });
+          homePkgs = builtins.concatMap (u: u.home.packages or [ ]) homeUsers;
+          all = sysPkgs ++ homePkgs;
+          info = p: {
+            name = p.pname or p.name or "unknown";
+            value = p.version or "";
+          };
+        in
+        builtins.listToAttrs (map info all)
+    ' 2>/dev/null
+}
+
+refresh() {
+    if [ ! -f "$flake_dir/flake.lock" ]; then
+        printf '{"text": ""}\n' > "$cache_path"
+        return
+    fi
+
+    tmp="$(mktemp -d)"
+    trap 'rm -rf "$tmp"' EXIT
+    # A full copy (not just flake.nix/flake.lock) is required: evaluating
+    # nixosConfigurations.$host.config pulls in every module/host file the
+    # flake's own source tree references (./modules, ./hosts, ...), not
+    # just its external inputs - a two-file copy is enough to run
+    # `flake update` (which only touches flake.lock) but not enough to then
+    # evaluate the updated config against it.
+    cp -a "$flake_dir/." "$tmp/repo"
+
+    if ! (cd "$tmp/repo" && nix --extra-experimental-features 'nix-command flakes' flake update) >/dev/null 2>&1; then
+        # Network down or similar - keep showing whatever was last cached
+        # rather than replacing it with a false "nothing pending".
+        return
+    fi
+
+    old_json="$(eval_packages "$flake_dir")"
+    new_json="$(eval_packages "$tmp/repo")"
+
+    if [ -z "$old_json" ] || [ -z "$new_json" ]; then
+        # Evaluation failed - keep the last good cache rather than
+        # clobbering it with a false "nothing pending".
+        return
+    fi
+
+    changed="$(jq -n --argjson old "$old_json" --argjson new "$new_json" -r '
+        $old | to_entries[] | select($new[.key] != null and $new[.key] != .value) |
+        "\(.key): \(.value) -> \($new[.key])"
+    ' | sort)"
+
+    if [ -z "$changed" ]; then
+        printf '{"text": ""}\n' > "$cache_path"
+    else
+        n="$(printf '%s\n' "$changed" | grep -c '^')"
+        # Both of these are single-quoted, so printf/sed see the backslashes
+        # verbatim and each does exactly one round of its own escape
+        # processing - \\n (2 backslashes) is what's needed to end up with
+        # a real 2-character `\n` in the output file (a valid JSON newline
+        # escape). Using \\\\n here instead double-unescapes down to a
+        # literal backslash followed by the letter n, which JSON decodes
+        # back to `\n` as two visible characters rather than a line break -
+        # confirmed live, that's exactly what showed up in the tooltip.
+        tooltip="$(printf '%s' "$changed" | sed ':a;N;$!ba;s/\n/\\n/g')"
+        printf '{"text": "%s", "tooltip": "Packages with updates available:\\n%s" }\n' \
+            "$n" "$tooltip" > "$cache_path"
+    fi
+
+    pkill -RTMIN+1 -x waybar 2>/dev/null || true
+}
+
+case "${1:-}" in
+    show) show ;;
+    refresh) refresh ;;
+    *) echo >&2 "Usage: $0 <show|refresh>"; exit 1 ;;
+esac
