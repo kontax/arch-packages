@@ -1,0 +1,8 @@
+{ pkgs, ... }:
+{
+  home.packages = [ pkgs.kitty ];
+
+  xdg.configFile."kitty/kitty.conf".source = ../../conf/desktop/kitty/kitty.conf;
+  xdg.configFile."kitty/diff.conf".source = ../../conf/desktop/kitty/diff.conf;
+  xdg.configFile."kitty/vm.py".source = ../../conf/desktop/kitty/vm.py;
+}

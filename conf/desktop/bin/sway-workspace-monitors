@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+# Dynamically reassigns sway workspaces to outputs by relative position
+# (leftmost non-laptop output = left, next = right) rather than hardcoded
+# monitor identities, since USB-hub-connected DisplayPort connector names/
+# order proved unstable across replugs during testing. Complements the
+# static workspace-pinning block in conf/desktop/sway/config (config-load
+# time only - doesn't react to already-open workspaces or monitor changes).
+import i3ipc
+
+LAPTOP_PREFIX = "eDP"
+WORKSPACE_COUNT = 10
+FILLER_WORKSPACE = 99  # reserved, outside 1-10 - claims a vacated output deterministically
+
+
+def compute_targets(outputs):
+    externals = sorted(
+        (o for o in outputs if o.active and not o.name.startswith(LAPTOP_PREFIX)),
+        key=lambda o: o.rect.x,
+    )
+    laptop = next((o for o in outputs if o.name.startswith(LAPTOP_PREFIX)), None)
+
+    if len(externals) >= 2:
+        left, right = externals[0].name, externals[1].name
+    elif len(externals) == 1:
+        left = right = externals[0].name
+    elif laptop is not None:
+        left = right = laptop.name
+    else:
+        return {}
+
+    ws1 = laptop.name if laptop is not None else left
+
+    targets = {1: ws1}
+    for n in range(2, WORKSPACE_COUNT + 1):
+        targets[n] = left if n % 2 == 0 else right
+    return targets
+
+
+def move_workspace(ipc, ws_num, current_output, target_output):
+    # `workspace N output O` (sway config directive) only affects
+    # workspaces created after it loads - moving an already-open one needs
+    # the runtime `move workspace to output` command instead, which only
+    # operates on the currently focused workspace, hence the focus dance.
+    ipc.command('focus output "%s"' % current_output)
+    ipc.command("workspace number %d" % ws_num)
+    ipc.command('move workspace to output "%s"' % target_output)
+    ipc.command('focus output "%s"' % current_output)
+    # Claim the now-vacated output with a reserved filler workspace instead
+    # of letting sway auto-create a placeholder there - an auto-placeholder
+    # can reuse the very number that just moved away, producing two
+    # workspace objects with the same number if a later pass isn't careful.
+    ipc.command("workspace number %d" % FILLER_WORKSPACE)
+
+
+def reassign(ipc):
+    outputs = ipc.get_outputs()
+    targets = compute_targets(outputs)
+    if not targets:
+        return
+
+    original_focus = next((o.name for o in outputs if o.focused), None)
+    moved = False
+
+    # One move at a time, re-querying state after each - deciding every
+    # move from one stale snapshot can produce duplicate workspace numbers,
+    # since moving a workspace off an output makes sway immediately create
+    # a replacement placeholder there, which can reuse a number a later
+    # move in the same batch was still planning to use.
+    for _ in range(WORKSPACE_COUNT * 2):
+        workspaces = ipc.get_workspaces()
+        tree = ipc.get_tree()
+        tree_by_num = {w.num: w for w in tree.workspaces()}
+
+        mismatch = None
+        for ws in workspaces:
+            if ws.num not in targets or ws.num == FILLER_WORKSPACE:
+                continue
+            node = tree_by_num.get(ws.num)
+            # Only real, content-bearing workspaces are mismatch
+            # candidates - otherwise this chases sway's own empty
+            # placeholder workspaces back and forth between outputs
+            # forever, never reaching the real one.
+            if node is None or not (node.nodes or node.floating_nodes):
+                continue
+            if ws.output != targets[ws.num]:
+                mismatch = ws
+                break
+
+        if mismatch is None:
+            break
+
+        move_workspace(ipc, mismatch.num, mismatch.output, targets[mismatch.num])
+        moved = True
+
+    if moved and original_focus:
+        ipc.command('focus output "%s"' % original_focus)
+
+
+def output_event_handler(ipc, e):
+    reassign(ipc)
+
+
+def workspace_event_handler(ipc, e):
+    # Fires exactly when a not-yet-existing workspace is created - a fresh
+    # workspace is empty by definition, so it would never be caught by
+    # reassign()'s own non-empty filter above. Targets it directly via the
+    # event's own context instead.
+    if e.change != "init":
+        return
+    ws_num = e.current.num
+    if ws_num is None or ws_num == FILLER_WORKSPACE:
+        return
+
+    outputs = ipc.get_outputs()
+    targets = compute_targets(outputs)
+    target = targets.get(ws_num)
+    if target is None or e.current.output == target:
+        return
+
+    move_workspace(ipc, ws_num, e.current.output, target)
+
+
+if __name__ == "__main__":
+    ipc = i3ipc.Connection()
+    reassign(ipc)
+    ipc.on("output", output_event_handler)
+    ipc.on("workspace::init", workspace_event_handler)
+    ipc.main()

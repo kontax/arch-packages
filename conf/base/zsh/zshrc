@@ -1,0 +1,74 @@
+#!/usr/bin/env zsh
+#
+# Plain zsh - no plugin manager. Prompt (powerlevel10k) and the two
+# highlighting plugins are wired in via modules/profiles/base.nix instead,
+# since they need actual nixpkgs store paths; everything here is
+# self-contained and needs nothing beyond zsh itself, fzf and direnv.
+
+## Completion matching (case-insensitive + partial-word) - compinit itself
+## runs automatically via NixOS's programs.zsh.enableGlobalCompInit
+
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'l:|=* r:|=*'
+
+## Options
+
+setopt GLOB_DOTS   # globs match dotfiles too
+# IGNORE_EOF removed: with zle's ^D bound to delete-char-or-list, an empty
+# line has nothing to delete and IGNORE_EOF also blocks the exit - the net
+# effect was Ctrl+D listing all 4000+ completions instead of closing the
+# shell, confirmed live. Ctrl+D now closes the shell as normal.
+setopt INTERACTIVE_COMMENTS  # `#` starts a comment - off by default in zsh
+# (unlike bash); zsh4humans apparently carried this on by default (commit
+# 545bdb3 dropped z4h) - lost when it was replaced with plain nixpkgs
+# zsh plugins, confirmed live (`# foo` errored "foo: command not found").
+
+## fzf + direnv shell integration (both ship their own, no plugin manager needed)
+
+source <(fzf --zsh)
+eval "$(direnv hook zsh)"
+
+export FZF_DEFAULT_OPTS="--reverse --multi --no-exact --color=hl:14,hl+:14"
+export DIRENV_LOG_FORMAT=
+export SYSTEMD_LESS="${LESS}S"
+
+## Keybindings
+
+autoload -Uz edit-command-line up-line-or-beginning-search down-line-or-beginning-search
+zle -N edit-command-line
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+zstyle ':zle:(up|down)-line-or-beginning-search' leave-cursor yes
+
+bindkey '^[e'  edit-command-line             # Alt+E: edit the command line in $EDITOR
+bindkey '^[[A' up-line-or-beginning-search   # Up: search history backward by prefix
+bindkey '^[[B' down-line-or-beginning-search # Down: search history forward by prefix
+
+toggle-ctrl-z() {
+    if [[ $#BUFFER -eq 0 ]]; then
+        BUFFER="fg"
+        zle accept-line -w
+    else
+        zle push-input -w
+        zle clear-screen -w
+    fi
+}
+zle -N toggle-ctrl-z
+bindkey '^Z' toggle-ctrl-z   # Ctrl+Z: fg the last job, or suspend the current line
+
+cd-up() { cd .. }
+zle -N cd-up
+bindkey '^[k' cd-up   # Alt+K: cd ..
+
+## Terminal title: show user@host while SSH'd in, just the command locally
+
+if [[ -n "$SSH_CONNECTION" ]]; then
+    _term_title_preexec() { print -Pn "\e]0;%* | %n@%m: ${1//\%/%%}\a" }
+else
+    _term_title_preexec() { print -Pn "\e]0;%* | ${1//\%/%%}\a" }
+fi
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _term_title_preexec
+
+## Aliases/functions
+
+source /etc/zsh/zsh-aliases

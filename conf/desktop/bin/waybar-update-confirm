@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Right-click on the waybar updates widget (conf/desktop/waybar/config) -
+# meant to run inside its own floating terminal (see the app_id="waybar-update"
+# rule in conf/desktop/sway/config), since update.sh's own
+# `sudo nixos-rebuild switch` needs a real terminal for the sudo
+# password/YubiKey PIN prompt anyway.
+set -euo pipefail
+
+read -rp "Update NixOS packages now? [y/N] " reply
+case "$reply" in
+    y|Y|yes|Yes) ;;
+    *) exit 0 ;;
+esac
+
+"$HOME/dev/arch-packages/update.sh"
+
+echo
+read -rp "Done - press enter to close: " _
