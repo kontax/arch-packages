@@ -197,6 +197,17 @@ mkdir -p "/mnt/home/$PRIMARY_USER/dev"
 # the rest of this script (passwords, Secure Boot, bootloader) to succeed.
 if ! {
     git clone --local --no-hardlinks --branch master "$REPO_DIR" "/mnt/home/$PRIMARY_USER/dev/arch-packages" &&
+    # `git clone --local` points the new origin at the literal source path
+    # ($REPO_DIR, the live ISO's own ephemeral checkout - something like
+    # /home/nixos/arch-packages) rather than preserving whatever upstream
+    # URL that source repo itself had configured - confirmed live, this
+    # left the installed system unable to fetch/push at all ("does not
+    # appear to be a git repository") since that live-ISO path is gone
+    # after reboot. SSH (not HTTPS) specifically: the HTTPS credential
+    # helper (pass-git-helper) needs the password store already cloned,
+    # which itself needs working git auth first - SSH via the YubiKey's
+    # gpg-agent-forwarded key has no such chicken-and-egg problem.
+    git -C "/mnt/home/$PRIMARY_USER/dev/arch-packages" remote set-url origin git@github.com:kontax/arch-packages.git &&
     git -C "/mnt/home/$PRIMARY_USER/dev/arch-packages" submodule update --init &&
     nixos-enter --root /mnt -c "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/dev"
 }; then
