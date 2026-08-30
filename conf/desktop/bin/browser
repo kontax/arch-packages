@@ -4,7 +4,11 @@ menu=$(echo -e "vivaldi\ncopy to clipboard\nplay" | dmenu -p browser)
 
 case $menu in
     "vivaldi")
-        vivaldi-stable "$@" &
+        # was vivaldi-stable - that's upstream's Debian/RPM package name,
+        # not the binary nixpkgs actually installs (confirmed live: only
+        # `vivaldi` exists on PATH here). Silent failure since this runs
+        # backgrounded with no attached terminal to show "command not found" on.
+        vivaldi "$@" &
         ;;
     "copy to clipboard")
         echo "$@" | wl-copy
