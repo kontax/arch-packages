@@ -39,6 +39,22 @@ if [ ! -d "$HOST_DIR" ]; then
     exit 1
 fi
 
+# Confirmed live, twice: a submodule checked out at one branch's path (e.g.
+# while comparing .gitmodules across branches to chase an unrelated error)
+# is left behind un-removed by a later `git checkout`, since git won't
+# clean up a populated directory - the new branch's own submodule path
+# then silently stays uninitialized, only surfacing much later as a
+# confusing "path is not tracked by Git" flake evaluation error two steps
+# from now. Failing fast here, before anything destructive happens, beats
+# that.
+CURRENT_BRANCH="$(git -C "$REPO_DIR" branch --show-current 2>/dev/null)"
+if [ "$CURRENT_BRANCH" != "master" ]; then
+    echo "This checkout is on branch '$CURRENT_BRANCH', expected 'master'" >&2
+    echo "(this flake's own branch, now that nixos has been merged in) -" >&2
+    echo "run 'git -C $REPO_DIR checkout master' first." >&2
+    exit 1
+fi
+
 # couldinho.user has no default (modules/options.nix) - every host reads it
 # from ~/.config/couldinho/local.nix, which this script doesn't generate
 # (it's meant to be hand-authored, and often carries more than just the
@@ -178,11 +194,17 @@ nixos-enter --root /mnt -c "passwd $PRIMARY_USER"
 if [ "$SECURE_BOOT" = "true" ]; then
     echo
     echo "==> Setting up Secure Boot signing keys (needs the firmware in Setup Mode)"
-    if ! nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft'; then
+    # --ignore-immutable: confirmed live, enrolling keys from inside
+    # nixos-enter's chroot hits "file is immutable" writing the efivarfs
+    # key database entries even in genuine Setup Mode - something about how
+    # the chroot's mount namespace exposes /sys/firmware/efi/efivars stops
+    # sbctl's own automatic immutable-flag handling from working. Not
+    # needed (and sbctl doesn't take the flag) outside a chroot.
+    if ! nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft --ignore-immutable'; then
         echo "    Secure Boot key setup failed - see modules/secure-boot.nix for the" >&2
         echo "    manual steps. The bootloader install right after this will fail too" >&2
         echo "    until it's fixed; once the firmware's in Setup Mode, rerun:" >&2
-        echo "      sudo nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft'" >&2
+        echo "      sudo nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft --ignore-immutable'" >&2
         echo "      sudo nixos-enter --root /mnt -c '/run/current-system/bin/switch-to-configuration boot'" >&2
     fi
 fi

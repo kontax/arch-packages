@@ -13,11 +13,15 @@
 # as an explicit final step. If you're redoing this by hand instead of via
 # bootstrap.sh (cannot be made fully declarative either way - it enrolls
 # keys into firmware):
-#   sudo nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft'
+#   sudo nixos-enter --root /mnt -c 'sbctl create-keys && sbctl enroll-keys --microsoft --ignore-immutable'
 #   sudo nixos-enter --root /mnt -c '/run/current-system/bin/switch-to-configuration boot'
 # enroll-keys needs the firmware already in "Setup Mode" to accept new keys -
 # if it fails, go into firmware Secure Boot settings, clear/reset the
 # existing keys to re-enter Setup Mode, and retry both commands above.
+# --ignore-immutable: confirmed live, needed specifically from inside a
+# nixos-enter chroot - sbctl's own automatic immutable-flag handling for
+# the efivarfs key database entries doesn't work there even in genuine
+# Setup Mode, for reasons that look chroot-mount-namespace-specific.
 { config, lib, pkgs, ... }:
 let
   cfg = config.couldinho;
