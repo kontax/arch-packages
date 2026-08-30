@@ -36,10 +36,11 @@ in
   couldinho-desktop-scripts = mkScriptBundle {
     profile = "desktop";
     dir = ../conf/desktop/bin;
-    # sway-autoname-workspaces / sway-inactive-window-transparency `import i3ipc` -
-    # a bare pkgs.python3 doesn't have it on sys.path (unlike
-    # environment.systemPackages, patchShebangs bakes in one fixed interpreter
-    # path, so it has to be this wrapped one, not whatever's on PATH later).
+    # sway-autoname-workspaces / sway-inactive-window-transparency /
+    # sway-workspace-monitors all `import i3ipc` - a bare pkgs.python3
+    # doesn't have it on sys.path (unlike environment.systemPackages,
+    # patchShebangs bakes in one fixed interpreter path, so it has to be
+    # this wrapped one, not whatever's on PATH later).
     interpreters = [ prev.bash (prev.python3.withPackages (ps: [ ps.i3ipc ])) ];
   };
   couldinho-laptop-scripts = mkScriptBundle {

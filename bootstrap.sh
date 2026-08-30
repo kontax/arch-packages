@@ -142,6 +142,23 @@ nixos-enter --root /mnt -c \
     "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/.config && chmod 600 /home/$PRIMARY_USER/.config/couldinho/local.nix"
 
 echo
+echo "==> Cloning this flake into $PRIMARY_USER's new home"
+# waybar-updates (conf/desktop/bin/waybar-updates) and README.md's rebuild
+# instructions both assume a working checkout at ~/dev/arch-packages - the
+# live ISO's own checkout at $REPO_DIR only exists on its ephemeral
+# filesystem, gone after reboot. --local hardlinks objects instead of
+# copying them, so this is fast and fully offline even though $REPO_DIR may
+# carry a substantial history. Same chown-the-parent-directory reasoning as
+# .config above: mkdir -p runs as root on the live ISO's view of /mnt, and
+# chowning only the arch-packages subdirectory afterward would leave
+# ~/dev itself root-owned.
+mkdir -p "/mnt/home/$PRIMARY_USER/dev"
+git clone --local "$REPO_DIR" "/mnt/home/$PRIMARY_USER/dev/arch-packages"
+git -C "/mnt/home/$PRIMARY_USER/dev/arch-packages" submodule update --init
+nixos-enter --root /mnt -c \
+    "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/dev"
+
+echo
 echo "==> Set root's password"
 nixos-enter --root /mnt -c 'passwd'
 echo

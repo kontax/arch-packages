@@ -10,7 +10,6 @@
     swayidle
     swayr
     kanshi
-    wdisplays
     swaybg
   ];
 
@@ -103,6 +102,20 @@
     };
     Service = {
       ExecStart = "${pkgs.couldinho-desktop-scripts}/bin/sway-inactive-window-transparency";
+      Restart = "always";
+      RestartSec = "10s";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  systemd.user.services.sway-workspace-monitors = {
+    Unit = {
+      Description = "Keep sway workspaces pinned to monitors by relative position";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.couldinho-desktop-scripts}/bin/sway-workspace-monitors";
       Restart = "always";
       RestartSec = "10s";
     };

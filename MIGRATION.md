@@ -96,12 +96,15 @@ per-subsystem daemons) for no functional benefit if nothing uses it.
 ## Config mapping notes
 
 - **waybar-updates**: rewritten (not just ported) - was a pacman/AUR/pacdiff/
-  rebuild-detector checker, none of which apply under NixOS. Now diffs the
-  flake's own `flake.lock` against what `nix flake update` would produce in a
-  scratch copy, reporting which inputs have newer revisions available.
-  Assumes the flake is checked out at `$HOME/arch-packages` (override via
-  `WAYBAR_UPDATES_FLAKE_DIR`) **and that `flake.lock` is actually committed**
-  - without a committed lock file there's nothing to diff against.
+  rebuild-detector checker, none of which apply under NixOS. Now evaluates
+  (never builds) `.pname`/`.version` for every explicitly-installed package
+  (`environment.systemPackages` + every home-manager user's `home.packages`)
+  for this host, comparing the flake's committed `flake.lock` against what
+  `nix flake update` would produce in a scratch copy, reporting per-package
+  version bumps. Assumes the flake is checked out at `~/dev/arch-packages`
+  (`bootstrap.sh` places it there on install) **and that `flake.lock` is
+  actually committed** - without a committed lock file there's nothing to
+  diff against.
 - **nvim submodule + Nix**: `conf/base/nvim` is a git submodule
   (`.gitmodules`), and Nix's flake git-tree filtering does not include
   submodule content by default - it'll error with

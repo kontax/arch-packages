@@ -20,6 +20,18 @@ trap 's=$?; notify-send -i "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s
 # Globals
 OUT=""
 SSID=""
+RC=0
+# Set alongside RC by every real connection attempt (not menu navigation,
+# not blank-password back-outs) - show_menu only fires a success/failure
+# notification when this is 1, and resets it after every round trip.
+CONNECT_ATTEMPTED=0
+# Set alongside CONNECT_ATTEMPTED only when the attempt just created a new
+# connection profile (nmcli con add / nmcli dev wifi con ... password ...) -
+# on failure, notify_result deletes it to avoid leaving a broken saved
+# profile behind. Left 0 for reconnect-to-an-existing-profile attempts,
+# where failure (e.g. the AP is just out of range) must not delete the
+# saved profile.
+CONNECT_IS_NEW=0
 DIVIDER="---------"
 MANUAL="Manual Connection"
 FIELDS="IN-USE,SSID,BARS,SECURITY"
@@ -76,26 +88,50 @@ DISPLAY_APS=$(echo "$APS" | awk -v FIELDWIDTHS="$WIDTHS" -v lock=$'' -v unloc
 ')
 
 
-# Use libnotify to send any errors that occur and show the menu again
-notify_error() {
+# Uses libnotify to report a failed connection attempt (RC/OUT come from
+# the last nmcli invocation - see run_nmcli). Driven by the actual exit
+# code rather than grepping $OUT for "Error", since `nmcli con up` on a
+# saved connection never included that word even on failure, silently
+# never notifying at all.
+#
+# Success isn't reported here - a successful connection always brings the
+# device up, which nm-dispatcher-notify (conf/desktop/bin/nm-dispatcher-notify)
+# already notifies unconditionally for every wifi/ethernet device on the
+# system, this script's own attempts included. A failed attempt never
+# brings the device up, so it's the one outcome only this script can see.
+notify_result() {
+    # Reset immediately, before the show_menu recursion below on failure -
+    # that recursive call must start with a clean slate, otherwise it
+    # inherits CONNECT_ATTEMPTED still set to 1 and re-fires this same
+    # notification (with SSID/RC already cleared) on every menu round trip
+    # from here on, forever - confirmed live in testing.
+    local was_new="$CONNECT_IS_NEW"
+    CONNECT_ATTEMPTED=0
+    CONNECT_IS_NEW=0
 
-    # Check if the output contains the word Error
-    if [[ "$OUT" =~ "Error" ]]; then
+    [[ "$RC" -eq 0 ]] && return
 
-        # Send the message
-        echo "$OUT" 1>&2
-        notify-send "NetworkManager" "$OUT"
+    echo "$OUT" 1>&2
+    notify-send -u critical "WiFi" "Failed to connect to $SSID: $OUT"
 
-        # Delete any SSID that may have been created with errors
-        nmcli con delete "$SSID"
-
-        # Reset the global variables
-        OUT=""
-        SSID=""
-
-        # Go back to the main menu
-        show_menu
+    # Only delete a profile this run just created - deleting one that
+    # already existed (a reconnect attempt) would throw away a saved
+    # password just because the AP was temporarily out of range.
+    if [[ "$was_new" -eq 1 ]]; then
+        nmcli con delete "$SSID" 2>/dev/null
     fi
+
+    OUT=""
+    SSID=""
+    show_menu
+}
+
+# Runs an nmcli command, capturing combined output into $OUT and its exit
+# code into $RC - used by every connection attempt so notify_result always
+# has both to report on.
+run_nmcli() {
+    OUT=$("$@" 2>&1)
+    RC=$?
 }
 
 # Gets the field number of the specified column for matching
@@ -203,16 +239,19 @@ create_manual_connection() {
     # If so, connect to that connection
     if [[ -n "$matches" ]]; then
         echo "Connection matches $matches"
-        OUT=$(nmcli con up "$SSID" 2>&1)
+        run_nmcli nmcli con up "$SSID"
+        CONNECT_ATTEMPTED=1
 
     # Otherwise get the password and create the connection
     else
         password=$($dmenu_command "Password: " -password)
         if [ "$password" = "" ];then
-            OUT=$(nmcli dev wifi con "$SSID" 2>&1)
+            run_nmcli nmcli dev wifi con "$SSID"
         else
-            OUT=$(nmcli dev wifi con "$SSID" password "$password" 2>&1)
+            run_nmcli nmcli dev wifi con "$SSID" password "$password"
         fi
+        CONNECT_ATTEMPTED=1
+        CONNECT_IS_NEW=1
     fi
 }
 
@@ -273,7 +312,9 @@ create_8021x_connection() {
         802-1x.password "$password"
 
     # Connect
-    OUT=$(nmcli con up "$SSID" 2>&1)
+    run_nmcli nmcli con up "$SSID"
+    CONNECT_ATTEMPTED=1
+    CONNECT_IS_NEW=1
 }
 
 
@@ -304,12 +345,16 @@ create_connection() {
             return
         fi
         echo "WEP/WPA Connection: $SSID"
-        OUT=$(nmcli dev wifi con "$SSID" password "$password")
+        run_nmcli nmcli dev wifi con "$SSID" password "$password"
+        CONNECT_ATTEMPTED=1
+        CONNECT_IS_NEW=1
 
     # No security
     else
         echo "No security"
-        OUT=$(nmcli dev wifi con "$SSID")
+        run_nmcli nmcli dev wifi con "$SSID"
+        CONNECT_ATTEMPTED=1
+        CONNECT_IS_NEW=1
     fi
 }
 
@@ -344,7 +389,8 @@ handle_connection() {
     # If we already have the connection details of the selected
     # AP, then bring up the connection
     elif echo "$connections" | grep -x "$SSID"; then
-        nmcli con up "$SSID"
+        run_nmcli nmcli con up "$SSID"
+        CONNECT_ATTEMPTED=1
 
     # Otherwise create a new connection
     else
@@ -421,7 +467,10 @@ show_menu() {
             fi
             ;;
     esac
-    notify_error
+
+    if [[ "$CONNECT_ATTEMPTED" -eq 1 ]]; then
+        notify_result
+    fi
 }
 
 # Was fuzzel, which looked out of place once every other prompt in this

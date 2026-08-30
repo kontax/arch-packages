@@ -52,11 +52,38 @@ set $workspace8 workspace number 8
 set $workspace9 workspace number 9
 set $workspace0 workspace number 10
 
+# Pin workspaces to specific monitors - even workspaces on the left
+# monitor, odd on the right, except workspace 1 which stays on the
+# laptop panel. eDP-1 fallback per `man 5 sway`'s output-list priority
+# behavior: reconnecting a higher-priority output auto-moves the
+# workspace back. Only affects newly-created workspaces at config-load
+# time, not already-open ones - see sway-workspace-monitors for the
+# runtime/dynamic counterpart (handles monitor unplug/replug and
+# position changes without needing to hardcode which model is left/right).
+# NOTE: verify these two identity strings against `swaymsg -t get_outputs`
+# next time both monitors are plugged in - reconstructed from memory
+# after this session's local-only commits were lost to an uncommitted
+# disk wipe, not re-verified against live hardware.
+set $mon_left "Dell Inc. DELL S2721DGF JDTZC23"
+set $mon_right "Dell Inc. DELL U2719D 900QQS2"
+workspace 1  output eDP-1
+workspace 2  output $mon_left eDP-1
+workspace 3  output $mon_right eDP-1
+workspace 4  output $mon_left eDP-1
+workspace 5  output $mon_right eDP-1
+workspace 6  output $mon_left eDP-1
+workspace 7  output $mon_right eDP-1
+workspace 8  output $mon_left eDP-1
+workspace 9  output $mon_right eDP-1
+workspace 10 output $mon_left eDP-1
+
 # Specific window configuration
 for_window    [app_id=".*"]                              sticky enable
 for_window    [window_role="pop-up"]                     floating enable
 for_window    [app_id="udiskie"]                         floating enable
 for_window    [app_id="pavucontrol"]                     floating enable
+for_window    [app_id="nwg-displays"]                    floating enable
+for_window    [app_id="waybar-update"]                   floating enable, resize set width 50ppt height 40ppt, move position center
 for_window    [app_id="vivaldi-stable"]                  move container to $workspace2
 for_window    [app_id="vivaldi-stable"]                  inhibit_idle fullscreen
 for_window    [app_id="scli"]                            move container to $workspace3

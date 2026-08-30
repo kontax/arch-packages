@@ -17,6 +17,27 @@ in
   # like the old system (which never used a DM either).
   services.getty.autologinUser = cfg.user;
 
+  # Desktop notification on every ethernet/WiFi connect and disconnect -
+  # in particular the automatic wifi<->ethernet switch when the USB hub is
+  # plugged/unplugged, which nothing else here would otherwise surface.
+  # nm-dispatcher-notify runs as root (NetworkManager's own dispatcher.d
+  # convention) and needs the target user baked in to reach their session
+  # bus - this wrapper is the only thing that knows cfg.user, so it sets
+  # COULDINHO_USER and hands off to the real (host-agnostic) script.
+  networking.networkmanager.dispatcherScripts = [
+    {
+      type = "basic";
+      source = pkgs.writeShellScript "nm-dispatcher-notify-wrapper" ''
+        export COULDINHO_USER="${cfg.user}"
+        exec "${pkgs.couldinho-desktop-scripts}/bin/nm-dispatcher-notify" "$@"
+      '';
+    }
+  ];
+  # nmcli/notify-send aren't in NetworkManager-dispatcher's own default PATH
+  # (just iproute2/util-linux/coreutils, see nixpkgs' networkmanager.nix) -
+  # nm-dispatcher-notify needs both.
+  systemd.services.NetworkManager-dispatcher.path = [ pkgs.networkmanager pkgs.libnotify ];
+
   security.polkit.enable = true;
   services.dbus.enable = true;
   # udiskie (home/programs/desktop.nix) is only the client - on Arch,
@@ -167,6 +188,7 @@ in
             # its systemd service was running and failing this exact way on
             # every clipboard copy: "sqlite3: command not found"
     file # wl-clipboard-manager's MIME-type detection - same live failure
+    nwg-displays # GUI for arranging monitor position/scale/rotation under sway
 
     # web
     vivaldi

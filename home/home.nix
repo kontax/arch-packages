@@ -12,6 +12,7 @@
     ./programs/gpg-import.nix
     ./programs/password-store.nix
     ./programs/git.nix
+    ./programs/atuin.nix
   ];
 
   home.username = osConfig.couldinho.user;

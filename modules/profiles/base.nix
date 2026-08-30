@@ -44,6 +44,18 @@ in
       typeset -g POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       source /etc/zsh/p10k.zsh
+
+      # Atuin (home/programs/atuin.nix) - searchable/timestamped shell
+      # history, binds ctrl-r and up-arrow. home-manager's own
+      # enableZshIntegration only wires into ITS OWN programs.zsh module,
+      # which this repo doesn't use, so it's wired directly here instead -
+      # same zle guard home-manager's own hook uses, to avoid breaking a
+      # non-interactive zsh invocation (confirmed live: `zsh -ic` without a
+      # real tty fails exactly here with "can't change option: zle"
+      # otherwise).
+      if [[ $options[zle] = on ]]; then
+        eval "$(${pkgs.atuin}/bin/atuin init zsh)"
+      fi
     '';
   };
   # Autosuggestions + syntax highlighting (was zsh4humans' bundled
@@ -51,6 +63,12 @@ in
   # module options, so no manual plugin sourcing is needed for these two.
   programs.zsh.autosuggestions.enable = true;
   programs.zsh.syntaxHighlighting.enable = true;
+  # Default comment style is fg=black,bold - invisible against a dark
+  # terminal background (only ever visible once INTERACTIVE_COMMENTS
+  # was on, since # wasn't treated as a comment token before that -
+  # confirmed live). #928374 matches the gray already used for
+  # color8/active_border_color in conf/desktop/kitty/kitty.conf.
+  programs.zsh.syntaxHighlighting.styles.comment = "fg=#928374";
   environment.etc."zsh/zsh-aliases".source = ../../conf/base/zsh/zsh-aliases;
   environment.etc."zsh/p10k.zsh".source = ../../conf/base/zsh/p10k.zsh;
   environment.shells = [ pkgs.zsh ];
@@ -301,4 +319,63 @@ in
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
+
+  # nix-index-database (flake input) enables programs.nix-index by default
+  # once imported and disables the stock programs.command-not-found (which
+  # uses a nix-channel-based database, not flake-aware) - this just turns on
+  # comma (`, foo` runs foo via a throwaway `nix run` with nothing
+  # installed) on top of that. Replaces a capability silently dropped in
+  # the Arch migration: pacman-contrib's pkgfile/command-not-found hook had
+  # no NixOS equivalent carried forward (see MIGRATION.md's dropped list).
+  programs.nix-index-database.comma.enable = true;
+
+  # --- Store maintenance ---
+  # Deduplicates identical files across store paths via hardlinks - pure
+  # space saving, doesn't delete anything or touch generations, so no
+  # rollback tradeoff here.
+  nix.optimise.automatic = true;
+
+  # nix-collect-garbage's own --delete-older-than is purely time-based with
+  # no minimum-count floor - if the machine goes unrebuilt for a while, it
+  # can happily delete every generation and leave nothing to roll back to.
+  # `nix-env --delete-generations +5` is count-based instead: always keeps
+  # the 5 most recent system generations (see `man nix-env-delete-generations`),
+  # regardless of how old they are. `nix store gc` afterwards is the actual
+  # space reclaim - it only sweeps store paths unreachable from current GC
+  # roots, without itself touching any generation (unlike
+  # `nix-collect-garbage -d`, which would immediately strip every profile
+  # back down to just its current generation and defeat the "keep 5" policy
+  # applied above it).
+  systemd.services.nix-gc-generations = {
+    description = "Keep only the 5 most recent system generations";
+    script = ''
+      ${config.nix.package}/bin/nix-env -p /nix/var/nix/profiles/system --delete-generations +5
+      ${config.nix.package}/bin/nix store gc
+      # systemd-boot only re-renders /efi/loader/entries during its own
+      # install step (part of `nixos-rebuild switch`/`boot`) - without
+      # re-running it here, the menu keeps stale entries for the
+      # generations just deleted above until the next unrelated rebuild
+      # happens to refresh it. In between, selecting one of those entries
+      # at boot would fail (its store path no longer exists). `boot`
+      # (not `switch`) only updates the bootloader, it doesn't activate
+      # anything - nothing about the running system changes here.
+      /run/current-system/bin/switch-to-configuration boot
+    '';
+    serviceConfig.Type = "oneshot";
+  };
+  systemd.timers.nix-gc-generations = {
+    description = "Weekly system generation cleanup";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "weekly";
+      Persistent = true; # catches up if the machine was off when it should have fired
+    };
+  };
+
+  # Caps the boot menu itself at 5 entries, independent of how many
+  # generations exist on disk at any moment (e.g. between two runs of the
+  # cleanup above) - unset (null) means unlimited. Matches the "keep 5"
+  # policy above; doesn't itself delete generations, just how many get a
+  # rendered menu entry.
+  boot.loader.systemd-boot.configurationLimit = 5;
 }

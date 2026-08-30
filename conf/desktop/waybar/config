@@ -52,8 +52,8 @@
         "exec": "waybar-updates show",
         "return-type": "json",
         "signal": 1,
-        "on-click": "waybar-updates notify",
-        "on-click-right": "waybar-updates refresh",
+        "on-click": "waybar-updates refresh",
+        "on-click-right": "kitty --class waybar-update waybar-update-confirm",
         "interval": "once"
     },
     "custom/wireguard": {

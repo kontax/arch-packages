@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
-# Checks for pending updates to this flake's own inputs (nixpkgs,
-# home-manager, disko, lanzaboote) - was a pacman/AUR/pacdiff/rebuild-detector
-# checker, none of which mean anything under NixOS. Assumes the flake is
-# checked out at $HOME/arch-packages (override with WAYBAR_UPDATES_FLAKE_DIR)
-# and that it has a committed flake.lock to compare against.
+# Checks for pending updates among this host's explicitly-installed
+# packages (environment.systemPackages + every home-manager user's
+# home.packages) - was a pacman/AUR/pacdiff/rebuild-detector checker under
+# Arch, none of which mean anything under NixOS. Compares each package's
+# .pname/.version between the flake's committed flake.lock and what
+# `nix flake update` would produce in a scratch copy - pure evaluation only
+# (pname/version are plain derivation attributes), never builds or
+# downloads anything. Assumes the flake is checked out at
+# ~/dev/arch-packages (bootstrap.sh places it there) with a committed
+# flake.lock to compare against.
 set -uo pipefail
 
+flake_dir="$HOME/dev/arch-packages"
 cache_path="${XDG_CACHE_HOME:-$HOME/.cache}/waybar-updates"
-flake_dir="${WAYBAR_UPDATES_FLAKE_DIR:-$HOME/arch-packages}"
+host="$(hostname)"
 
 show() {
     if [ -f "$cache_path" ]; then
@@ -17,13 +23,24 @@ show() {
     fi
 }
 
-notify() {
-    tooltip="$(sed -n 's/.*"tooltip": *"\([^"]*\)".*/\1/p' "$cache_path" 2>/dev/null | sed 's/\\n/\n/g')"
-    if [ -n "$tooltip" ]; then
-        notify-send "Flake updates available" "$tooltip"
-    else
-        notify-send "Flake updates" "Everything up to date"
-    fi
+# Prints {"name": "version", ...} for every explicitly-installed package in
+# the given flake checkout, for $host.
+eval_packages() {
+    nix --extra-experimental-features 'nix-command flakes' eval --impure --json \
+        "$1?submodules=1#nixosConfigurations.$host.config" --apply '
+        cfg:
+        let
+          sysPkgs = cfg.environment.systemPackages or [ ];
+          homeUsers = builtins.attrValues (cfg.home-manager.users or { });
+          homePkgs = builtins.concatMap (u: u.home.packages or [ ]) homeUsers;
+          all = sysPkgs ++ homePkgs;
+          info = p: {
+            name = p.pname or p.name or "unknown";
+            value = p.version or "";
+          };
+        in
+        builtins.listToAttrs (map info all)
+    ' 2>/dev/null
 }
 
 refresh() {
@@ -34,29 +51,49 @@ refresh() {
 
     tmp="$(mktemp -d)"
     trap 'rm -rf "$tmp"' EXIT
-    cp "$flake_dir/flake.nix" "$flake_dir/flake.lock" "$tmp/"
+    # A full copy (not just flake.nix/flake.lock) is required: evaluating
+    # nixosConfigurations.$host.config pulls in every module/host file the
+    # flake's own source tree references (./modules, ./hosts, ...), not
+    # just its external inputs - a two-file copy is enough to run
+    # `flake update` (which only touches flake.lock) but not enough to then
+    # evaluate the updated config against it.
+    cp -a "$flake_dir/." "$tmp/repo"
 
-    if ! (cd "$tmp" && nix --extra-experimental-features 'nix-command flakes' flake update) >/dev/null 2>&1; then
+    if ! (cd "$tmp/repo" && nix --extra-experimental-features 'nix-command flakes' flake update) >/dev/null 2>&1; then
         # Network down or similar - keep showing whatever was last cached
         # rather than replacing it with a false "nothing pending".
         return
     fi
 
-    changed=""
-    for name in $(jq -r '.nodes | keys[]' "$flake_dir/flake.lock"); do
-        old_rev="$(jq -r --arg n "$name" '.nodes[$n].locked.rev // empty' "$flake_dir/flake.lock")"
-        new_rev="$(jq -r --arg n "$name" '.nodes[$n].locked.rev // empty' "$tmp/flake.lock")"
-        if [ -n "$old_rev" ] && [ -n "$new_rev" ] && [ "$old_rev" != "$new_rev" ]; then
-            changed="${changed}${changed:+\n}${name}"
-        fi
-    done
+    old_json="$(eval_packages "$flake_dir")"
+    new_json="$(eval_packages "$tmp/repo")"
+
+    if [ -z "$old_json" ] || [ -z "$new_json" ]; then
+        # Evaluation failed - keep the last good cache rather than
+        # clobbering it with a false "nothing pending".
+        return
+    fi
+
+    changed="$(jq -n --argjson old "$old_json" --argjson new "$new_json" -r '
+        $old | to_entries[] | select($new[.key] != null and $new[.key] != .value) |
+        "\(.key): \(.value) -> \($new[.key])"
+    ' | sort)"
 
     if [ -z "$changed" ]; then
         printf '{"text": ""}\n' > "$cache_path"
     else
-        n="$(printf '%b' "$changed" | grep -c '^')"
-        printf "{\"text\": \"<span foreground='#928374'></span> %s\", \"tooltip\": \"Flake inputs with updates available:\\n%s\" }\n" \
-            "$n" "$changed" > "$cache_path"
+        n="$(printf '%s\n' "$changed" | grep -c '^')"
+        # Both of these are single-quoted, so printf/sed see the backslashes
+        # verbatim and each does exactly one round of its own escape
+        # processing - \\n (2 backslashes) is what's needed to end up with
+        # a real 2-character `\n` in the output file (a valid JSON newline
+        # escape). Using \\\\n here instead double-unescapes down to a
+        # literal backslash followed by the letter n, which JSON decodes
+        # back to `\n` as two visible characters rather than a line break -
+        # confirmed live, that's exactly what showed up in the tooltip.
+        tooltip="$(printf '%s' "$changed" | sed ':a;N;$!ba;s/\n/\\n/g')"
+        printf '{"text": "%s", "tooltip": "Packages with updates available:\\n%s" }\n' \
+            "$n" "$tooltip" > "$cache_path"
     fi
 
     pkill -RTMIN+1 -x waybar 2>/dev/null || true
@@ -65,6 +102,5 @@ refresh() {
 case "${1:-}" in
     show) show ;;
     refresh) refresh ;;
-    notify) notify ;;
-    *) echo >&2 "Usage: $0 <show|refresh|notify>"; exit 1 ;;
+    *) echo >&2 "Usage: $0 <show|refresh>"; exit 1 ;;
 esac

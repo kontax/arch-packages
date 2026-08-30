@@ -12,6 +12,18 @@ command -v eza       &> /dev/null    && alias la='ll -a'                        
 command -v eza       &> /dev/null    && alias lk='ll -s=size'                                      || alias lk='ll -r --sort=size'
 command -v eza       &> /dev/null    && alias lm='ll -s=modified'                                  || alias lm='ll -r --sort=time'
 
+# kitty sets TERM=xterm-kitty, and a remote host without the kitty-terminfo
+# entry installed can't correctly interpret it - the shell there ends up
+# misjudging cursor position on every redraw, which shows up as duplicated
+# characters while typing (the command itself still runs correctly, since
+# the actual input was never doubled, only its on-screen redraw). kitty's
+# own `+kitten ssh` wrapper copies the terminfo entry to the remote
+# automatically before connecting - confirmed fixing this exact symptom
+# live. Only applies inside an actual kitty session, so plain `ssh` is
+# untouched anywhere else (a serial console, a different terminal, tmux
+# without TERM passthrough, etc).
+command -v kitty &> /dev/null && [[ "$TERM" == "xterm-kitty" ]] && alias ssh='kitty +kitten ssh'
+
 alias e="$EDITOR"
 alias cp='cp -r --reflink=auto'
 alias mkdir='mkdir -p'
