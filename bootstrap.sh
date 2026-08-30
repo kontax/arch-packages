@@ -169,20 +169,35 @@ echo "==> Cloning this flake into $PRIMARY_USER's new home"
 # chowning only the arch-packages subdirectory afterward would leave
 # ~/dev itself root-owned.
 mkdir -p "/mnt/home/$PRIMARY_USER/dev"
-# --branch nixos: this flake only exists on that branch (master is the old
-# pre-NixOS repo, no flake.nix at all) - pinned explicitly rather than
-# relying on whatever $REPO_DIR's working tree happens to have checked out
-# by this point in the script. Confirmed live, twice: mid-install
-# troubleshooting (comparing .gitmodules between branches to chase the
-# submodule error two paragraphs up) can leave $REPO_DIR sitting on
-# master by the time this line runs, and a plain `git clone --local`
-# silently clones whatever branch that is - no error, just a
-# flake-less checkout that only surfaces as confusing symptoms much later
-# (nothing in ~/dev/arch-packages resembling the NixOS repo).
-git clone --local --branch nixos "$REPO_DIR" "/mnt/home/$PRIMARY_USER/dev/arch-packages"
-git -C "/mnt/home/$PRIMARY_USER/dev/arch-packages" submodule update --init
-nixos-enter --root /mnt -c \
-    "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/dev"
+# --branch master: pinned explicitly rather than relying on whatever
+# $REPO_DIR's working tree happens to have checked out by this point in
+# the script. Confirmed live, twice, back when this flake lived on a
+# separate nixos branch and master was still the old pre-NixOS repo:
+# mid-install troubleshooting (comparing .gitmodules between branches to
+# chase the submodule error two paragraphs up) could leave $REPO_DIR
+# sitting on the wrong branch by the time this line ran, and a plain
+# `git clone --local` silently clones whatever branch that is - no error,
+# just a flake-less checkout that only surfaces as confusing symptoms much
+# later. nixos has since been merged into master (PR #96) and deleted, but
+# the pin stays - the same class of bug is just as possible against any
+# future branch this repo grows.
+#
+# Soft-fail like the Secure Boot step below: this has failed at least once
+# on a real live ISO for a reason never fully diagnosed (possibly something
+# --local-specific about that environment's filesystem layout) - not
+# reproduced since, but nothing about ~/dev/arch-packages existing is
+# required for the rest of this script (passwords, Secure Boot, bootloader)
+# to succeed, so a failure here shouldn't take those down with it. Worth
+# capturing the exact error if this ever fires again.
+if ! {
+    git clone --local --branch master "$REPO_DIR" "/mnt/home/$PRIMARY_USER/dev/arch-packages" &&
+    git -C "/mnt/home/$PRIMARY_USER/dev/arch-packages" submodule update --init &&
+    nixos-enter --root /mnt -c "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/dev"
+}; then
+    echo "    Cloning the flake into $PRIMARY_USER's home failed - continuing" >&2
+    echo "    without it. Clone it manually once booted:" >&2
+    echo "      git clone --branch master https://github.com/kontax/arch-packages ~/dev/arch-packages" >&2
+fi
 
 echo
 echo "==> Set root's password"
