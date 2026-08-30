@@ -20,13 +20,30 @@ first_blocked_line() {
     usbguard list-devices | grep -m1 ': block '
 }
 
+# All blocked lines, not just the first - show() only ever acts on/displays
+# the first one (same as allow/reject below), but needs the full list to
+# know how many more are queued behind it. Confirmed live: with several
+# devices blocked at once, clicking through them one at a time gives no
+# indication anything else is still waiting once the current one's name
+# scrolls by - easy to stop checking before the queue's actually empty.
+all_blocked_lines() {
+    usbguard list-devices | grep ': block '
+}
+
 show() {
-    blocked="$(first_blocked_line | grep -Po 'name "\K[^"]+')"
-    if [ -n "$blocked" ]; then
-        printf "{\"text\": \"<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> %s\"}\n" "$blocked"
-    else
+    blocked_lines="$(all_blocked_lines)"
+    if [ -z "$blocked_lines" ]; then
         printf '{"text": ""}\n'
+        return
     fi
+
+    name="$(printf '%s\n' "$blocked_lines" | head -n1 | grep -Po 'name "\K[^"]+')"
+    count="$(printf '%s\n' "$blocked_lines" | grep -c '^')"
+    if [ "$count" -gt 1 ]; then
+        name="$name ($count)"
+    fi
+
+    printf "{\"text\": \"<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'></span> %s\"}\n" "$name"
 }
 
 allow() {
