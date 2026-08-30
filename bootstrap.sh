@@ -182,15 +182,21 @@ mkdir -p "/mnt/home/$PRIMARY_USER/dev"
 # the pin stays - the same class of bug is just as possible against any
 # future branch this repo grows.
 #
-# Soft-fail like the Secure Boot step below: this has failed at least once
-# on a real live ISO for a reason never fully diagnosed (possibly something
-# --local-specific about that environment's filesystem layout) - not
-# reproduced since, but nothing about ~/dev/arch-packages existing is
-# required for the rest of this script (passwords, Secure Boot, bootloader)
-# to succeed, so a failure here shouldn't take those down with it. Worth
-# capturing the exact error if this ever fires again.
+# --no-hardlinks: root-caused live via a captured log (fatal: failed to
+# create link '.../pack-*.idx': Invalid cross-device link) - --local tries
+# to hardlink object files for speed, but $REPO_DIR (the live ISO's own
+# checkout) and /mnt/home/.../dev (the target disk being installed to) are
+# always on different filesystems in this setup, and hardlinks can't cross
+# a filesystem boundary at the OS level - not retryable, not environment-
+# specific, just wrong for this pairing. --no-hardlinks forces a plain copy
+# instead, keeping --local's fast same-machine transport without the
+# hardlink attempt.
+#
+# Still kept as a soft-fail like the Secure Boot step below, on general
+# principle - nothing about ~/dev/arch-packages existing is required for
+# the rest of this script (passwords, Secure Boot, bootloader) to succeed.
 if ! {
-    git clone --local --branch master "$REPO_DIR" "/mnt/home/$PRIMARY_USER/dev/arch-packages" &&
+    git clone --local --no-hardlinks --branch master "$REPO_DIR" "/mnt/home/$PRIMARY_USER/dev/arch-packages" &&
     git -C "/mnt/home/$PRIMARY_USER/dev/arch-packages" submodule update --init &&
     nixos-enter --root /mnt -c "chown -R $PRIMARY_USER:users /home/$PRIMARY_USER/dev"
 }; then
