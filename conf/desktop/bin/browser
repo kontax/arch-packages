@@ -1,6 +1,12 @@
 #!/bin/sh
+# Was the custom fzf-in-kitty `dmenu` tool (hardcoded #242828 background/
+# border, its own font and layout) - visually inconsistent with every other
+# picker in this setup (dmenu-nmcli, rofi-pass, rofi-bluetooth,
+# pinentry-rofi), which all use rofi and pick up the shared Gruvbox theme
+# (conf/desktop/rofi/config.rasi) automatically with no -theme flag needed.
+# Matches that pattern instead of trying to reskin a different UI paradigm.
 
-menu=$(echo -e "vivaldi\ncopy to clipboard\nplay" | dmenu -p browser)
+menu=$(echo -e "vivaldi\ncopy to clipboard\nplay" | rofi -dmenu -p browser)
 
 case $menu in
     "vivaldi")
