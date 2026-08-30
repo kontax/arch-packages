@@ -3,6 +3,14 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    # Provides xdg-open/xdg-mime - was missing from this flake entirely,
+    # on every host, confirmed live. Without it, the mimeapps.list
+    # associations below (browser picker, zathura, vimiv, mpv, nvim) were
+    # silently non-functional for any app that follows the standard
+    # desktop convention of shelling out to xdg-open to dispatch a link or
+    # file - nothing errored, xdg-open just didn't exist to be called.
+    xdg-utils
+
     swaynotificationcenter # was swaync (attr renamed upstream, binary is still `swaync`)
     fuzzel
     libnotify
