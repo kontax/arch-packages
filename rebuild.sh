@@ -30,6 +30,20 @@ echo "==> Staging new files so the flake can see them"
 git add --intent-to-add --all
 
 echo
+# pam_u2f's per-user credential file isn't part of this repo (personal,
+# tied to a specific physical key) and doesn't survive a fresh install -
+# without it, sudo silently falls back to a password prompt instead of a
+# YubiKey touch. Confirmed live, repeatedly, across every fresh bootstrap
+# so far. pamu2fcfg needs a real interactive PIN prompt and a physical
+# touch, so this only helps when run from an actual terminal - which is
+# exactly how this script is meant to be run.
+if [ ! -f "$HOME/.config/Yubico/u2f_keys" ]; then
+    echo "==> Enrolling this YubiKey for sudo/polkit touch-to-confirm (pam_u2f)"
+    mkdir -p "$HOME/.config/Yubico"
+    pamu2fcfg >> "$HOME/.config/Yubico/u2f_keys"
+    echo
+fi
+
 echo "==> Rebuilding and switching (flake: $REPO_DIR#$HOST)"
 # --impure: flake.nix reads ~/.config/couldinho/local.nix via $HOME/SUDO_USER
 # - see its own comments for why sudo alone doesn't preserve this.
