@@ -60,6 +60,17 @@ echo "==> Refreshing the waybar updates widget"
 waybar-updates refresh 2>/dev/null || true
 
 echo
+# home/programs/gpg-import.nix only imports the public key and sets trust -
+# it never touches the card, so the local secret-key stub that links a
+# keygrip to this physical YubiKey (~/.gnupg/private-keys-v1.d/*.key) doesn't
+# exist until something runs a card-aware gpg operation at least once.
+# Confirmed live, on every fresh bootstrap so far: the commit below is
+# usually the very first thing that tries to sign with this key, and it
+# failed outright ("Unusable secret key" / INV_SGNR) with no such stub yet.
+# --card-status creates it as a side effect, same as pamu2fcfg above is a
+# one-time "prime this from a real terminal" step.
+gpg --card-status >/dev/null 2>&1 || true
+
 echo "==> Committing flake.lock"
 git add flake.lock
 git commit -m "Update flake inputs"
