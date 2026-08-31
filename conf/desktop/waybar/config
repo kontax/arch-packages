@@ -13,6 +13,7 @@
         "custom/updates",
         "custom/recording",
         "custom/dnd",
+        "tray",
         "pulseaudio",
         "network",
         "custom/wireguard",
@@ -80,6 +81,14 @@
         "return-type": "json",
         "signal": 3,
         "interval": "once"
+    },
+    // hyper+m used to open udiskie-dmenu for interactive mount/unmount -
+    // unpackaged (MIGRATION.md). udiskie now runs with --tray instead
+    // (still auto-mounts new devices on insert same as before), and this
+    // module is what actually shows/lets you click its icon - left-click
+    // lists mounted devices to unmount/eject, right-click for its menu.
+    "tray": {
+        "spacing": 10
     },
     "clock": {
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
