@@ -1,0 +1,84 @@
+#!/bin/sh
+# hyper+m used to open udiskie-dmenu for interactive mount/unmount -
+# unpackaged (MIGRATION.md). Tried waybar's own "tray" module + udiskie
+# --tray as the replacement, but that route depends on gdk-pixbuf resolving
+# an SVG icon theme correctly, which broke waybar's rendering outright when
+# forced via GDK_PIXBUF_MODULE_FILE (confirmed live - see git log). Text
+# module instead, in the same Font Awesome style as every other custom/*
+# widget here, built entirely on udiskie's own packaged CLI companions
+# (udiskie-info/udiskie-mount/udiskie-umount) rather than the unpackaged
+# dmenu tool.
+
+mounted() {
+    udiskie-info -a -f is_mounted -o '{ui_label}|{device_file}'
+}
+
+# is_external excludes the root/boot filesystem and other internal drives -
+# without it this also lists every internal partition that just isn't
+# mounted right now (swap, etc.), which nobody wants in a "mount" menu.
+unmounted() {
+    udiskie-info -a -f '!is_mounted' -f is_external -o '{ui_label}|{device_file}'
+}
+
+show() {
+    count="$(mounted | grep -c '^')"
+    if [ "$count" -gt 0 ]; then
+        class=',"class": "mounted"'
+        count=" ($count)"
+    else
+        class=""
+        count=""
+    fi
+    printf "{\"text\": \"<span face='Font Awesome 7 Free,Font Awesome 7 Brands' foreground='#928374'>\\uf0c7</span>%s\"%s}\n" "$count" "$class"
+}
+
+# Picks a "label|device_file" line from $1 via rofi (prompted "$2") and
+# echoes back just the device_file, or nothing if cancelled/empty.
+pick_device() {
+    devices="$1"
+    prompt="$2"
+
+    if [ -z "$devices" ]; then
+        notify-send "Mounts" "Nothing to $prompt"
+        return
+    fi
+
+    chosen="$(printf '%s\n' "$devices" | cut -d'|' -f1 | rofi -dmenu -p "$prompt")"
+    [ -z "$chosen" ] && return
+
+    printf '%s\n' "$devices" | grep -F "$chosen|" | cut -d'|' -f2
+}
+
+unmount_menu() {
+    device_file="$(pick_device "$(mounted)" "unmount")"
+    [ -z "$device_file" ] && return
+
+    # --eject sends a real SCSI eject, not just a safe unmount - confirmed
+    # live, this left a Ventoy stick's partition table gone entirely
+    # (kernel reported it as a 0-byte device) until physically unplugged
+    # and replugged. Plain unmount is all "safe to remove" actually needs;
+    # it leaves the device mountable again immediately via the right-click
+    # menu, without a replug.
+    if udiskie-umount "$device_file" 2>&1; then
+        notify-send "Mounts" "Unmounted $device_file"
+    else
+        notify-send -u critical "Mounts" "Failed to unmount $device_file"
+    fi
+}
+
+mount_menu() {
+    device_file="$(pick_device "$(unmounted)" "mount")"
+    [ -z "$device_file" ] && return
+
+    if udiskie-mount "$device_file" 2>&1; then
+        notify-send "Mounts" "Mounted $device_file"
+    else
+        notify-send -u critical "Mounts" "Failed to mount $device_file"
+    fi
+}
+
+case "$1" in
+    unmount) unmount_menu ;;
+    mount)   mount_menu ;;
+    *)       show ;;
+esac

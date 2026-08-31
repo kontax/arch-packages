@@ -8,6 +8,16 @@ pkill -x wf-recorder -SIGINT
     path="/tmp/record_$(date +%s)"
     notify-send -t 2000 'GIF recording' 'Select an area to start the recording...'
     geometry="$(slurp)"
+    # Cancelling the selection (Escape) exits slurp with a non-zero status
+    # but this script never checked it - an empty $geometry still got
+    # passed to `wf-recorder -g`, which falls back to recording the whole
+    # output instead of erroring. Confirmed live: an accidental Escape
+    # left wf-recorder running unbounded for 54 minutes, unnoticed until
+    # the recording indicator turned up and had to be tracked down.
+    if [ -z "$geometry" ]; then
+        systemctl --user start sway-inactive-window-transparency.service
+        exit 1
+    fi
     { sleep 1 && pkill -RTMIN+3 -x waybar; } &
     wf-recorder -g "$geometry" -f "$path.mkv"
     pkill -RTMIN+3 -x waybar
