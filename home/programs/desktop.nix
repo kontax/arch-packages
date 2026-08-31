@@ -32,6 +32,13 @@
     # drop-in match for the old Arc-Gruvbox theme, but close in spirit and
     # actually packaged.
     gruvbox-gtk-theme
+    # gtk-3.0/settings.ini also names gtk-icon-theme-name=Adwaita /
+    # gtk-cursor-theme-name=Adwaita, but the actual Adwaita icon theme was
+    # never installed anywhere in this flake - confirmed live, only the
+    # empty hicolor base theme was present. Icons that don't resolve (e.g.
+    # udiskie's tray icon, "media-optical") silently fell back to GTK's
+    # generic broken-image placeholder instead of erroring.
+    adwaita-icon-theme
   ];
 
   xdg.configFile."swaync/config.json".source = ../../conf/desktop/swaync/config.json;
