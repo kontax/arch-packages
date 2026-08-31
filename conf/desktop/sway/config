@@ -19,6 +19,16 @@ input type:pointer {
     pointer_accel "-0.5"
 }
 
+# Confirmed live by reading sway's own source (sway/input/seat.c
+# seat_configure_xcursor): sway's compositor cursor never reads
+# XCURSOR_THEME/XCURSOR_SIZE (modules/profiles/desktop.nix) - those are only
+# exported for XWayland/GTK clients' benefit. With no directive here,
+# sway's own theme name defaults to NULL, which wlroots maps to a theme
+# literally named "default" (xcursor/wlr_xcursor.c) - that doesn't exist on
+# disk (only Adwaita/hicolor are installed), so it silently falls back to
+# wlroots' own tiny built-in cursor. This is what actually drives sway's
+# real cursor theme/size.
+seat * xcursor_theme Adwaita 24
 seat * hide_cursor 10000
 
 output * {
