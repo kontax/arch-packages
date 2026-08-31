@@ -12,6 +12,10 @@
     # unconditionally; NixOS doesn't unless something asks for it.
     gnumake
     gcc
+    # nvim-treesitter shells out to the `tree-sitter` CLI to compile parsers
+    # - confirmed live, missing entirely: "Error during tree-sitter build:
+    # ENOENT: no such file or directory (cmd): 'tree-sitter'".
+    tree-sitter
   ];
 
   # lazy-lock.json's writability is handled by lazy_init.lua itself (seeds a
