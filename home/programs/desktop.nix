@@ -26,6 +26,11 @@
     # pinentry-rofi only because that package wraps its own private rofi
     # runtime dependency, invisible outside its own wrapper.
     rofi
+    # rofi-pass's autotype (types username/Tab/password into the previously
+    # focused window) - xdotool's Wayland equivalent, via the
+    # virtual-keyboard protocol. Nothing in this flake provided any way to
+    # simulate keystrokes at all before this.
+    wtype
     # gtk-3.0/settings.ini names gtk-theme-name=Arc-Gruvbox - a confirmed
     # migration gap (MIGRATION.md), never packaged for NixOS, so GTK apps
     # (pavucontrol included) silently fell back to stock Adwaita. Not a

@@ -5,10 +5,12 @@
 # unrelated same-named script, see git log), but a plain suckless-dmenu-style
 # top bar, inconsistent with every other picker in this setup (rofi-bluetooth,
 # pinentry-rofi, dmenu-nmcli's rofi tooling) which all use rofi's centered
-# popup. Reimplements the same entry-listing + pass show -c behaviour
-# passmenu has, just via rofi instead - pass show -c already handles the
-# Wayland-vs-X11 clipboard split correctly on its own (checks $WAYLAND_DISPLAY,
-# uses wl-copy), this only replaces the picker.
+# popup. Reimplements the same entry-listing passmenu has, just via rofi
+# instead, plus the old upstream rofi-pass's autotype behaviour (confirmed
+# live, MIGRATION.md gap: this was silently dropped, replaced with a plain
+# `pass show -c` clipboard copy, when this script was first written for the
+# migration) - types username, Tab, password into whatever window was
+# focused before this launched, rather than requiring a manual paste.
 prefix="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
 
 selection="$(
@@ -18,4 +20,17 @@ selection="$(
 
 [ -n "$selection" ] || exit 0
 
-pass show -c "$selection"
+entry="$(pass show "$selection")" || exit 1
+password="$(printf '%s\n' "$entry" | head -n1)"
+username="$(printf '%s\n' "$entry" | sed -n 's/^username: //p' | head -n1)"
+
+# A brief pause for sway to actually hand keyboard focus back to that window
+# once rofi's own surface closes, before typing into it - confirmed live,
+# necessary; typing immediately raced this and went nowhere.
+sleep 0.2
+
+[ -n "$username" ] && wtype -- "$username" && wtype -k Tab
+# Piped via stdin (wtype -), not passed as an argv string like the username -
+# an argv password would sit in `ps`/`/proc/<pid>/cmdline` in plaintext,
+# however briefly, for any other local user to read.
+printf '%s' "$password" | wtype -

@@ -202,7 +202,10 @@ bindsym --to-code {
     # Launcher
     $hyper+equal                 exec cgtoggle qalculate-gtk
     $hyper+d                     exec cgtoggle fuzzel
-    $hyper+p                     exec "wl-clipboard-manager lock; cglaunch rofi-pass -p pass; wl-clipboard-manager unlock"
+    # rofi-pass now types the password directly (wtype) rather than going
+    # through the clipboard, so it no longer needs wrapping in
+    # wl-clipboard-manager lock/unlock to keep it out of clipboard history.
+    $hyper+p                     exec cglaunch rofi-pass -p pass
     $win+p                       exec cgtoggle pass-gen
     # $hyper+m used to open udiskie-dmenu here - unpackaged (MIGRATION.md),
     # replaced with udiskie's own --tray flag, which needs a "tray" module
