@@ -40,5 +40,10 @@ in
     claude-code # unverified attr name - nixpkgs wraps @anthropic-ai/claude-code
 
     gh # GitHub CLI - creating/managing PRs from a terminal
+
+    age
+    sops
+    mkdocs
+    terraform
   ];
 }
