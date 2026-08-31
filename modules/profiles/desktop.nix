@@ -113,6 +113,19 @@ in
     # confirmed working (GTK_THEME=Gruvbox-Dark pavucontrol rendered
     # correctly) where settings.ini alone did not.
     GTK_THEME = "Gruvbox-Dark";
+    # Confirmed live: XCURSOR_THEME was unset entirely, so sway couldn't
+    # resolve a real theme (only Adwaita/hicolor are installed - no theme
+    # named "default") and silently fell back to wlroots' own built-in
+    # cursor, which rendered tiny regardless of XCURSOR_SIZE - that was the
+    # actual "too small" cause, not the size value. Setting the theme
+    # explicitly is what makes a real cursor (and XCURSOR_SIZE) apply at
+    # all. gtk-3.0/settings.ini already names Adwaita for GTK apps' own
+    # cursor; this matches it for sway's compositor-drawn one. Plain 24 -
+    # sway multiplies this by the output's scale factor (2.0 on this
+    # display) automatically, so 48 here actually rendered at 96 physical
+    # pixels, confirmed live to be too big; 24 lands at the intended 48.
+    XCURSOR_THEME = "Adwaita";
+    XCURSOR_SIZE = "24";
     LIBVA_DRIVER_NAME = "iHD";
     MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland-egl";
