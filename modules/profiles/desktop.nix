@@ -145,6 +145,21 @@ in
     font-awesome # was otf-font-awesome
     joypixels # was ttf-joypixels
     nerd-fonts.symbols-only # was ttf-nerd-fonts-symbols[-mono]
+    # Confirmed via fonttools cmap inspection: the vendored Inconsolata Nerd
+    # Font below only patched in the power-symbol range (U+23FB-U+23FE) plus
+    # a handful of PUA icon ranges - it has neither the Unicode Miscellaneous
+    # Technical media-control block (U+23E9-U+23FA, e.g. the ⏵⏵ Claude Code
+    # renders for its permission-mode indicator) nor box-drawing (U+2500+) nor
+    # en/em dash (U+2013/U+2014), and neither does nerd-fonts.symbols-only.
+    # Those were silently falling back to NixOS's default proportional
+    # DejaVu Sans fallback (dashes/box-drawing: present but off-metric,
+    # rendering as faint/blank-looking in a monospace grid) or to nothing at
+    # all (media-control block: tofu). unifont is a single, purpose-built,
+    # fixed-width "don't show tofu" fallback font covering nearly the entire
+    # BMP, including all of the above - a better fit here than pulling in
+    # e.g. all of noto-fonts (50M, mostly unneeded non-Latin scripts) just
+    # for one missing Unicode block.
+    unifont
   ] ++ [
     (pkgs.runCommand "couldinho-desktop-fonts" { } ''
       mkdir -p $out/share/fonts
