@@ -272,6 +272,7 @@ in
     htop
     lscolors # was lscolors-git
     dfrs
+    tree
     psmisc # killall/fuser/pstree - not pulled in by anything on NixOS by default
 
     # Shell
