@@ -44,6 +44,8 @@ in
     age
     sops
     terraform
+    talosctl
+    kubectl
 
     # Plain pkgs.mkdocs alone wouldn't see mkdocs-material as a theme -
     # they're separate, isolated Nix store paths with no shared site-packages
