@@ -305,6 +305,7 @@ in
     speedtest-cli
     net-tools
     netcat-openbsd # was openbsd-netcat
+    nmap
     iw
     bandwhich
     croc

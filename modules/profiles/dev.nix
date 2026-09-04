@@ -43,7 +43,13 @@ in
 
     age
     sops
-    mkdocs
     terraform
+
+    # Plain pkgs.mkdocs alone wouldn't see mkdocs-material as a theme -
+    # they're separate, isolated Nix store paths with no shared site-packages
+    # unless bundled into the same python env together, which is what
+    # withPackages does (and it still produces the usual `mkdocs` binary,
+    # since mkdocs registers it as a console-script entry point).
+    (python3.withPackages (ps: with ps; [ mkdocs mkdocs-material ]))
   ];
 }
