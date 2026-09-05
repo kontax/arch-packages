@@ -227,5 +227,12 @@ in
     couldinho-desktop-scripts
   ];
 
+  # Confirmed via nixpkgs source (nixos/modules/programs/browserpass.nix):
+  # the browserpass package above is just the native-host binary - nothing
+  # registers it with any browser's native-messaging host registry without
+  # this. Without it, /etc/opt/vivaldi/native-messaging-hosts doesn't even
+  # exist, so the browserpass extension has no bridge to `pass` at all.
+  programs.browserpass.enable = true;
+
   environment.etc."xdg/nvim".source = ../../conf/base/nvim; # kept for root/system-wide nvim invocations
 }
