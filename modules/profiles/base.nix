@@ -298,6 +298,7 @@ in
     libu2f-server
     pam_u2f # was pam-u2f
     git-secret
+    openssl
 
     # Networking
     wireguard-tools
