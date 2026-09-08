@@ -46,6 +46,8 @@ alias gpg-change-card='gpg-connect-agent "scd serialno" "learn --force" /bye'
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
+cdr() { cd -- "$(git rev-parse --show-toplevel)" }
+
 e64() { [[ $# == 1 ]] && base64 -w0 <<<"$1" || base64 -w0 }
 d64() { [[ $# == 1 ]] && base64 --decode <<<"$1" || base64 --decode }
 
