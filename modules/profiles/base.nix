@@ -278,6 +278,7 @@ in
     # Shell
     direnv
     tmux
+    screen
     fzf
     fzy
     bash-completion
@@ -308,6 +309,7 @@ in
     net-tools
     netcat-openbsd # was openbsd-netcat
     nmap
+    dnsutils # provides dig/nslookup/host
     iw
     bandwhich
     croc
