@@ -5,8 +5,11 @@ pkill -x wf-recorder
 [ $? -ne 0 ] && {
     notify-send -t 2000 'Screen sharing' 'Select an area to start the recording...'
     geometry="$(slurp)"
-    { sleep 1 && pkill -RTMIN+3 -x waybar; } &
+    # -x (exact match) never works here: NixOS wraps the waybar binary, so
+    # the running process's comm is ".waybar-wrapped", not "waybar" -
+    # confirmed live via /proc/<pid>/comm (see waybar-updates for the same fix).
+    { sleep 1 && pkill -RTMIN+3 waybar; } &
     wf-recorder --muxer=v4l2 --codec=rawvideo --pixel-format=yuv420p --file=/dev/video9 --geometry="$geometry"
-    pkill -RTMIN+3 -x waybar
+    pkill -RTMIN+3 waybar
     notify-send 'Screen sharing' 'Recording is complete'
 }

@@ -18,9 +18,12 @@ pkill -x wf-recorder -SIGINT
         systemctl --user start sway-inactive-window-transparency.service
         exit 1
     fi
-    { sleep 1 && pkill -RTMIN+3 -x waybar; } &
+    # -x (exact match) never works here: NixOS wraps the waybar binary, so
+    # the running process's comm is ".waybar-wrapped", not "waybar" -
+    # confirmed live via /proc/<pid>/comm (see waybar-updates for the same fix).
+    { sleep 1 && pkill -RTMIN+3 waybar; } &
     wf-recorder -g "$geometry" -f "$path.mkv"
-    pkill -RTMIN+3 -x waybar
+    pkill -RTMIN+3 waybar
     notify-send -t 2000 'GIF recording' "Encoding to GIF format..."
     ffmpeg -i "$path.mkv" -vf "fps=15,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" "$path.gif"
     wl-copy -t image/gif < "$path.gif"

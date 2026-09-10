@@ -96,7 +96,12 @@ refresh() {
             "$n" "$tooltip" > "$cache_path"
     fi
 
-    pkill -RTMIN+1 -x waybar 2>/dev/null || true
+    # -x (exact match) never worked here: NixOS wraps the waybar binary, so
+    # the actual running process's comm is ".waybar-wrapped", not "waybar" -
+    # confirmed live via /proc/<pid>/comm. Plain substring matching (no -x)
+    # still matches ".waybar-wrapped" and was confirmed live to deliver the
+    # signal correctly.
+    pkill -RTMIN+1 waybar 2>/dev/null || true
 }
 
 case "${1:-}" in
