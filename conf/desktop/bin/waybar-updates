@@ -99,9 +99,16 @@ refresh() {
     # -x (exact match) never worked here: NixOS wraps the waybar binary, so
     # the actual running process's comm is ".waybar-wrapped", not "waybar" -
     # confirmed live via /proc/<pid>/comm. Plain substring matching (no -x)
-    # still matches ".waybar-wrapped" and was confirmed live to deliver the
-    # signal correctly.
-    pkill -RTMIN+1 waybar 2>/dev/null || true
+    # does reach it, but also self-matches this very script's own comm
+    # ("waybar-updates" contains "waybar") - confirmed live, that's exactly
+    # what made waybar-updates.service start failing (its own main process
+    # killed itself with the signal it was sending). -f anchored on the
+    # literal install path is exact without that collision: argv[0] for the
+    # real waybar process is still the unwrapped ".../bin/waybar" path (only
+    # comm is rewritten), while every other couldinho-desktop-scripts binary
+    # (waybar-updates itself, waybar-recording, etc.) lives at a
+    # "bin/waybar-something" path that the trailing $ excludes.
+    pkill -RTMIN+1 -f '/bin/waybar$' 2>/dev/null || true
 }
 
 case "${1:-}" in

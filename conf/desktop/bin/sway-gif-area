@@ -19,11 +19,18 @@ pkill -x wf-recorder -SIGINT
         exit 1
     fi
     # -x (exact match) never works here: NixOS wraps the waybar binary, so
-    # the running process's comm is ".waybar-wrapped", not "waybar" -
-    # confirmed live via /proc/<pid>/comm (see waybar-updates for the same fix).
-    { sleep 1 && pkill -RTMIN+3 waybar; } &
+    # the running process's comm is ".waybar-wrapped", not "waybar". Plain
+    # substring matching also isn't safe: it collides with any other
+    # waybar-* helper that happens to be running (e.g. waybar-yubikey, a
+    # persistent loop) and would kill that instead/as well - confirmed live
+    # this exact collision took down waybar-updates.service (see its own
+    # comment). -f anchored on the literal install path is exact: argv[0]
+    # for the real waybar process is still the unwrapped ".../bin/waybar"
+    # path (only comm is rewritten), and the trailing $ excludes every
+    # "bin/waybar-something" helper.
+    { sleep 1 && pkill -RTMIN+3 -f '/bin/waybar$'; } &
     wf-recorder -g "$geometry" -f "$path.mkv"
-    pkill -RTMIN+3 waybar
+    pkill -RTMIN+3 -f '/bin/waybar$'
     notify-send -t 2000 'GIF recording' "Encoding to GIF format..."
     ffmpeg -i "$path.mkv" -vf "fps=15,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" "$path.gif"
     wl-copy -t image/gif < "$path.gif"

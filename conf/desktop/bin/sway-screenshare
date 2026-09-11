@@ -6,10 +6,17 @@ pkill -x wf-recorder
     notify-send -t 2000 'Screen sharing' 'Select an area to start the recording...'
     geometry="$(slurp)"
     # -x (exact match) never works here: NixOS wraps the waybar binary, so
-    # the running process's comm is ".waybar-wrapped", not "waybar" -
-    # confirmed live via /proc/<pid>/comm (see waybar-updates for the same fix).
-    { sleep 1 && pkill -RTMIN+3 waybar; } &
+    # the running process's comm is ".waybar-wrapped", not "waybar". Plain
+    # substring matching also isn't safe: it collides with any other
+    # waybar-* helper that happens to be running (e.g. waybar-yubikey, a
+    # persistent loop) and would kill that instead/as well - confirmed live
+    # this exact collision took down waybar-updates.service (see its own
+    # comment). -f anchored on the literal install path is exact: argv[0]
+    # for the real waybar process is still the unwrapped ".../bin/waybar"
+    # path (only comm is rewritten), and the trailing $ excludes every
+    # "bin/waybar-something" helper.
+    { sleep 1 && pkill -RTMIN+3 -f '/bin/waybar$'; } &
     wf-recorder --muxer=v4l2 --codec=rawvideo --pixel-format=yuv420p --file=/dev/video9 --geometry="$geometry"
-    pkill -RTMIN+3 waybar
+    pkill -RTMIN+3 -f '/bin/waybar$'
     notify-send 'Screen sharing' 'Recording is complete'
 }
