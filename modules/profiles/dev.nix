@@ -38,6 +38,7 @@ in
     android-studio
 
     claude-code # unverified attr name - nixpkgs wraps @anthropic-ai/claude-code
+    antigravity-cli
 
     gh # GitHub CLI - creating/managing PRs from a terminal
 
