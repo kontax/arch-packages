@@ -78,6 +78,52 @@ regenerate `hardware-configuration.nix` on the real hardware, list the
 profiles it needs in `default.nix`, and add it to `flake.nix`'s
 `nixosConfigurations`.
 
+## Adding a new package
+
+1. **Find the exact attribute name.** Don't guess - a plausible-looking name
+   can be wrong, or collide with something similarly named but different
+   (e.g. `antigravity-cli` is a TUI agent client, not the `antigravity` GUI
+   IDE; `browserpass` is just a native-messaging binary with no browser
+   integration until `programs.browserpass.enable` is also set). Search
+   locally, without touching the network:
+   ```bash
+   nix-env -f '<nixpkgs>' -qaP --description | grep -i <name>
+   ```
+   or use [search.nixos.org/packages](https://search.nixos.org/packages).
+   If more than one result looks plausible, check each one's
+   `meta.mainProgram` and `meta.description` before picking:
+   ```bash
+   nix eval --impure --json --expr '(import <nixpkgs> {}).<attr>.meta' | jq
+   ```
+2. **Pick the right file.** `modules/profiles/base.nix` for anything wanted
+   on every host, `dev.nix`/`desktop.nix`/`laptop.nix` for profile-specific
+   tools (GUI apps go in `desktop.nix` even though CLI tools also live
+   there - see `android-studio` next to `claude-code` in `dev.nix`).
+3. **Add it** to that file's `environment.systemPackages` list (alphabetical
+   isn't enforced - match the existing grouping/comments in that section).
+   Add a one-line comment only if the attribute name is non-obvious, unfree,
+   or the binary name doesn't match the attribute name.
+4. **Validate before changing anything live:**
+   ```bash
+   nix flake check '.?submodules=1' --impure
+   ```
+   This catches eval errors (typo'd attribute names, missing
+   `nixpkgs.config.allowUnfree`/`allowUnfreePackages`, etc.) without
+   building or touching the running system.
+5. **Rebuild and switch:**
+   ```bash
+   sudo nixos-rebuild switch --flake '.?submodules=1#<host>' --impure
+   ```
+6. **Test it live, don't just trust the build.** A successful rebuild only
+   means the derivation built - it says nothing about whether the command
+   you expect actually exists or works. Run the real binary (check
+   `meta.mainProgram` from step 1 if the name isn't obvious, e.g.
+   `antigravity-cli`'s binary is `agy`), and for anything with a config
+   surface (a systemd unit, a NixOS module `enable` option, a generated
+   `/etc` file), check the actual live state - don't assume the option name
+   alone was enough.
+7. **Commit and push** once confirmed working.
+
 ## Sources
 * [Disconnected's guide](https://disconnected.systems/blog/archlinux-repo-in-aws-bucket/)
 * [Maxim Baz's dotfiles](https://github.com/maximbaz/dotfiles.git)

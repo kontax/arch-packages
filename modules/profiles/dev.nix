@@ -38,7 +38,7 @@ in
     android-studio
 
     claude-code # unverified attr name - nixpkgs wraps @anthropic-ai/claude-code
-    antigravity-cli
+    antigravity-cli # Google's TUI agent client - binary is `agy`, not `antigravity`
 
     gh # GitHub CLI - creating/managing PRs from a terminal
 
