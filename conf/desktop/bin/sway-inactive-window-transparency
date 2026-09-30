@@ -8,12 +8,22 @@ import i3ipc
 INACTIVE_OPACITY = 0.7
 
 
+def focused_workspace_num(tree):
+    # find_focused() is None when nothing has focus, e.g. while sway has no
+    # outputs mid-hotplug.
+    focused = tree.find_focused()
+    workspace = focused.workspace() if focused is not None else None
+    return workspace.num if workspace is not None else None
+
+
 class Monitor:
     def __init__(self):
         self.ipc = i3ipc.Connection()
-        self.prev_workspace = self.ipc.get_tree().find_focused().workspace().num
+        tree = self.ipc.get_tree()
+        self.prev_workspace = focused_workspace_num(tree)
+        self.prev_focused = None
 
-        for window in self.ipc.get_tree():
+        for window in tree:
             if window.focused:
                 self.prev_focused = window
             else:
@@ -21,10 +31,14 @@ class Monitor:
 
     def on_window_focus(self, _, event):
         focused = event.container
-        workspace = self.ipc.get_tree().find_focused().workspace().num
+        workspace = focused_workspace_num(self.ipc.get_tree())
 
         # https://github.com/swaywm/sway/issues/2859
-        if focused.id != self.prev_focused.id:
+        if self.prev_focused is None:
+            focused.command("opacity 1")
+            self.prev_focused = focused
+            self.prev_workspace = workspace
+        elif focused.id != self.prev_focused.id:
             focused.command("opacity 1")
             if workspace == self.prev_workspace:
                 self.deactivate(self.prev_focused)

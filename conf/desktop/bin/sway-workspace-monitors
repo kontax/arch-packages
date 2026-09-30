@@ -114,10 +114,18 @@ def workspace_event_handler(ipc, e):
     outputs = ipc.get_outputs()
     targets = compute_targets(outputs)
     target = targets.get(ws_num)
-    if target is None or e.current.output == target:
+    if target is None:
         return
 
-    move_workspace(ipc, ws_num, e.current.output, target)
+    # The event's Con doesn't reliably carry `output` (it's absent on some
+    # init events, e.g. during output hotplug), so look it up instead.
+    current_output = next(
+        (w.output for w in ipc.get_workspaces() if w.num == ws_num), None
+    )
+    if current_output is None or current_output == target:
+        return
+
+    move_workspace(ipc, ws_num, current_output, target)
 
 
 if __name__ == "__main__":

@@ -70,10 +70,6 @@ set $workspace0 workspace number 10
 # time, not already-open ones - see sway-workspace-monitors for the
 # runtime/dynamic counterpart (handles monitor unplug/replug and
 # position changes without needing to hardcode which model is left/right).
-# NOTE: verify these two identity strings against `swaymsg -t get_outputs`
-# next time both monitors are plugged in - reconstructed from memory
-# after this session's local-only commits were lost to an uncommitted
-# disk wipe, not re-verified against live hardware.
 set $mon_left "Dell Inc. DELL S2721DGF JDTZC23"
 set $mon_right "Dell Inc. DELL U2719D 900QQS2"
 workspace 1  output eDP-1
