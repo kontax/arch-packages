@@ -52,5 +52,15 @@ lib.mkIf (keyId != null) {
     else
       echo "trustPersonalGpgKey: ${keyId} not present locally - cannot set trust, skipping" >&2
     fi
+
+    # At boot /run/user/$UID doesn't exist yet, so the gpg calls above put
+    # their sockets in ~/.gnupg and auto-spawn gpg-agent/dirmngr/keyboxd
+    # there. Those never exit, and the session's gpg (which looks in
+    # /run/user/$UID/gnupg instead) then starts a second keyboxd that blocks
+    # forever on the pubring.db lock the first one still holds. Kill them
+    # before leaving. On a nixos-rebuild switch from a live session this
+    # hits the real session daemons instead - they restart on demand, at the
+    # cost of one extra YubiKey PIN prompt.
+    $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpgconf --kill all || true
   '';
 }
