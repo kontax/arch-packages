@@ -128,7 +128,12 @@ in
     LIBVA_DRIVER_NAME = "iHD";
     MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland-egl";
-    QT_QPA_PLATFORMTHEME = "gtk2";
+    # Qt apps follow the GTK3 theme (conf/desktop/gtk-3.0/settings.ini) via
+    # the gtk3 platform theme plugin built into qtbase for both Qt5 and Qt6.
+    # Was "gtk2" via libsForQt5.qtstyleplugins + qt6Packages.qt6gtk2, until
+    # nixpkgs removed qt6gtk2 (2026-09) for depending on gtk2, after earlier
+    # dropping "gtk2" from qt.platformTheme.
+    QT_QPA_PLATFORMTHEME = "gtk3";
     WLR_DRM_NO_MODIFIERS = "1";
     XDG_CURRENT_DESKTOP = "sway";
     XDG_SESSION_DESKTOP = "sway";
@@ -182,15 +187,6 @@ in
   security.rtkit.enable = true;
 
   environment.systemPackages = with pkgs; [
-    # qt.platformTheme's "gtk2" choice was dropped from the NixOS qt module
-    # (nixos/modules/config/qt.nix no longer maps it), but the underlying
-    # plugin packages are still in nixpkgs - installed manually here, paired
-    # with QT_QPA_PLATFORMTHEME below, so Qt apps keep following the GTK3
-    # theme (conf/desktop/gtk-3.0/settings.ini) instead of falling back to
-    # plain Qt widget styling.
-    libsForQt5.qtstyleplugins
-    qt6Packages.qt6gtk2
-
     # sway stack
     wl-clipboard
     python3Packages.i3ipc
