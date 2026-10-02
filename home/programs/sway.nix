@@ -36,7 +36,9 @@
       # crash-loops with "failed to parse config file" when the file doesn't
       # exist; skip starting entirely instead. Create
       # ~/.config/kanshi/config with your real output names and restart this
-      # service once you have one.
+      # service once you have one. For multi-monitor dock profiles, add
+      # `exec sway-enable-outputs "<output>" ...` listing the externals - see
+      # that script for why kanshi alone can leave one disabled.
       ConditionPathExists = "%h/.config/kanshi/config";
     };
     Service = {

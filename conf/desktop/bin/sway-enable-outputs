@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+# Makes sure each named output really came up after a kanshi profile
+# applies. Meant to be run from a profile's `exec` line, e.g.
+#
+#   exec sway-enable-outputs "Dell Inc. DELL U2719D 900QQS2" "..."
+#
+# After a Thunderbolt dock replug, sway has repeatedly acked kanshi's
+# output-management request as successful while leaving one of the
+# external monitors disabled (a different one each time, and its DP-N
+# connector name changes across replugs too). `kanshictl reload` doesn't
+# recover it - kanshi believes the profile is already applied - but a plain
+# `swaymsg output ... enable` does, every time. So check what sway actually
+# reports and re-enable anything still off, retrying for a few seconds
+# while the dock settles.
+#
+# Arguments are output names or sway identifiers ("Make Model Serial") -
+# the same strings the kanshi profile uses. Outputs that aren't connected
+# are skipped, so it's safe to list one that might be unplugged.
+import sys
+import time
+
+import i3ipc
+
+ATTEMPTS = 5
+DELAY = 1.0
+
+
+def identifier(output):
+    return "%s %s %s" % (output.make, output.model, output.serial)
+
+
+def inactive(ipc, wanted):
+    return [
+        o
+        for o in ipc.get_outputs()
+        if (o.name in wanted or identifier(o) in wanted) and not o.active
+    ]
+
+
+def main(argv):
+    wanted = set(argv[1:])
+    if not wanted:
+        print("usage: sway-enable-outputs OUTPUT...", file=sys.stderr)
+        return 2
+
+    ipc = i3ipc.Connection()
+    for _ in range(ATTEMPTS):
+        pending = inactive(ipc, wanted)
+        if not pending:
+            return 0
+        for o in pending:
+            print("re-enabling %s (%s)" % (o.name, identifier(o)), file=sys.stderr)
+            # Connector name, not identifier: it's unambiguous for an output
+            # sway just listed, and needs no extra quoting.
+            ipc.command('output "%s" enable power on' % o.name)
+        time.sleep(DELAY)
+
+    pending = inactive(ipc, wanted)
+    for o in pending:
+        print("%s still disabled after %d attempts" % (o.name, ATTEMPTS), file=sys.stderr)
+    return 1 if pending else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
