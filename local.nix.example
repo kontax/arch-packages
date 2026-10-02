@@ -19,8 +19,10 @@
 # credentials in this file would land them in the world-readable /nix/store
 # once built, unlike a git URL or pass-git-helper routing rule, which are
 # personal but not secret. Register the public half
-# (`ssh-add -L` once the card's plugged in) as a read-only deploy key on the
-# password-store repo.
+# (`ssh-add -L` once the card's plugged in) on the password-store repo - with
+# write access on any machine that will add or edit entries, since a
+# post-commit hook pushes each change straight back (a read-only deploy key
+# still clones and pulls fine; the hook's push just warns).
 #
 # If the git server sits behind a non-default SSH port (e.g. proxied through
 # HAProxy), use the full ssh://user@host:port/path form - the git@host:path
