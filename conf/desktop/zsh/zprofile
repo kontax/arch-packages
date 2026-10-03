@@ -8,7 +8,13 @@ export PATH="$HOME/.local/bin:$HOME/.local/bin-private:$HOME/.local/state/cargo/
 
 [[ "$TTY" == /dev/tty* ]] || return 0
 
-export $(systemctl --user show-environment)
+# Each line is a shell-quoted assignment - values with spaces (e.g.
+# NIX_PROFILES, once sway's bare `import-environment` has pushed it into
+# the user manager) come out as $'...', which a plain `export $(...)`
+# word-splits into invalid names and aborts the zprofile before sway starts.
+while IFS= read -r line; do
+    eval "export $line"
+done < <(systemctl --user show-environment)
 
 export GPG_TTY="$TTY"
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh"
