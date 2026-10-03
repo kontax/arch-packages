@@ -21,7 +21,4 @@ text-caps-lock-color=00000000
 text-clear-color=222222
 text-ver-color=00000000
 text-wrong-color=00000000
-clock
-indicator
-datestr=%a %Y-%m-%d
-timestr=%H:%M
+indicator-idle-visible

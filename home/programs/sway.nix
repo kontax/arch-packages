@@ -6,7 +6,7 @@
 {
   home.packages = with pkgs; [
     sway
-    swaylock-effects
+    swaylock
     swayidle
     swayr
     kanshi
@@ -58,10 +58,10 @@
       Type = "simple";
       ExecStart = ''
         ${pkgs.swayidle}/bin/swayidle -w \
-            timeout 900 'pgrep -x swaylock || ${pkgs.swaylock-effects}/bin/swaylock -f -c 000000' \
+            timeout 900 'pgrep -x swaylock || ${pkgs.swaylock}/bin/swaylock -f -c 000000' \
             timeout 1200 'swaymsg "output * dpms off"' \
               resume 'swaymsg "output * dpms on"' \
-            before-sleep 'swaymsg "output * dpms on"; pgrep -x swaylock || ${pkgs.swaylock-effects}/bin/swaylock -f -c 000000'
+            before-sleep 'swaymsg "output * dpms on"; pgrep -x swaylock || ${pkgs.swaylock}/bin/swaylock -f -c 000000'
       '';
     };
     Install.WantedBy = [ "sway-session.target" ];
