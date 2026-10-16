@@ -41,6 +41,7 @@ in
     antigravity-cli # Google's TUI agent client - binary is `agy`, not `antigravity`
 
     gh # GitHub CLI - creating/managing PRs from a terminal
+    tea # Gitea CLI - same for Gitea/Forgejo instances
 
     age
     sops
