@@ -224,9 +224,14 @@ in
     nwg-displays # GUI for arranging monitor position/scale/rotation under sway
 
     # web
-    vivaldi
-    vivaldi-ffmpeg-codecs
-    widevine-cdm # was vivaldi-widevine
+    # widevine-cdm (was vivaldi-widevine) does nothing as a standalone
+    # package - nixpkgs only links it into vivaldi's opt dir via this
+    # override, so DRM sites had no Widevine at all before.
+    # proprietaryCodecs is left off on purpose: vivaldi-ffmpeg-codecs lags
+    # upstream (nixpkgs snap rev 118 vs rev 120 pinned by 8.2.4133.83's own
+    # update-ffmpeg), while vivaldi already fetches the matching build into
+    # ~/.local/lib/vivaldi itself on first launch of each version.
+    (vivaldi.override { enableWidevine = true; })
     browserpass # was browserpass-chromium
 
     couldinho-desktop-scripts
