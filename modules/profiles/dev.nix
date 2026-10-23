@@ -55,5 +55,23 @@ in
     # withPackages does (and it still produces the usual `mkdocs` binary,
     # since mkdocs registers it as a console-script entry point).
     (python3.withPackages (ps: with ps; [ mkdocs mkdocs-material ]))
+
+    # Headless browser for dev testing - `chromium --headless=new ...` for
+    # one-off screenshots/dumps, playwright-driver.browsers-chromium for
+    # Playwright/Puppeteer-driven tests (see sessionVariables below).
+    chromium
+    playwright-driver.browsers-chromium
   ];
+
+  # Playwright's own `npx playwright install` downloads generic FHS binaries
+  # that can't find their shared libs on NixOS, so point it at the
+  # nixpkgs-built browsers instead and skip its distro dependency check
+  # (which only knows Debian/Ubuntu package names). Caveat: the npm
+  # `playwright` version in a project has to match playwright-driver's
+  # (1.64.x at time of writing), or it'll look for a browser revision
+  # that isn't in this path.
+  environment.sessionVariables = {
+    PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers-chromium}";
+    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+  };
 }
