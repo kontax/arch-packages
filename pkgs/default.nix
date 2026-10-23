@@ -56,6 +56,14 @@ in
   # just skips running its tests during the nixpkgs build.
   udiskie = prev.udiskie.overrideAttrs (_: { doCheck = false; });
 
+  # Same story: aws-sam-cli 1.165.0's suite has 28 failures (of ~6950) on
+  # nixpkgs 02c087f - `'<' not supported between instances of
+  # 'ParameterSource' and ...` plus option-list ordering asserts, i.e. the
+  # newer click in nixpkgs. Mostly cosmetic, but the TypeError ones are in
+  # --hook-name handling, so that one flag may genuinely be broken at
+  # runtime. Drop this once nixpkgs' aws-sam-cli builds again.
+  aws-sam-cli = prev.aws-sam-cli.overridePythonAttrs (_: { doCheck = false; });
+
   # Upstream packaging bug, not ours: gtk-3.0/gtk.css leaks one GTK4-only
   # property (its gtk-3.0 and gtk-4.0 variants are almost certainly
   # generated from shared SCSS source) - confirmed on real hardware, waybar
