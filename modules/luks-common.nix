@@ -1,7 +1,9 @@
 # Shared LUKS2 plumbing. The actual `boot.initrd.luks.devices.<name>` entry is
 # host-specific (device path, optional detached header, optional FIDO2) and is
-# declared in each host's disko.nix - this module only turns on the systemd
-# stage-1 initrd, which is required for FIDO2 unlock to work at all.
+# declared in each host's disko.nix. This module used to turn on the systemd
+# stage-1 initrd (required for FIDO2 unlock); nixpkgs has since removed the
+# scripted initrd, so systemd stage-1 is now unconditional and the module only
+# carries these notes.
 #
 # FIDO2 YubiKey enrollment (replaces the `systemd-cryptenroll --fido2-device=auto`
 # call in the old install.sh) is a one-time manual step done after install, since
@@ -27,6 +29,4 @@
 # loaded via $CREDENTIALS_DIRECTORY or `systemd-run --set-credential=`),
 # more machinery than's worth wiring into a chroot for a one-time step.
 { ... }:
-{
-  boot.initrd.systemd.enable = true;
-}
+{ }
