@@ -39,6 +39,7 @@ in
 
     claude-code # unverified attr name - nixpkgs wraps @anthropic-ai/claude-code
     antigravity-cli # Google's TUI agent client - binary is `agy`, not `antigravity`
+    codex # OpenAI's Codex CLI agent
 
     gh # GitHub CLI - creating/managing PRs from a terminal
     tea # Gitea CLI - same for Gitea/Forgejo instances
