@@ -62,7 +62,12 @@ lib.mkMerge [
       # StrictHostKeyChecking=no, accept-new still fails on a *later* key
       # change for an already-known host, so this doesn't blind a real
       # MITM after the first successful clone.
-      export GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=accept-new"
+      # BatchMode stops ssh itself prompting, but the real hang is gpg-agent
+      # waiting on a YubiKey PIN/touch nobody is there for (e.g. mid-switch,
+      # while gpg-agent is being restarted) - that ran into the unit's 5min
+      # start timeout and failed the whole rebuild. Hence also the `timeout`
+      # around the git calls below, so it degrades to the warning instead.
+      export GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=accept-new -o BatchMode=yes"
       # Same narrow-service-environment problem for SSH_AUTH_SOCK: the auth
       # here is the YubiKey's Authenticate subkey via gpg-agent's SSH support
       # (gpg-import.nix), whose socket path is normally exported by
@@ -70,10 +75,10 @@ lib.mkMerge [
       # script isn't one, so resolve it the same way extraInit does.
       export SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-$(${pkgs.gnupg}/bin/gpgconf --list-dirs agent-ssh-socket)}"
       if [ -d "$HOME/.password-store/.git" ]; then
-        $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$HOME/.password-store" pull --ff-only ||
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/timeout 60 ${pkgs.git}/bin/git -C "$HOME/.password-store" pull --ff-only ||
           echo "warning: couldn't update ~/.password-store" >&2
       else
-        $DRY_RUN_CMD ${pkgs.git}/bin/git clone "${cfg.url}" "$HOME/.password-store" ||
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/timeout 60 ${pkgs.git}/bin/git clone "${cfg.url}" "$HOME/.password-store" ||
           echo "warning: couldn't clone ~/.password-store from ${cfg.url}" >&2
       fi
       # .git/hooks isn't versioned, so the hook has to be (re)installed
