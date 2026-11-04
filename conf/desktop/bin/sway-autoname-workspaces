@@ -12,6 +12,7 @@ WINDOW_ICONS = {
     "bleachbit": "",
     "calibre": "",
     "chromium": "",
+    "chromium-browser": "",
     "code-oss": "",
     "discord": "",
     "draw.io": "",
