@@ -165,6 +165,15 @@ in
     # e.g. all of noto-fonts (50M, mostly unneeded non-Latin scripts) just
     # for one missing Unicode block.
     unifont
+    # Real text faces. NixOS only ships dejavu_fonts.minimal (DejaVu Sans)
+    # by default, so with no serif font installed fontconfig resolved
+    # serif / "Times New Roman" to Font Awesome 7 Brands - Vivaldi's
+    # default standard font is Times New Roman, so any profile without its
+    # own font prefs rendered pages in whatever Chromium fell back to.
+    # liberation_ttf is metric-compatible with Times New Roman/Arial/Courier
+    # New, which is what most sites actually ask for.
+    dejavu_fonts
+    liberation_ttf
   ] ++ [
     (pkgs.runCommand "couldinho-desktop-fonts" { } ''
       mkdir -p $out/share/fonts
@@ -172,6 +181,11 @@ in
       cp "${../../conf/desktop/share/fonts}/taskbar.ttf" "$out/share/fonts/"
     '')
   ];
+  fonts.fontconfig.defaultFonts = {
+    serif = [ "DejaVu Serif" ];
+    sansSerif = [ "DejaVu Sans" ];
+    monospace = [ "Inconsolata Nerd Font Mono" ];
+  };
 
   # --- Multimedia (PipeWire, not the old system's raw PulseAudio - avoids
   # needing laptop.nix's old pulseaudioFull + module-switch-on-connect
