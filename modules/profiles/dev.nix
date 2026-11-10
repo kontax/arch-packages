@@ -31,6 +31,12 @@ in
     gdb
     rr
 
+    qemu
+    OVMF.fd # UEFI firmware for qemu - see OVMF_DIR below
+    # `cargo objdump`/`cargo size`/etc. - needs `rustup component add
+    # llvm-tools` for the actual LLVM binaries it wraps
+    cargo-binutils
+
     awscli2 # was aws-cli-v2-bin
     aws-sam-cli # was aws-sam-cli-bin
     # was npm -> bundled in nodejs, already installed unconditionally by base.nix
@@ -74,5 +80,10 @@ in
   environment.sessionVariables = {
     PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers-chromium}";
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+
+    # OVMF's firmware images live in FV/, which isn't one of the dirs that
+    # gets linked into /run/current-system/sw - so there's no stable path to
+    # them without this. Holds OVMF.fd, OVMF_CODE.fd and OVMF_VARS.fd.
+    OVMF_DIR = "${pkgs.OVMF.fd}/FV";
   };
 }
