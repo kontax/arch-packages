@@ -36,6 +36,26 @@ in
   # was pulseaudio-bluetooth - the desktop profile now uses PipeWire, whose
   # WirePlumber session manager handles bluetooth output switching natively,
   # so no pulseaudioFull / module-switch-on-connect workaround is needed.
+
+  # The Thunderbolt 4 dock exposes a USB audio sink whether or not anything
+  # is plugged into its jack, and ALSA gives it a higher priority (1109) than
+  # the built-in speakers (1009), so WirePlumber picked the empty dock as the
+  # default output and nothing was audible. Rank it below the speakers; it can
+  # still be picked by hand in pavucontrol.
+  services.pipewire.wireplumber.extraConfig."51-dock-audio-low-priority" = {
+    "monitor.alsa.rules" = [
+      {
+        matches = [
+          { "node.name" = "~alsa_output.usb-Lenovo_ThinkPad_Thunderbolt_4_Dock_USB_Audio.*"; }
+        ];
+        actions.update-props = {
+          "priority.session" = 500;
+          "priority.driver" = 500;
+        };
+      }
+    ];
+  };
+
   hardware.enableRedistributableFirmware = true;
   hardware.firmware = [ pkgs.sof-firmware ];
 
