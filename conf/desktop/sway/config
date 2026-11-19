@@ -360,3 +360,9 @@ bindsym --to-code {
 
 include @sysconfdir@/sway/config.d/*
 exec "systemctl --user import-environment; systemctl --user start sway-session.target"
+
+# A reload drops the output positions kanshi set over IPC, and sway then
+# auto-arranges the monitors (often swapped left/right). kanshi only reacts to
+# hotplug, so restart it to re-apply the current profile. try-restart is a
+# no-op at login, when sway-session.target hasn't started kanshi yet.
+exec_always systemctl --user try-restart kanshi.service
