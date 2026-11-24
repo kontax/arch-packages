@@ -40,6 +40,8 @@ WINDOW_ICONS = {
     "transmission-gtk": "",
     "vimiv": "",
     "virt-manager": "",
+    # Kerf PWA (Vivaldi app window); nf-md-hand_saw
+    "vivaldi-dhmbnooebehchnhnoohlklfobelhlgho-default": "󰹈",
     "vivaldi-stable": "",
     "wofi": "",
     "org.pwmt.zathura": "",

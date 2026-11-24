@@ -258,5 +258,14 @@ in
   # exist, so the browserpass extension has no bridge to `pass` at all.
   programs.browserpass.enable = true;
 
+  # PDFs go to the system reader (xdg-open -> zathura, per mimeapps.list)
+  # instead of Vivaldi's built-in viewer, and open as soon as they finish
+  # downloading - e.g. Kerf's cutlist export, which is an <a download>.
+  # Same managed-policy dir browserpass writes to above.
+  environment.etc."opt/vivaldi/policies/managed/pdf.json".text = builtins.toJSON {
+    AlwaysOpenPdfExternally = true;
+    AutoOpenFileTypes = [ "pdf" ];
+  };
+
   environment.etc."xdg/nvim".source = ../../conf/base/nvim; # kept for root/system-wide nvim invocations
 }
