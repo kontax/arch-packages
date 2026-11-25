@@ -87,4 +87,10 @@
 [remote "origin"]
 	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
 
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
 # vim:ft=ini

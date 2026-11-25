@@ -254,6 +254,7 @@ in
   # so it's dropped rather than mapped. urlwatch is retained below.
   environment.systemPackages = with pkgs; [
     git
+    git-lfs # filter config lives in conf/base/gitconfig ([filter "lfs"])
     delta # was git-delta
     cifs-utils
     nfs-utils # mount.nfs/mount.nfs4 - was missing entirely, no NFS client support anywhere in this flake
