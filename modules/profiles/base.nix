@@ -56,6 +56,10 @@ in
       if [[ $options[zle] = on ]]; then
         eval "$(${pkgs.atuin}/bin/atuin init zsh)"
       fi
+
+      # Per-user private shell config (tokens, machine-specific exports) -
+      # lives outside this public repo, next to local.nix.
+      [[ -r $HOME/.config/couldinho/local.zsh ]] && source $HOME/.config/couldinho/local.zsh
     '';
   };
   # Autosuggestions + syntax highlighting (was zsh4humans' bundled
