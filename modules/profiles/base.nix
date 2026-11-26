@@ -172,7 +172,21 @@ in
     # already relied on elsewhere in this sway setup (dmenu-nmcli,
     # rofi-bluetooth), so it gets the same reliable focus every other rofi
     # menu already has.
-    pinentryPackage = pkgs.pinentry-rofi;
+    #
+    # rofi is overridden with a shim that holds the prompt back while
+    # swaylock is running: a pinentry fired during lock (background ssh/git
+    # via the gpg-agent SSH socket) otherwise opens rofi's exclusive-keyboard
+    # overlay over the lock screen and takes its input. The shim sits in
+    # front of rofi only, so pinentry itself still starts and answers
+    # gpg-agent straight away; the prompt just appears after unlock.
+    pinentryPackage = pkgs.pinentry-rofi.override {
+      rofi = pkgs.writeShellScriptBin "rofi" ''
+        while ${pkgs.procps}/bin/pgrep -x -u "$(${pkgs.coreutils}/bin/id -u)" swaylock >/dev/null; do
+          ${pkgs.coreutils}/bin/sleep 1
+        done
+        exec ${pkgs.rofi}/bin/rofi "$@"
+      '';
+    };
   };
 
   # --- YubiKey touch-to-confirm for sudo/polkit (was pam.d/{sudo,polkit-1}) ---
